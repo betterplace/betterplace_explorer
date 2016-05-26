@@ -25895,12 +25895,11 @@
 
 	  render: function render() {
 	    var volunteeringNodes = this.props.records.map(function (record) {
-	      return _react2.default.createElement(_Volunteering2.default, { record: record });
-	      return;
+	      return _react2.default.createElement(_Volunteering2.default, { record: record, key: record.id });
 	    });
 
 	    return _react2.default.createElement(
-	      'ul',
+	      'div',
 	      null,
 	      volunteeringNodes
 	    );
@@ -25913,7 +25912,7 @@
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -25926,14 +25925,40 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Volunteering = _react2.default.createClass({
-	  displayName: 'Volunteering',
+	  displayName: "Volunteering",
 
 	  render: function render() {
+	    var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141");
+
 	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      this.props.record.title
+	      "div",
+	      { "class": "media" },
+	      _react2.default.createElement(
+	        "div",
+	        { "class": "media-left" },
+	        _react2.default.createElement(
+	          "a",
+	          { href: "#" },
+	          _react2.default.createElement("img", { "class": "media-object", src: imageUrl, alt: "{this.props.record.title}" })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        { "class": "media-body" },
+	        _react2.default.createElement(
+	          "h4",
+	          { "class": "media-heading" },
+	          this.props.record.title
+	        ),
+	        this.props.record.description
+	      )
 	    );
+	  },
+
+	  findLink: function findLink(links, rel) {
+	    for (var i = 0; i < links.length; i++) {
+	      if (links[i].rel === rel) return links[i].href;
+	    }
 	  }
 	});
 

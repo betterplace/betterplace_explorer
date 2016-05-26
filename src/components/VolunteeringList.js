@@ -4,15 +4,10 @@ import Volunteering from './Volunteering'
 var VolunteeringList = React.createClass({
   render: function() {
     var volunteeringNodes = this.props.records.map(function(record) {
-      return (<Volunteering record={record}/>);
-      return;
+      return (<Volunteering record={record} key={record.id} />);
     });
 
-    return (
-      <ul>
-        {volunteeringNodes}
-      </ul>
-    )
+    return (<div>{volunteeringNodes}</div>)
   }
 });
 
