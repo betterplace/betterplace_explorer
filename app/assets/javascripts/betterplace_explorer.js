@@ -91,7 +91,7 @@
 	  },
 
 	  loadByBoundingBox: function loadByBoundingBox(bb) {
-	    fetch('https://api.betterplace.org/de/api_v4/volunteering?scope=location&nelat=' + bb.nelat + '&nelng=' + bb.nelng + '&swlat=' + bb.swlat + '&swlng=' + bb.swlng).then(function (response) {
+	    fetch('https://api.betterplace.org/de/api_v4/volunteering?nelat=' + bb.nelat + '&nelng=' + bb.nelng + '&swlat=' + bb.swlat + '&swlng=' + bb.swlng).then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
 	      this.setState({ records: json.data });
