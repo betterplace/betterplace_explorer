@@ -7,8 +7,15 @@ var VolunteeringList = React.createClass({
       return (<Volunteering record={record} key={record.id} />);
     });
 
-    return (<div>{volunteeringNodes}</div>)
-  }
+    return (
+      <div className='col-md-14'>
+        <h1>{this.props.records.length} von {this.props.totalEntries} Ehrenämter</h1>
+        <div className='bpe--volunteering-list'>
+          {volunteeringNodes}
+        </div>
+      </div>
+    )
+  },
 });
 
 export default VolunteeringList;

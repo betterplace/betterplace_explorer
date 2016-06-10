@@ -5,17 +5,15 @@ var Volunteering = React.createClass({
     var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141")
 
     return (
-      <div class="media">
-        <div class="media-left">
-          <a href="#">
-            <img class="media-object" src={imageUrl} alt="{this.props.record.title}" />
-          </a>
+      <a href='#'>
+        <div className="bpe--volunteering media">
+          <img className="bpe--volunteering--image" src={imageUrl} alt="{this.props.record.title}" />
+          <div className="bpe--volunteering--body">
+            <p><small className="text-muted">{this.props.record.carrier.name}</small></p>
+            <h4 className="media-heading">{this.props.record.title}</h4>
+          </div>
         </div>
-        <div class="media-body">
-          <h4 class="media-heading">{this.props.record.title}</h4>
-          {this.props.record.description}
-        </div>
-      </div>
+      </a>
     )
   },
 

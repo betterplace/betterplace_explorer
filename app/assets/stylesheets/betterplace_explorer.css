@@ -1,0 +1,43 @@
+.bpe--volunteering-list {
+  /*position: fixed;*/
+  /*top: 0;*/
+  /*left: 0;*/
+  /*overflow-y: scroll;*/
+  /*css wtf*/
+}
+
+.bpe--volunteering {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.bpe--volunteering--image {
+  margin-right: 10px;
+  /*width: 100px;*/
+}
+
+.bpe--volunteering--body {
+  flex-grow: 1;
+}
+
+.bpe--location-input--input {
+  display: block;
+  margin: 20px;
+  padding: 5px;
+  padding-right: 30px;
+  width: 100%;
+}
+
+.bpe--location-input--reset {
+  position: absolute;
+  right: 0px;
+  top: 13px;
+  z-index: 1000;
+  font-size: 3rem;
+  font-weight: 100;
+  cursor: pointer;
+}
+.bpe--location-input--reset:hover {
+  text-decoration: none;
+}
+

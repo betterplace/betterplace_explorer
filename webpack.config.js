@@ -27,7 +27,7 @@ var port = '9000';
 
 if (env === 'dev') {
   new WebpackDevServer(webpack(config), {
-    contentBase: './app/assets/javascripts',
+    contentBase: './app/assets',
     hot: true,
     debug: true,
     historyApiFallback: true,
