@@ -6,7 +6,7 @@ var LocationInput = React.createClass({
     return (
       <div className='row'>
         <div className='col-md-5'>
-          <input type='text' placeholder='Ort' ref='locationInput' className='bpe--location-input--input' onKeyPress={this.handleKeyPress} />
+          <input type='text' placeholder='Ort' ref='locationInput' className='bpe--location-input--input' />
           <a className='bpe--location-input--reset' onClick={this.resetInput}>&times;</a>
         </div>
       </div>
@@ -16,8 +16,8 @@ var LocationInput = React.createClass({
   componentDidMount() {
     var input = ReactDOM.findDOMNode(this.refs.locationInput)
     input.focus()
-    this.autocomplete = new google.maps.places.Autocomplete(input, { 'types': ['(regions)'] });
-    google.maps.event.addListener(this.autocomplete, 'place_changed', this.changeBounds)
+    this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
+    google.maps.event.addListener(this.searchBox, 'places_changed', this.changeBounds)
   },
 
   resetInput() {
@@ -26,16 +26,18 @@ var LocationInput = React.createClass({
     input.focus()
   },
 
-  handleKeyPress(event) {
-    if(event.charCode == 13) {
-      event.preventDefault()
-      console.log('enter')
-    }
-  },
-
   changeBounds() {
-    var place = this.autocomplete.getPlace()
-    this.props.changeBounds(place.geometry.viewport)
+    var place = this.searchBox.getPlaces()[0]
+
+    if (!place.geometry) return;
+
+    if (place.geometry.viewport) {
+      this.props.changeBounds(place.geometry.viewport)
+    } else {
+      // non-boundary place, maybe a shop or a building. Do nothing yet.
+      //   map.setCenter(place.geometry.location);
+      //   map.setZoom(16);
+    }
   }
 });
 

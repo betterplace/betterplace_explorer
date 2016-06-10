@@ -12,8 +12,9 @@ var Explorer = React.createClass({
 
   componentDidMount() {
     fetch('https://api.betterplace.org/de/api_v4/volunteering?per_page=20')
-      .then(function(response) { return response.json() })
-      .then(function(json) { this.assignApiResult(json) }.bind(this))
+      .then(response => response.json())
+      .then(json => this.assignApiResult(json))
+      .then(undefined, function(err) { console.log(err) })
   },
 
   render: function() {
@@ -46,8 +47,9 @@ var Explorer = React.createClass({
 
   loadByBoundingBox: function(bb) {
     fetch('https://api.betterplace.org/de/api_v4/volunteering?nelat='+bb.nelat+'&nelng='+bb.nelng+'&swlat='+bb.swlat+'&swlng='+bb.swlng+'&per_page=20')
-      .then(function(response) { return response.json() })
-      .then(function(json) { this.assignApiResult(json) }.bind(this))
+      .then(response => response.json())
+      .then(json => this.assignApiResult(json))
+      .then(undefined, function(err) { console.log(err) })
   }
 });
 

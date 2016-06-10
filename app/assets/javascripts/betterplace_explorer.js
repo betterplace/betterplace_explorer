@@ -76,11 +76,15 @@
 	    return { records: [] };
 	  },
 	  componentDidMount: function componentDidMount() {
+	    var _this = this;
+
 	    fetch('https://api.betterplace.org/de/api_v4/volunteering?per_page=20').then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
-	      this.assignApiResult(json);
-	    }.bind(this));
+	      return _this.assignApiResult(json);
+	    }).then(undefined, function (err) {
+	      console.log(err);
+	    });
 	  },
 
 
@@ -117,11 +121,15 @@
 	  },
 
 	  loadByBoundingBox: function loadByBoundingBox(bb) {
+	    var _this2 = this;
+
 	    fetch('https://api.betterplace.org/de/api_v4/volunteering?nelat=' + bb.nelat + '&nelng=' + bb.nelng + '&swlat=' + bb.swlat + '&swlng=' + bb.swlng + '&per_page=20').then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
-	      this.assignApiResult(json);
-	    }.bind(this));
+	      return _this2.assignApiResult(json);
+	    }).then(undefined, function (err) {
+	      console.log(err);
+	    });
 	  }
 	});
 
@@ -25982,6 +25990,7 @@
 
 	  render: function render() {
 	    var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141");
+	    var carrier = this.props.record.carrier || {};
 
 	    return _react2.default.createElement(
 	      'a',
@@ -25999,7 +26008,7 @@
 	            _react2.default.createElement(
 	              'small',
 	              { className: 'text-muted' },
-	              this.props.record.carrier.name
+	              carrier.name
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -30428,7 +30437,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'col-md-5' },
-	        _react2.default.createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input', onKeyPress: this.handleKeyPress }),
+	        _react2.default.createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input' }),
 	        _react2.default.createElement(
 	          'a',
 	          { className: 'bpe--location-input--reset', onClick: this.resetInput },
@@ -30441,23 +30450,26 @@
 	  componentDidMount: function componentDidMount() {
 	    var input = _reactDom2.default.findDOMNode(this.refs.locationInput);
 	    input.focus();
-	    this.autocomplete = new google.maps.places.Autocomplete(input, { 'types': ['(regions)'] });
-	    google.maps.event.addListener(this.autocomplete, 'place_changed', this.changeBounds);
+	    this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
+	    google.maps.event.addListener(this.searchBox, 'places_changed', this.changeBounds);
 	  },
 	  resetInput: function resetInput() {
 	    var input = _reactDom2.default.findDOMNode(this.refs.locationInput);
 	    input.value = '';
 	    input.focus();
 	  },
-	  handleKeyPress: function handleKeyPress(event) {
-	    if (event.charCode == 13) {
-	      event.preventDefault();
-	      console.log('enter');
-	    }
-	  },
 	  changeBounds: function changeBounds() {
-	    var place = this.autocomplete.getPlace();
-	    this.props.changeBounds(place.geometry.viewport);
+	    var place = this.searchBox.getPlaces()[0];
+
+	    if (!place.geometry) return;
+
+	    if (place.geometry.viewport) {
+	      this.props.changeBounds(place.geometry.viewport);
+	    } else {
+	      // non-boundary place, maybe a shop or a building. Do nothing yet.
+	      //   map.setCenter(place.geometry.location);
+	      //   map.setZoom(16);
+	    }
 	  }
 	});
 
