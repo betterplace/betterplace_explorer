@@ -11,17 +11,29 @@ var Explorer = React.createClass({
   },
 
   componentDidMount() {
-    fetch('https://api.betterplace.org/de/api_v4/volunteering?per_page=20')
-      .then(response => response.json())
-      .then(json => this.assignApiResult(json))
-      .then(undefined, function(err) { console.log(err) })
+
+    if(this.props.location.query.east) {
+      var currentBounds = {
+        east: parseFloat(this.props.location.query.east),
+        west: parseFloat(this.props.location.query.west),
+        north: parseFloat(this.props.location.query.north),
+        south: parseFloat(this.props.location.query.south),
+      }
+      this.setState({ records: [], bounds: currentBounds })
+
+    } else {
+      fetch('http://jop.betterplace.dev/de/api_v4/volunteering?per_page=20')
+        .then(response => response.json())
+        .then(json => this.assignApiResult(json))
+        .then(undefined, function(err) { console.log(err) })
+    }
   },
 
   render: function() {
     return (
       <div className="betterplace-explorer">
         <div className="row">
-          <LocationInput changeBounds={this.changeBounds} />
+          <LocationInput changeLocation={this.changeLocation} />
         </div>
         <div className="row">
           <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} />
@@ -41,12 +53,24 @@ var Explorer = React.createClass({
     })
   },
 
-  changeBounds: function(bounds) {
-    this.setState({ records: this.state.records, bounds: bounds })
+  updateURLBounds: function(bounds) {
+    var newQuery = Object.assign({}, this.props.location.query, bounds);
+    browserHistory.push({ pathname: this.props.location.pathname, query: newQuery })
   },
 
-  loadByBoundingBox: function(bb) {
-    fetch('https://api.betterplace.org/de/api_v4/volunteering?nelat='+bb.nelat+'&nelng='+bb.nelng+'&swlat='+bb.swlat+'&swlng='+bb.swlng+'&per_page=20')
+  changeLocation: function(location, bounds) {
+    // console.log(location)
+
+    // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
+
+    this.updateURLBounds(bounds.toJSON())
+    this.setState({ records: this.state.records, bounds: bounds.toJSON() })
+  },
+
+  loadByBoundingBox: function(bounds) {
+    bounds = bounds.toJSON()
+    this.updateURLBounds(bounds)
+    fetch('http://jop.betterplace.dev/de/api_v4/volunteering?nelat='+bounds.north+'&nelng='+bounds.east+'&swlat='+bounds.south+'&swlng='+bounds.west+'&per_page=20')
       .then(response => response.json())
       .then(json => this.assignApiResult(json))
       .then(undefined, function(err) { console.log(err) })
@@ -56,5 +80,6 @@ var Explorer = React.createClass({
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={Explorer}/>
+    <Route path="/l/:location" component={Explorer}/>
   </Router>
 ), document.getElementById('betterplace-explorer'))

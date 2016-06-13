@@ -78,13 +78,23 @@
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
 
-	    fetch('https://api.betterplace.org/de/api_v4/volunteering?per_page=20').then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      return _this.assignApiResult(json);
-	    }).then(undefined, function (err) {
-	      console.log(err);
-	    });
+	    if (this.props.location.query.east) {
+	      var currentBounds = {
+	        east: parseFloat(this.props.location.query.east),
+	        west: parseFloat(this.props.location.query.west),
+	        north: parseFloat(this.props.location.query.north),
+	        south: parseFloat(this.props.location.query.south)
+	      };
+	      this.setState({ records: [], bounds: currentBounds });
+	    } else {
+	      fetch('http://jop.betterplace.dev/de/api_v4/volunteering?per_page=20').then(function (response) {
+	        return response.json();
+	      }).then(function (json) {
+	        return _this.assignApiResult(json);
+	      }).then(undefined, function (err) {
+	        console.log(err);
+	      });
+	    }
 	  },
 
 
@@ -95,7 +105,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'row' },
-	        _react2.default.createElement(_LocationInput2.default, { changeBounds: this.changeBounds })
+	        _react2.default.createElement(_LocationInput2.default, { changeLocation: this.changeLocation })
 	      ),
 	      _react2.default.createElement(
 	        'div',
@@ -116,14 +126,26 @@
 	    });
 	  },
 
-	  changeBounds: function changeBounds(bounds) {
-	    this.setState({ records: this.state.records, bounds: bounds });
+	  updateURLBounds: function updateURLBounds(bounds) {
+	    var newQuery = Object.assign({}, this.props.location.query, bounds);
+	    _reactRouter.browserHistory.push({ pathname: this.props.location.pathname, query: newQuery });
 	  },
 
-	  loadByBoundingBox: function loadByBoundingBox(bb) {
+	  changeLocation: function changeLocation(location, bounds) {
+	    // console.log(location)
+
+	    // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
+
+	    this.updateURLBounds(bounds.toJSON());
+	    this.setState({ records: this.state.records, bounds: bounds.toJSON() });
+	  },
+
+	  loadByBoundingBox: function loadByBoundingBox(bounds) {
 	    var _this2 = this;
 
-	    fetch('https://api.betterplace.org/de/api_v4/volunteering?nelat=' + bb.nelat + '&nelng=' + bb.nelng + '&swlat=' + bb.swlat + '&swlng=' + bb.swlng + '&per_page=20').then(function (response) {
+	    bounds = bounds.toJSON();
+	    this.updateURLBounds(bounds);
+	    fetch('http://jop.betterplace.dev/de/api_v4/volunteering?nelat=' + bounds.north + '&nelng=' + bounds.east + '&swlat=' + bounds.south + '&swlng=' + bounds.west + '&per_page=20').then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
 	      return _this2.assignApiResult(json);
@@ -136,7 +158,8 @@
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
-	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: Explorer })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: Explorer }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/l/:location', component: Explorer })
 	), document.getElementById('betterplace-explorer'));
 
 /***/ },
@@ -26054,7 +26077,10 @@
 	  render: function render() {
 	    var _this = this;
 
-	    if (this.props.bounds) this.googlemap.fitBounds(this.props.bounds);
+	    // console.log(this.props)
+
+	    // if(this.props.bounds)
+	    //   this.googlemap.fitBounds(this.props.bounds)
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'col-md-10' },
@@ -26082,128 +26108,67 @@
 	    );
 	  },
 
+	  componentDidUpdate: function componentDidUpdate(next, prev) {
+	    if (next.bounds) {
+	      this.googlemap.fitBounds(next.bounds);
+
+	      var GLOBE_WIDTH = 256; // a constant in Google's map projection
+	      var angle = next.bounds.east - next.bounds.west;
+	      if (angle < 0) {
+	        angle += 360;
+	      }
+	      var pixelWidth = 1;
+	      var zoom = Math.round(Math.log(pixelWidth * 360 / angle / GLOBE_WIDTH) / Math.LN2);
+
+	      // console.log(zoom)
+	      // console.log(this.getBoundsZoomLevel(next.bounds, {width: 546, height: 800}))
+	      // console.log(this.googlemap.getZoom())
+
+	      // this.getBoundsZoomLevel(next.bounds, {width: 546, height: 800})
+
+	      this.googlemap.props.map.setZoom(this.googlemap.getZoom() + 1);
+	    }
+	  },
+
+	  getBoundsZoomLevel: function getBoundsZoomLevel(bounds, mapDim) {
+	    var WORLD_DIM = { height: 256, width: 256 };
+	    var ZOOM_MAX = 21;
+
+	    function latRad(lat) {
+	      var sin = Math.sin(lat * Math.PI / 180);
+	      var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+	      return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+	    }
+
+	    function zoom(mapPx, worldPx, fraction) {
+	      return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+	    }
+
+	    var latFraction = (latRad(bounds.north) - latRad(bounds.south)) / Math.PI;
+
+	    var lngDiff = bounds.east - bounds.south;
+	    var lngFraction = (lngDiff < 0 ? lngDiff + 360 : lngDiff) / 360;
+
+	    var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+	    var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+	    return Math.min(latZoom, lngZoom, ZOOM_MAX);
+	  },
+
 	  resize: function resize() {
 	    // $(ReactDOM.findDOMNode(this)).css 'height', $('html').height() - $(@container).offset().top
 	    // this.googlemap.event.trigger(@map, "resize")
 	  },
 
 	  idle: function idle() {
-	    var ne = this.googlemap.getBounds().getNorthEast();
-	    var sw = this.googlemap.getBounds().getSouthWest();
-	    var bb = { nelat: ne.lat(), nelng: ne.lng(), swlat: sw.lat(), swlng: sw.lng() };
-	    this.props.mapIdle(bb);
+	    // var ne = this.googlemap.getBounds().getNorthEast()
+	    // var sw = this.googlemap.getBounds().getSouthWest()
+	    // var bb = { nelat: ne.lat(), nelng: ne.lng(), swlat: sw.lat(), swlng: sw.lng() }
+	    this.props.mapIdle(this.googlemap.getBounds());
 	  }
 	});
 
 	exports.default = Map;
-
-	// export default class Map extends Component {
-
-	//   state = {
-	//     markers: [{
-	//       position: {
-	//         lat: 25.0112183,
-	//         lng: 121.52067570000001,
-	//       },
-	//       key: `Taiwan`,
-	//       defaultAnimation: 2,
-	//     }],
-	//   }
-
-	//   /*
-	//    * This is called when you click on the map.
-	//    * Go and try click now.
-	//    */
-	//   handleMapClick(event) {
-	//     let { markers } = this.state;
-	//     markers = update(markers, {
-	//       $push: [
-	//         {
-	//           position: event.latLng,
-	//           defaultAnimation: 2,
-	//           key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys
-	//         },
-	//       ],
-	//     });
-	//     this.setState({ markers });
-
-	//     if (markers.length === 3) {
-	//       this.props.toast(
-	//         `Right click on the marker to remove it`,
-	//         `Also check the code!`
-	//       );
-	//     }
-	//   }
-
-	//   handleMarkerRightclick(index, event) {
-	//     /*
-	//      * All you modify is data, and the view is driven by data.
-	//      * This is so called data-driven-development. (And yes, it's now in
-	//      * web front end and even with google maps API.)
-	//      */
-	//     let { markers } = this.state;
-	//     markers = update(markers, {
-	//       $splice: [
-	//         [index, 1],
-	//       ],
-	//     });
-	//     this.setState({ markers });
-	//   }
-
-	//   renderNewBehavior() {
-	//     return (
-	//       <ScriptjsLoader
-	//         hostname={"maps.googleapis.com"}
-	//         pathname={"/maps/api/js"}
-	//         query={{ v: `3.${ AsyncGettingStarted.version }`, libraries: `geometry,drawing,places` }}
-	//         loadingElement={
-	//           <div {...this.props} style={{ height: `100%` }}>
-	//             <FaSpinner
-	//               style={{
-	//                 display: `block`,
-	//                 width: 200,
-	//                 height: 200,
-	//                 margin: `100px auto`,
-	//                 animation: `fa-spin 2s infinite linear`,
-	//               }}
-	//             />
-	//           </div>
-	//         }
-	//         containerElement={
-	//           <div {...this.props} style={{ height: `100%` }} />
-	//         }
-	//         googleMapElement={
-	//           <GoogleMap
-	//             ref={googleMap => {
-	//               if (!googleMap) {
-	//                 return;
-	//               }
-	//               console.log(googleMap);
-	//               console.log(`Zoom: ${ googleMap.getZoom() }`);
-	//               console.log(`Center: ${ googleMap.getCenter() }`);
-	//             }}
-	//             defaultZoom={3}
-	//             defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
-	//             onClick={::this.handleMapClick}
-	//           >
-	//             {this.state.markers.map((marker, index) => {
-	//               return (
-	//                 <Marker
-	//                   {...marker}
-	//                   onRightclick={this.handleMarkerRightclick.bind(this, index)}
-	//                 />
-	//               );
-	//             })}
-	//           </GoogleMap>
-	//         }
-	//       />
-	//     );
-	//   }
-
-	//   render() {
-	//     return this.renderNewBehavior();
-	//   }
-	// }
 
 /***/ },
 /* 232 */
@@ -30464,7 +30429,9 @@
 	    if (!place.geometry) return;
 
 	    if (place.geometry.viewport) {
-	      this.props.changeBounds(place.geometry.viewport);
+	      var value = _reactDom2.default.findDOMNode(this.refs.locationInput).value.replace(', ', '--');
+	      // this.props.changeBounds(place.geometry.viewport)
+	      this.props.changeLocation(value, place.geometry.viewport);
 	    } else {
 	      // non-boundary place, maybe a shop or a building. Do nothing yet.
 	      //   map.setCenter(place.geometry.location);

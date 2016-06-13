@@ -32,7 +32,9 @@ var LocationInput = React.createClass({
     if (!place.geometry) return;
 
     if (place.geometry.viewport) {
-      this.props.changeBounds(place.geometry.viewport)
+      var value = ReactDOM.findDOMNode(this.refs.locationInput).value.replace(', ', '--')
+      // this.props.changeBounds(place.geometry.viewport)
+      this.props.changeLocation(value, place.geometry.viewport)
     } else {
       // non-boundary place, maybe a shop or a building. Do nothing yet.
       //   map.setCenter(place.geometry.location);
