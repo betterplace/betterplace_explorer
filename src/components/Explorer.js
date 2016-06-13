@@ -4,6 +4,7 @@ import ReactDOM         from 'react-dom'
 import VolunteeringList from './VolunteeringList'
 import Map              from './Map.js'
 import LocationInput    from './LocationInput.js'
+import Pagination       from './Pagination.js'
 
 var Explorer = React.createClass({
   getInitialState() {
@@ -11,7 +12,6 @@ var Explorer = React.createClass({
   },
 
   componentDidMount() {
-
     if(this.props.location.query.east) {
       var currentBounds = {
         east: parseFloat(this.props.location.query.east),
@@ -33,6 +33,7 @@ var Explorer = React.createClass({
           <LocationInput changeLocation={this.changeLocation} />
         </div>
         <div className="row">
+          <Pagination currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
           <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} />
           <Map records={this.state.records} mapIdle={this.loadByBoundingBox} bounds={this.state.bounds} />
         </div>
@@ -48,6 +49,10 @@ var Explorer = React.createClass({
       totalEntries: json.total_entries,
       bounds:       null,
     })
+  },
+
+  changePage: function(page) {
+    this.load(`http://jop.betterplace.dev/de/api_v4/volunteering?per_page=20&page=${page}`)
   },
 
   updateURLBounds: function(bounds) {
