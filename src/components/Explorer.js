@@ -22,10 +22,7 @@ var Explorer = React.createClass({
       this.setState({ records: [], bounds: currentBounds })
 
     } else {
-      fetch('http://jop.betterplace.dev/de/api_v4/volunteering?per_page=20')
-        .then(response => response.json())
-        .then(json => this.assignApiResult(json))
-        .then(undefined, function(err) { console.log(err) })
+      this.load('http://jop.betterplace.dev/de/api_v4/volunteering?per_page=20')
     }
   },
 
@@ -67,13 +64,17 @@ var Explorer = React.createClass({
     this.setState({ records: this.state.records, bounds: bounds.toJSON() })
   },
 
-  loadByBoundingBox: function(bounds) {
-    bounds = bounds.toJSON()
-    this.updateURLBounds(bounds)
-    fetch('http://jop.betterplace.dev/de/api_v4/volunteering?nelat='+bounds.north+'&nelng='+bounds.east+'&swlat='+bounds.south+'&swlng='+bounds.west+'&per_page=20')
+  load: function(url) {
+    fetch(url)
       .then(response => response.json())
       .then(json => this.assignApiResult(json))
       .then(undefined, function(err) { console.log(err) })
+  },
+
+  loadByBoundingBox: function(bounds) {
+    bounds = bounds.toJSON()
+    this.updateURLBounds(bounds)
+    this.load('http://jop.betterplace.dev/de/api_v4/volunteering?nelat='+bounds.north+'&nelng='+bounds.east+'&swlat='+bounds.south+'&swlng='+bounds.west+'&per_page=20')
   }
 });
 
