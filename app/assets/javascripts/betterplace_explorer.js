@@ -68,26 +68,112 @@
 
 	var _LocationInput2 = _interopRequireDefault(_LocationInput);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _Pagination = __webpack_require__(278);
 
-	var Explorer = _react2.default.createClass({
+	var _Pagination2 = _interopRequireDefault(_Pagination);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var Explorer = _react2['default'].createClass({
 	  displayName: 'Explorer',
-	  getInitialState: function getInitialState() {
-	    return { records: [] };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
+	  getInitialState: function () {
+	    function getInitialState() {
+	      return { records: [] };
+	    }
 
-	    if (this.props.location.query.east) {
-	      var currentBounds = {
-	        east: parseFloat(this.props.location.query.east),
-	        west: parseFloat(this.props.location.query.west),
-	        north: parseFloat(this.props.location.query.north),
-	        south: parseFloat(this.props.location.query.south)
-	      };
-	      this.setState({ records: [], bounds: currentBounds });
-	    } else {
-	      fetch('http://jop.betterplace.dev/de/api_v4/volunteering?per_page=20').then(function (response) {
+	    return getInitialState;
+	  }(),
+	  componentDidMount: function () {
+	    function componentDidMount() {
+	      if (this.props.location.query.east) {
+	        var currentBounds = {
+	          east: parseFloat(this.props.location.query.east),
+	          west: parseFloat(this.props.location.query.west),
+	          north: parseFloat(this.props.location.query.north),
+	          south: parseFloat(this.props.location.query.south)
+	        };
+	        this.setState({ records: [], changeBounds: currentBounds });
+	      } else {
+	        this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20');
+	      }
+	    }
+
+	    return componentDidMount;
+	  }(),
+
+
+	  render: function () {
+	    function render() {
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'betterplace-explorer' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2['default'].createElement(_LocationInput2['default'], { changeLocation: this.changeLocation })
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2['default'].createElement(_Pagination2['default'], { currentPage: this.state.currentPage, totalPages: this.state.totalPages, changePage: this.changePage }),
+	          _react2['default'].createElement(_VolunteeringList2['default'], { records: this.state.records, totalEntries: this.state.totalEntries }),
+	          _react2['default'].createElement(_Map2['default'], { records: this.state.records, mapIdle: this.loadByBoundingBox, changeBounds: this.state.changeBounds })
+	        )
+	      );
+	    }
+
+	    return render;
+	  }(),
+
+	  assignApiResult: function () {
+	    function assignApiResult(json) {
+	      this.setState({
+	        records: json.data,
+	        currentPage: json.current_page,
+	        totalPages: json.total_pages,
+	        totalEntries: json.total_entries,
+	        changeBounds: null
+	      });
+	    }
+
+	    return assignApiResult;
+	  }(),
+
+	  changePage: function () {
+	    function changePage(page) {
+	      this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20&page=' + page);
+	    }
+
+	    return changePage;
+	  }(),
+
+	  updateURLBounds: function () {
+	    function updateURLBounds(bounds) {
+	      var newQuery = Object.assign({}, this.props.location.query, bounds);
+	      _reactRouter.browserHistory.push({ pathname: this.props.location.pathname, query: newQuery });
+	    }
+
+	    return updateURLBounds;
+	  }(),
+
+	  changeLocation: function () {
+	    function changeLocation(location, bounds) {
+	      // console.log(location)
+
+	      // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
+
+	      this.updateURLBounds(bounds);
+	      this.setState({ changeBounds: bounds });
+	    }
+
+	    return changeLocation;
+	  }(),
+
+	  load: function () {
+	    function load(url) {
+	      var _this = this;
+
+	      fetch(url).then(function (response) {
 	        return response.json();
 	      }).then(function (json) {
 	        return _this.assignApiResult(json);
@@ -95,71 +181,26 @@
 	        console.log(err);
 	      });
 	    }
-	  },
 
+	    return load;
+	  }(),
 
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'betterplace-explorer' },
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row' },
-	        _react2.default.createElement(_LocationInput2.default, { changeLocation: this.changeLocation })
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row' },
-	        _react2.default.createElement(_VolunteeringList2.default, { records: this.state.records, totalEntries: this.state.totalEntries }),
-	        _react2.default.createElement(_Map2.default, { records: this.state.records, mapIdle: this.loadByBoundingBox, bounds: this.state.bounds })
-	      )
-	    );
-	  },
+	  loadByBoundingBox: function () {
+	    function loadByBoundingBox(bounds) {
+	      bounds = bounds.toJSON();
+	      this.updateURLBounds(bounds);
+	      this.load('https://www.betterplace.org/de/api_v4/volunteering?nelat=' + bounds.north + '&nelng=' + bounds.east + '&swlat=' + bounds.south + '&swlng=' + bounds.west + '&per_page=20');
+	    }
 
-	  assignApiResult: function assignApiResult(json) {
-	    this.setState({
-	      records: json.data,
-	      currentPage: json.current_page,
-	      totalPages: json.total_pages,
-	      totalEntries: json.total_entries,
-	      bounds: null
-	    });
-	  },
-
-	  updateURLBounds: function updateURLBounds(bounds) {
-	    var newQuery = Object.assign({}, this.props.location.query, bounds);
-	    _reactRouter.browserHistory.push({ pathname: this.props.location.pathname, query: newQuery });
-	  },
-
-	  changeLocation: function changeLocation(location, bounds) {
-	    // console.log(location)
-
-	    // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
-
-	    this.updateURLBounds(bounds.toJSON());
-	    this.setState({ records: this.state.records, bounds: bounds.toJSON() });
-	  },
-
-	  loadByBoundingBox: function loadByBoundingBox(bounds) {
-	    var _this2 = this;
-
-	    bounds = bounds.toJSON();
-	    this.updateURLBounds(bounds);
-	    fetch('http://jop.betterplace.dev/de/api_v4/volunteering?nelat=' + bounds.north + '&nelng=' + bounds.east + '&swlat=' + bounds.south + '&swlng=' + bounds.west + '&per_page=20').then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      return _this2.assignApiResult(json);
-	    }).then(undefined, function (err) {
-	      console.log(err);
-	    });
-	  }
+	    return loadByBoundingBox;
+	  }()
 	});
 
-	_reactDom2.default.render(_react2.default.createElement(
+	_reactDom2['default'].render(_react2['default'].createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
-	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: Explorer }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/l/:location', component: Explorer })
+	  _react2['default'].createElement(_reactRouter.Route, { path: '/', component: Explorer }),
+	  _react2['default'].createElement(_reactRouter.Route, { path: '/l/:location', component: Explorer })
 	), document.getElementById('betterplace-explorer'));
 
 /***/ },
@@ -25960,37 +26001,41 @@
 
 	var _Volunteering2 = _interopRequireDefault(_Volunteering);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var VolunteeringList = _react2.default.createClass({
+	var VolunteeringList = _react2['default'].createClass({
 	  displayName: 'VolunteeringList',
 
-	  render: function render() {
-	    var volunteeringNodes = this.props.records.map(function (record) {
-	      return _react2.default.createElement(_Volunteering2.default, { record: record, key: record.id });
-	    });
+	  render: function () {
+	    function render() {
+	      var volunteeringNodes = this.props.records.map(function (record) {
+	        return _react2['default'].createElement(_Volunteering2['default'], { record: record, key: record.id });
+	      });
 
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'col-md-14' },
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        this.props.records.length,
-	        ' von ',
-	        this.props.totalEntries,
-	        ' Ehrenämter'
-	      ),
-	      _react2.default.createElement(
+	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'bpe--volunteering-list' },
-	        volunteeringNodes
-	      )
-	    );
-	  }
+	        { className: 'col-md-14' },
+	        _react2['default'].createElement(
+	          'h1',
+	          null,
+	          this.props.records.length,
+	          ' von ',
+	          this.props.totalEntries,
+	          ' Ehrenämter'
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'bpe--volunteering-list' },
+	          volunteeringNodes
+	        )
+	      );
+	    }
+
+	    return render;
+	  }()
 	});
 
-	exports.default = VolunteeringList;
+	exports['default'] = VolunteeringList;
 
 /***/ },
 /* 230 */
@@ -26006,52 +26051,60 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var Volunteering = _react2.default.createClass({
+	var Volunteering = _react2['default'].createClass({
 	  displayName: 'Volunteering',
 
-	  render: function render() {
-	    var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141");
-	    var carrier = this.props.record.carrier || {};
+	  render: function () {
+	    function render() {
+	      var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141");
+	      var carrier = this.props.record.carrier || {};
 
-	    return _react2.default.createElement(
-	      'a',
-	      { href: '#' },
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'bpe--volunteering media' },
-	        _react2.default.createElement('img', { className: 'bpe--volunteering--image', src: imageUrl, alt: '{this.props.record.title}' }),
-	        _react2.default.createElement(
+	      return _react2['default'].createElement(
+	        'a',
+	        { href: '#' },
+	        _react2['default'].createElement(
 	          'div',
-	          { className: 'bpe--volunteering--body' },
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'small',
-	              { className: 'text-muted' },
-	              carrier.name
+	          { className: 'bpe--volunteering media' },
+	          _react2['default'].createElement('img', { className: 'bpe--volunteering--image', src: imageUrl, alt: '{this.props.record.title}' }),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'bpe--volunteering--body' },
+	            _react2['default'].createElement(
+	              'p',
+	              null,
+	              _react2['default'].createElement(
+	                'small',
+	                { className: 'text-muted' },
+	                carrier.name
+	              )
+	            ),
+	            _react2['default'].createElement(
+	              'h4',
+	              { className: 'media-heading' },
+	              this.props.record.title
 	            )
-	          ),
-	          _react2.default.createElement(
-	            'h4',
-	            { className: 'media-heading' },
-	            this.props.record.title
 	          )
 	        )
-	      )
-	    );
-	  },
-
-	  findLink: function findLink(links, rel) {
-	    for (var i = 0; i < links.length; i++) {
-	      if (links[i].rel === rel) return links[i].href;
+	      );
 	    }
-	  }
+
+	    return render;
+	  }(),
+
+	  findLink: function () {
+	    function findLink(links, rel) {
+	      for (var i = 0; i < links.length; i++) {
+	        if (links[i].rel === rel) return links[i].href;
+	      }
+	    }
+
+	    return findLink;
+	  }()
 	});
 
-	exports.default = Volunteering;
+	exports['default'] = Volunteering;
 
 /***/ },
 /* 231 */
@@ -26069,106 +26122,84 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var Map = _react2.default.createClass({
+	var Map = _react2['default'].createClass({
 	  displayName: 'Map',
 
-	  render: function render() {
-	    var _this = this;
+	  render: function () {
+	    function render() {
+	      var _this = this;
 
-	    // console.log(this.props)
+	      console.log(this.props);
+	      // console.log(this.googlemap)
 
-	    // if(this.props.bounds)
-	    //   this.googlemap.fitBounds(this.props.bounds)
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'col-md-10' },
-	      _react2.default.createElement(
-	        'section',
-	        { style: { height: "800px", width: "100%" } },
-	        _react2.default.createElement(_reactGoogleMaps.GoogleMapLoader, {
-	          containerElement: _react2.default.createElement('div', { style: { height: "100%" } }),
-	          googleMapElement: _react2.default.createElement(
-	            _reactGoogleMaps.GoogleMap,
-	            {
-	              ref: function ref(map) {
-	                return _this.googlemap = map;
+	      // if(this.props.bounds)
+	      //   this.googlemap.fitBounds(this.props.bounds)
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'col-md-10' },
+	        _react2['default'].createElement(
+	          'section',
+	          { style: { height: "800px", width: "100%" } },
+	          _react2['default'].createElement(_reactGoogleMaps.GoogleMapLoader, {
+	            containerElement: _react2['default'].createElement('div', { style: { height: "100%" } }),
+	            googleMapElement: _react2['default'].createElement(
+	              _reactGoogleMaps.GoogleMap,
+	              {
+	                ref: function () {
+	                  function ref(map) {
+	                    return _this.googlemap = map;
+	                  }
+
+	                  return ref;
+	                }(),
+	                defaultZoom: 5,
+	                defaultCenter: { lat: 52.49928, lng: 13.44944 },
+	                onIdle: this.idle
 	              },
-	              defaultZoom: 5,
-	              defaultCenter: { lat: 52.49928, lng: 13.44944 },
-	              onIdle: this.idle
-	            },
-	            this.props.records.map(function (record, index) {
-	              return _react2.default.createElement(_reactGoogleMaps.Marker, { position: { lat: record.latitude, lng: record.longitude }, key: record.id });
-	            })
-	          )
-	        })
-	      )
-	    );
-	  },
+	              this.props.records.map(function (record, index) {
+	                return _react2['default'].createElement(_reactGoogleMaps.Marker, { position: { lat: record.latitude, lng: record.longitude }, key: record.id });
+	              })
+	            )
+	          })
+	        )
+	      );
+	    }
 
-	  componentDidUpdate: function componentDidUpdate(next, prev) {
-	    if (next.bounds) {
-	      this.googlemap.fitBounds(next.bounds);
+	    return render;
+	  }(),
 
-	      var GLOBE_WIDTH = 256; // a constant in Google's map projection
-	      var angle = next.bounds.east - next.bounds.west;
-	      if (angle < 0) {
-	        angle += 360;
+	  componentDidUpdate: function () {
+	    function componentDidUpdate(next, prev) {
+	      if (this.props.changeBounds) {
+	        this.googlemap.fitBounds(this.props.changeBounds);
+	        this.googlemap.props.map.setZoom(this.googlemap.getZoom() + 1);
 	      }
-	      var pixelWidth = 1;
-	      var zoom = Math.round(Math.log(pixelWidth * 360 / angle / GLOBE_WIDTH) / Math.LN2);
-
-	      // console.log(zoom)
-	      // console.log(this.getBoundsZoomLevel(next.bounds, {width: 546, height: 800}))
-	      // console.log(this.googlemap.getZoom())
-
-	      // this.getBoundsZoomLevel(next.bounds, {width: 546, height: 800})
-
-	      this.googlemap.props.map.setZoom(this.googlemap.getZoom() + 1);
-	    }
-	  },
-
-	  getBoundsZoomLevel: function getBoundsZoomLevel(bounds, mapDim) {
-	    var WORLD_DIM = { height: 256, width: 256 };
-	    var ZOOM_MAX = 21;
-
-	    function latRad(lat) {
-	      var sin = Math.sin(lat * Math.PI / 180);
-	      var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
-	      return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
 	    }
 
-	    function zoom(mapPx, worldPx, fraction) {
-	      return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+	    return componentDidUpdate;
+	  }(),
+
+	  resize: function () {
+	    function resize() {
+	      // $(ReactDOM.findDOMNode(this)).css 'height', $('html').height() - $(@container).offset().top
+	      // this.googlemap.event.trigger(@map, "resize")
 	    }
 
-	    var latFraction = (latRad(bounds.north) - latRad(bounds.south)) / Math.PI;
+	    return resize;
+	  }(),
 
-	    var lngDiff = bounds.east - bounds.south;
-	    var lngFraction = (lngDiff < 0 ? lngDiff + 360 : lngDiff) / 360;
+	  idle: function () {
+	    function idle() {
+	      this.props.mapIdle(this.googlemap.getBounds());
+	    }
 
-	    var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
-	    var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
-
-	    return Math.min(latZoom, lngZoom, ZOOM_MAX);
-	  },
-
-	  resize: function resize() {
-	    // $(ReactDOM.findDOMNode(this)).css 'height', $('html').height() - $(@container).offset().top
-	    // this.googlemap.event.trigger(@map, "resize")
-	  },
-
-	  idle: function idle() {
-	    // var ne = this.googlemap.getBounds().getNorthEast()
-	    // var sw = this.googlemap.getBounds().getSouthWest()
-	    // var bb = { nelat: ne.lat(), nelng: ne.lng(), swlat: sw.lat(), swlng: sw.lng() }
-	    this.props.mapIdle(this.googlemap.getBounds());
-	  }
+	    return idle;
+	  }()
 	});
 
-	exports.default = Map;
+	exports['default'] = Map;
 
 /***/ },
 /* 232 */
@@ -30390,57 +30421,197 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var LocationInput = _react2.default.createClass({
+	var LocationInput = _react2['default'].createClass({
 	  displayName: 'LocationInput',
 
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'row' },
-	      _react2.default.createElement(
+	  render: function () {
+	    function render() {
+	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'col-md-5' },
-	        _react2.default.createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input' }),
-	        _react2.default.createElement(
-	          'a',
-	          { className: 'bpe--location-input--reset', onClick: this.resetInput },
-	          '×'
+	        { className: 'row' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'col-md-5' },
+	          _react2['default'].createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input' }),
+	          _react2['default'].createElement(
+	            'a',
+	            { className: 'bpe--location-input--reset', onClick: this.resetInput },
+	            '×'
+	          )
 	        )
-	      )
-	    );
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    var input = _reactDom2.default.findDOMNode(this.refs.locationInput);
-	    input.focus();
-	    this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
-	    google.maps.event.addListener(this.searchBox, 'places_changed', this.changeBounds);
-	  },
-	  resetInput: function resetInput() {
-	    var input = _reactDom2.default.findDOMNode(this.refs.locationInput);
-	    input.value = '';
-	    input.focus();
-	  },
-	  changeBounds: function changeBounds() {
-	    var place = this.searchBox.getPlaces()[0];
-
-	    if (!place.geometry) return;
-
-	    if (place.geometry.viewport) {
-	      var value = _reactDom2.default.findDOMNode(this.refs.locationInput).value.replace(', ', '--');
-	      // this.props.changeBounds(place.geometry.viewport)
-	      this.props.changeLocation(value, place.geometry.viewport);
-	    } else {
-	      // non-boundary place, maybe a shop or a building. Do nothing yet.
-	      //   map.setCenter(place.geometry.location);
-	      //   map.setZoom(16);
+	      );
 	    }
-	  }
+
+	    return render;
+	  }(),
+
+	  componentDidMount: function () {
+	    function componentDidMount() {
+	      var input = _reactDom2['default'].findDOMNode(this.refs.locationInput);
+	      input.focus();
+	      this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
+	      google.maps.event.addListener(this.searchBox, 'places_changed', this.handlePlacesChanged);
+	    }
+
+	    return componentDidMount;
+	  }(),
+	  resetInput: function () {
+	    function resetInput() {
+	      var input = _reactDom2['default'].findDOMNode(this.refs.locationInput);
+	      input.value = '';
+	      input.focus();
+	    }
+
+	    return resetInput;
+	  }(),
+	  handlePlacesChanged: function () {
+	    function handlePlacesChanged() {
+	      var place = this.searchBox.getPlaces()[0];
+
+	      if (!place.geometry) return;
+
+	      if (place.geometry.viewport) {
+	        var value = _reactDom2['default'].findDOMNode(this.refs.locationInput).value.replace(', ', '--');
+	        this.props.changeLocation(value, place.geometry.viewport.toJSON());
+	      } else {
+	        // non-boundary place, maybe a shop or a building. Do nothing yet.
+	        //   map.setCenter(place.geometry.location);
+	        //   map.setZoom(16);
+	      }
+	    }
+
+	    return handlePlacesChanged;
+	  }()
 	});
 
-	exports.default = LocationInput;
+	exports['default'] = LocationInput;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var PrevButton = _react2["default"].createClass({
+	  displayName: "PrevButton",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage > 1) {
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "previous" },
+	          _react2["default"].createElement(
+	            "a",
+	            { href: "#", onClick: this.props.handleClick },
+	            _react2["default"].createElement(
+	              "span",
+	              { "aria-hidden": "true" },
+	              "←"
+	            ),
+	            " zurück"
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }()
+	});
+
+	var NextButton = _react2["default"].createClass({
+	  displayName: "NextButton",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage < this.props.totalPages) {
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "next" },
+	          _react2["default"].createElement(
+	            "a",
+	            { href: "#", onClick: this.props.handleClick },
+	            "weiter ",
+	            _react2["default"].createElement(
+	              "span",
+	              { "aria-hidden": "true" },
+	              "→"
+	            )
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }()
+	});
+
+	var Pagination = _react2["default"].createClass({
+	  displayName: "Pagination",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage) {
+	        return _react2["default"].createElement(
+	          "div",
+	          { className: "col-md-14" },
+	          _react2["default"].createElement(
+	            "nav",
+	            null,
+	            _react2["default"].createElement(
+	              "ul",
+	              { className: "pager" },
+	              _react2["default"].createElement(PrevButton, { currentPage: this.props.currentPage, handleClick: this.previousPage }),
+	              "Seite ",
+	              this.props.currentPage,
+	              " von ",
+	              this.props.totalPages,
+	              _react2["default"].createElement(NextButton, { currentPage: this.props.currentPage, totalPages: this.props.totalPages, handleClick: this.nextPage })
+	            )
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }(),
+
+	  previousPage: function () {
+	    function previousPage(event) {
+	      this.props.changePage(this.props.currentPage - 1);
+	    }
+
+	    return previousPage;
+	  }(),
+
+	  nextPage: function () {
+	    function nextPage(event) {
+	      this.props.changePage(this.props.currentPage + 1);
+	    }
+
+	    return nextPage;
+	  }()
+	});
+
+	exports["default"] = Pagination;
 
 /***/ }
 /******/ ]);

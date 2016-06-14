@@ -2,7 +2,7 @@ require('babel-register')();
 
 var jsdom = require('jsdom').jsdom;
 
-var exposedProperties = ['window', 'navigator', 'document'];
+var exposedProperties = ['window', 'navigator', 'document', 'google'];
 
 global.document = jsdom('');
 global.window = document.defaultView;

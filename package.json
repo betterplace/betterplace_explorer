@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "WEBPACK_ENV=dev ./node_modules/.bin/webpack --watch --inline --content-base . --history-api-fallback",
     "build": "WEBPACK_ENV=build ./node_modules/.bin/webpack",
-    "test": "mocha -w test/helpers/browser.js test/*.spec.js"
+    "test": "mocha -w test/helpers/browser.js test/helpers/stub_googlemaps.js test/*.spec.js"
   },
   "repository": {
     "type": "git",
