@@ -72,135 +72,99 @@
 
 	var _Pagination2 = _interopRequireDefault(_Pagination);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Explorer = _react2['default'].createClass({
+	var Explorer = _react2.default.createClass({
 	  displayName: 'Explorer',
-	  getInitialState: function () {
-	    function getInitialState() {
-	      return { records: [] };
+	  getInitialState: function getInitialState() {
+	    return { records: [] };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    if (this.props.location.query.east) {
+	      var currentBounds = {
+	        east: parseFloat(this.props.location.query.east),
+	        west: parseFloat(this.props.location.query.west),
+	        north: parseFloat(this.props.location.query.north),
+	        south: parseFloat(this.props.location.query.south)
+	      };
+	      this.setState({ records: [], changeBounds: currentBounds });
+	    } else {
+	      this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20');
 	    }
-
-	    return getInitialState;
-	  }(),
-	  componentDidMount: function () {
-	    function componentDidMount() {
-	      if (this.props.location.query.east) {
-	        var currentBounds = {
-	          east: parseFloat(this.props.location.query.east),
-	          west: parseFloat(this.props.location.query.west),
-	          north: parseFloat(this.props.location.query.north),
-	          south: parseFloat(this.props.location.query.south)
-	        };
-	        this.setState({ records: [], changeBounds: currentBounds });
-	      } else {
-	        this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20');
-	      }
-	    }
-
-	    return componentDidMount;
-	  }(),
+	  },
 
 
-	  render: function () {
-	    function render() {
-	      return _react2['default'].createElement(
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'betterplace-explorer' },
+	      _react2.default.createElement(
 	        'div',
-	        { className: 'betterplace-explorer' },
-	        _react2['default'].createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2['default'].createElement(_LocationInput2['default'], { changeLocation: this.changeLocation })
-	        ),
-	        _react2['default'].createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2['default'].createElement(_Pagination2['default'], { currentPage: this.state.currentPage, totalPages: this.state.totalPages, changePage: this.changePage }),
-	          _react2['default'].createElement(_VolunteeringList2['default'], { records: this.state.records, totalEntries: this.state.totalEntries }),
-	          _react2['default'].createElement(_Map2['default'], { records: this.state.records, mapIdle: this.loadByBoundingBox, changeBounds: this.state.changeBounds })
-	        )
-	      );
-	    }
+	        { className: 'row' },
+	        _react2.default.createElement(_LocationInput2.default, { changeLocation: this.changeLocation })
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row' },
+	        _react2.default.createElement(_Pagination2.default, { currentPage: this.state.currentPage, totalPages: this.state.totalPages, changePage: this.changePage }),
+	        _react2.default.createElement(_VolunteeringList2.default, { records: this.state.records, totalEntries: this.state.totalEntries }),
+	        _react2.default.createElement(_Map2.default, { records: this.state.records, mapIdle: this.loadByBoundingBox, changeBounds: this.state.changeBounds })
+	      )
+	    );
+	  },
 
-	    return render;
-	  }(),
+	  assignApiResult: function assignApiResult(json) {
+	    this.setState({
+	      records: json.data,
+	      currentPage: json.current_page,
+	      totalPages: json.total_pages,
+	      totalEntries: json.total_entries,
+	      changeBounds: null
+	    });
+	  },
 
-	  assignApiResult: function () {
-	    function assignApiResult(json) {
-	      this.setState({
-	        records: json.data,
-	        currentPage: json.current_page,
-	        totalPages: json.total_pages,
-	        totalEntries: json.total_entries,
-	        changeBounds: null
-	      });
-	    }
+	  changePage: function changePage(page) {
+	    this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20&page=' + page);
+	  },
 
-	    return assignApiResult;
-	  }(),
+	  updateURLBounds: function updateURLBounds(bounds) {
+	    var newQuery = Object.assign({}, this.props.location.query, bounds);
+	    _reactRouter.browserHistory.push({ pathname: this.props.location.pathname, query: newQuery });
+	  },
 
-	  changePage: function () {
-	    function changePage(page) {
-	      this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20&page=' + page);
-	    }
+	  changeLocation: function changeLocation(location, bounds) {
+	    // console.log(location)
 
-	    return changePage;
-	  }(),
+	    // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
 
-	  updateURLBounds: function () {
-	    function updateURLBounds(bounds) {
-	      var newQuery = Object.assign({}, this.props.location.query, bounds);
-	      _reactRouter.browserHistory.push({ pathname: this.props.location.pathname, query: newQuery });
-	    }
+	    this.updateURLBounds(bounds);
+	    this.setState({ changeBounds: bounds });
+	  },
 
-	    return updateURLBounds;
-	  }(),
+	  load: function load(url) {
+	    var _this = this;
 
-	  changeLocation: function () {
-	    function changeLocation(location, bounds) {
-	      // console.log(location)
+	    fetch(url).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return _this.assignApiResult(json);
+	    }).then(undefined, function (err) {
+	      console.log(err);
+	    });
+	  },
 
-	      // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
-
-	      this.updateURLBounds(bounds);
-	      this.setState({ changeBounds: bounds });
-	    }
-
-	    return changeLocation;
-	  }(),
-
-	  load: function () {
-	    function load(url) {
-	      var _this = this;
-
-	      fetch(url).then(function (response) {
-	        return response.json();
-	      }).then(function (json) {
-	        return _this.assignApiResult(json);
-	      }).then(undefined, function (err) {
-	        console.log(err);
-	      });
-	    }
-
-	    return load;
-	  }(),
-
-	  loadByBoundingBox: function () {
-	    function loadByBoundingBox(bounds) {
-	      bounds = bounds.toJSON();
-	      this.updateURLBounds(bounds);
-	      this.load('https://www.betterplace.org/de/api_v4/volunteering?nelat=' + bounds.north + '&nelng=' + bounds.east + '&swlat=' + bounds.south + '&swlng=' + bounds.west + '&per_page=20');
-	    }
-
-	    return loadByBoundingBox;
-	  }()
+	  loadByBoundingBox: function loadByBoundingBox(bounds) {
+	    bounds = bounds.toJSON();
+	    this.updateURLBounds(bounds);
+	    this.load('https://www.betterplace.org/de/api_v4/volunteering?nelat=' + bounds.north + '&nelng=' + bounds.east + '&swlat=' + bounds.south + '&swlng=' + bounds.west + '&per_page=20');
+	  }
 	});
 
-	_reactDom2['default'].render(_react2['default'].createElement(
+	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
-	  _react2['default'].createElement(_reactRouter.Route, { path: '/', component: Explorer }),
-	  _react2['default'].createElement(_reactRouter.Route, { path: '/l/:location', component: Explorer })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: Explorer }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/l/:location', component: Explorer })
 	), document.getElementById('betterplace-explorer'));
 
 /***/ },
@@ -312,6 +276,31 @@
 	// shim for using process in browser
 
 	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	(function () {
+	  try {
+	    cachedSetTimeout = setTimeout;
+	  } catch (e) {
+	    cachedSetTimeout = function () {
+	      throw new Error('setTimeout is not defined');
+	    }
+	  }
+	  try {
+	    cachedClearTimeout = clearTimeout;
+	  } catch (e) {
+	    cachedClearTimeout = function () {
+	      throw new Error('clearTimeout is not defined');
+	    }
+	  }
+	} ())
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -336,7 +325,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = setTimeout(cleanUpNextTick);
+	    var timeout = cachedSetTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -353,7 +342,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    clearTimeout(timeout);
+	    cachedClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -365,7 +354,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
+	        cachedSetTimeout(drainQueue, 0);
 	    }
 	};
 
@@ -1253,7 +1242,7 @@
 	var warning = emptyFunction;
 
 	if (process.env.NODE_ENV !== 'production') {
-	  warning = function (condition, format) {
+	  warning = function warning(condition, format) {
 	    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
 	      args[_key - 2] = arguments[_key];
 	    }
@@ -1301,6 +1290,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
+	 * 
 	 */
 
 	function makeEmptyFunction(arg) {
@@ -1314,7 +1304,7 @@
 	 * primarily useful idiomatically for overridable function endpoints which
 	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
 	 */
-	function emptyFunction() {}
+	var emptyFunction = function emptyFunction() {};
 
 	emptyFunction.thatReturns = makeEmptyFunction;
 	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
@@ -2203,11 +2193,11 @@
 	 * because of Facebook's testing infrastructure.
 	 */
 	if (performance.now) {
-	  performanceNow = function () {
+	  performanceNow = function performanceNow() {
 	    return performance.now();
 	  };
 	} else {
-	  performanceNow = function () {
+	  performanceNow = function performanceNow() {
 	    return Date.now();
 	  };
 	}
@@ -3295,7 +3285,7 @@
 	 * @param {object} obj
 	 * @return {object}
 	 */
-	var keyMirror = function (obj) {
+	var keyMirror = function keyMirror(obj) {
 	  var ret = {};
 	  var key;
 	  !(obj instanceof Object && !Array.isArray(obj)) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'keyMirror(...): Argument must be an object.') : invariant(false) : void 0;
@@ -3367,7 +3357,7 @@
 	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
 	 * reuse those resolutions.
 	 */
-	var keyOf = function (oneKeyObj) {
+	var keyOf = function keyOf(oneKeyObj) {
 	  var key;
 	  for (key in oneKeyObj) {
 	    if (!oneKeyObj.hasOwnProperty(key)) {
@@ -8501,11 +8491,11 @@
 	    arity: true
 	};
 
-	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent) {
+	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
 	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
 	        var keys = Object.getOwnPropertyNames(sourceComponent);
-	        for (var i=0; i<keys.length; ++i) {
-	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]]) {
+	        for (var i = 0; i < keys.length; ++i) {
+	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
 	                try {
 	                    targetComponent[keys[i]] = sourceComponent[keys[i]];
 	                } catch (error) {
@@ -9680,7 +9670,11 @@
 	  var useRefresh = !isSupported || forceRefresh;
 
 	  function getCurrentLocation(historyState) {
-	    historyState = historyState || window.history.state || {};
+	    try {
+	      historyState = historyState || window.history.state || {};
+	    } catch (e) {
+	      historyState = {};
+	    }
 
 	    var path = _DOMUtils.getWindowPath();
 	    var _historyState = historyState;
@@ -17364,6 +17358,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
+	 * 
 	 * @typechecks static-only
 	 */
 
@@ -17371,9 +17366,6 @@
 
 	/**
 	 * Memoizes the return value of a function that accepts one string argument.
-	 *
-	 * @param {function} callback
-	 * @return {function}
 	 */
 
 	function memoizeStringOnly(callback) {
@@ -22618,18 +22610,18 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  listen: function (target, eventType, callback) {
+	  listen: function listen(target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, false);
 	      return {
-	        remove: function () {
+	        remove: function remove() {
 	          target.removeEventListener(eventType, callback, false);
 	        }
 	      };
 	    } else if (target.attachEvent) {
 	      target.attachEvent('on' + eventType, callback);
 	      return {
-	        remove: function () {
+	        remove: function remove() {
 	          target.detachEvent('on' + eventType, callback);
 	        }
 	      };
@@ -22644,11 +22636,11 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  capture: function (target, eventType, callback) {
+	  capture: function capture(target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, true);
 	      return {
-	        remove: function () {
+	        remove: function remove() {
 	          target.removeEventListener(eventType, callback, true);
 	        }
 	      };
@@ -22662,7 +22654,7 @@
 	    }
 	  },
 
-	  registerDefault: function () {}
+	  registerDefault: function registerDefault() {}
 	};
 
 	module.exports = EventListener;
@@ -23358,7 +23350,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @typechecks
+	 * 
 	 */
 
 	var isTextNode = __webpack_require__(205);
@@ -23367,10 +23359,6 @@
 
 	/**
 	 * Checks if a given DOM node contains or is another DOM node.
-	 *
-	 * @param {?DOMNode} outerNode Outer DOM node.
-	 * @param {?DOMNode} innerNode Inner DOM node.
-	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
 	 */
 	function containsNode(outerNode, innerNode) {
 	  if (!outerNode || !innerNode) {
@@ -23381,7 +23369,7 @@
 	    return false;
 	  } else if (isTextNode(innerNode)) {
 	    return containsNode(outerNode, innerNode.parentNode);
-	  } else if (outerNode.contains) {
+	  } else if ('contains' in outerNode) {
 	    return outerNode.contains(innerNode);
 	  } else if (outerNode.compareDocumentPosition) {
 	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
@@ -26001,41 +25989,37 @@
 
 	var _Volunteering2 = _interopRequireDefault(_Volunteering);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var VolunteeringList = _react2['default'].createClass({
+	var VolunteeringList = _react2.default.createClass({
 	  displayName: 'VolunteeringList',
 
-	  render: function () {
-	    function render() {
-	      var volunteeringNodes = this.props.records.map(function (record) {
-	        return _react2['default'].createElement(_Volunteering2['default'], { record: record, key: record.id });
-	      });
+	  render: function render() {
+	    var volunteeringNodes = this.props.records.map(function (record) {
+	      return _react2.default.createElement(_Volunteering2.default, { record: record, key: record.id });
+	    });
 
-	      return _react2['default'].createElement(
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'col-md-14' },
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        this.props.records.length,
+	        ' von ',
+	        this.props.totalEntries,
+	        ' Ehrenämter'
+	      ),
+	      _react2.default.createElement(
 	        'div',
-	        { className: 'col-md-14' },
-	        _react2['default'].createElement(
-	          'h1',
-	          null,
-	          this.props.records.length,
-	          ' von ',
-	          this.props.totalEntries,
-	          ' Ehrenämter'
-	        ),
-	        _react2['default'].createElement(
-	          'div',
-	          { className: 'bpe--volunteering-list' },
-	          volunteeringNodes
-	        )
-	      );
-	    }
-
-	    return render;
-	  }()
+	        { className: 'bpe--volunteering-list' },
+	        volunteeringNodes
+	      )
+	    );
+	  }
 	});
 
-	exports['default'] = VolunteeringList;
+	exports.default = VolunteeringList;
 
 /***/ },
 /* 230 */
@@ -26051,60 +26035,52 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Volunteering = _react2['default'].createClass({
+	var Volunteering = _react2.default.createClass({
 	  displayName: 'Volunteering',
 
-	  render: function () {
-	    function render() {
-	      var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141");
-	      var carrier = this.props.record.carrier || {};
+	  render: function render() {
+	    var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141");
+	    var carrier = this.props.record.carrier || {};
 
-	      return _react2['default'].createElement(
-	        'a',
-	        { href: '#' },
-	        _react2['default'].createElement(
+	    return _react2.default.createElement(
+	      'a',
+	      { href: '#' },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'bpe--volunteering media' },
+	        _react2.default.createElement('img', { className: 'bpe--volunteering--image', src: imageUrl, alt: '{this.props.record.title}' }),
+	        _react2.default.createElement(
 	          'div',
-	          { className: 'bpe--volunteering media' },
-	          _react2['default'].createElement('img', { className: 'bpe--volunteering--image', src: imageUrl, alt: '{this.props.record.title}' }),
-	          _react2['default'].createElement(
-	            'div',
-	            { className: 'bpe--volunteering--body' },
-	            _react2['default'].createElement(
-	              'p',
-	              null,
-	              _react2['default'].createElement(
-	                'small',
-	                { className: 'text-muted' },
-	                carrier.name
-	              )
-	            ),
-	            _react2['default'].createElement(
-	              'h4',
-	              { className: 'media-heading' },
-	              this.props.record.title
+	          { className: 'bpe--volunteering--body' },
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            _react2.default.createElement(
+	              'small',
+	              { className: 'text-muted' },
+	              carrier.name
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'h4',
+	            { className: 'media-heading' },
+	            this.props.record.title
 	          )
 	        )
-	      );
+	      )
+	    );
+	  },
+
+	  findLink: function findLink(links, rel) {
+	    for (var i = 0; i < links.length; i++) {
+	      if (links[i].rel === rel) return links[i].href;
 	    }
-
-	    return render;
-	  }(),
-
-	  findLink: function () {
-	    function findLink(links, rel) {
-	      for (var i = 0; i < links.length; i++) {
-	        if (links[i].rel === rel) return links[i].href;
-	      }
-	    }
-
-	    return findLink;
-	  }()
+	  }
 	});
 
-	exports['default'] = Volunteering;
+	exports.default = Volunteering;
 
 /***/ },
 /* 231 */
@@ -26122,84 +26098,64 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Map = _react2['default'].createClass({
+	var Map = _react2.default.createClass({
 	  displayName: 'Map',
 
-	  render: function () {
-	    function render() {
-	      var _this = this;
+	  render: function render() {
+	    var _this = this;
 
-	      console.log(this.props);
-	      // console.log(this.googlemap)
+	    console.log(this.props);
+	    // console.log(this.googlemap)
 
-	      // if(this.props.bounds)
-	      //   this.googlemap.fitBounds(this.props.bounds)
-	      return _react2['default'].createElement(
-	        'div',
-	        { className: 'col-md-10' },
-	        _react2['default'].createElement(
-	          'section',
-	          { style: { height: "800px", width: "100%" } },
-	          _react2['default'].createElement(_reactGoogleMaps.GoogleMapLoader, {
-	            containerElement: _react2['default'].createElement('div', { style: { height: "100%" } }),
-	            googleMapElement: _react2['default'].createElement(
-	              _reactGoogleMaps.GoogleMap,
-	              {
-	                ref: function () {
-	                  function ref(map) {
-	                    return _this.googlemap = map;
-	                  }
-
-	                  return ref;
-	                }(),
-	                defaultZoom: 5,
-	                defaultCenter: { lat: 52.49928, lng: 13.44944 },
-	                onIdle: this.idle
+	    // if(this.props.bounds)
+	    //   this.googlemap.fitBounds(this.props.bounds)
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'col-md-10' },
+	      _react2.default.createElement(
+	        'section',
+	        { style: { height: "800px", width: "100%" } },
+	        _react2.default.createElement(_reactGoogleMaps.GoogleMapLoader, {
+	          containerElement: _react2.default.createElement('div', { style: { height: "100%" } }),
+	          googleMapElement: _react2.default.createElement(
+	            _reactGoogleMaps.GoogleMap,
+	            {
+	              ref: function ref(map) {
+	                return _this.googlemap = map;
 	              },
-	              this.props.records.map(function (record, index) {
-	                return _react2['default'].createElement(_reactGoogleMaps.Marker, { position: { lat: record.latitude, lng: record.longitude }, key: record.id });
-	              })
-	            )
-	          })
-	        )
-	      );
+	              defaultZoom: 5,
+	              defaultCenter: { lat: 52.49928, lng: 13.44944 },
+	              onIdle: this.idle
+	            },
+	            this.props.records.map(function (record, index) {
+	              return _react2.default.createElement(_reactGoogleMaps.Marker, { position: { lat: record.latitude, lng: record.longitude }, key: record.id });
+	            })
+	          )
+	        })
+	      )
+	    );
+	  },
+
+	  componentDidUpdate: function componentDidUpdate(next, prev) {
+	    if (this.props.changeBounds) {
+	      this.googlemap.fitBounds(this.props.changeBounds);
+	      this.googlemap.props.map.setZoom(this.googlemap.getZoom() + 1);
 	    }
+	  },
 
-	    return render;
-	  }(),
+	  resize: function resize() {
+	    // $(ReactDOM.findDOMNode(this)).css 'height', $('html').height() - $(@container).offset().top
+	    // this.googlemap.event.trigger(@map, "resize")
+	  },
 
-	  componentDidUpdate: function () {
-	    function componentDidUpdate(next, prev) {
-	      if (this.props.changeBounds) {
-	        this.googlemap.fitBounds(this.props.changeBounds);
-	        this.googlemap.props.map.setZoom(this.googlemap.getZoom() + 1);
-	      }
-	    }
-
-	    return componentDidUpdate;
-	  }(),
-
-	  resize: function () {
-	    function resize() {
-	      // $(ReactDOM.findDOMNode(this)).css 'height', $('html').height() - $(@container).offset().top
-	      // this.googlemap.event.trigger(@map, "resize")
-	    }
-
-	    return resize;
-	  }(),
-
-	  idle: function () {
-	    function idle() {
-	      this.props.mapIdle(this.googlemap.getBounds());
-	    }
-
-	    return idle;
-	  }()
+	  idle: function idle() {
+	    this.props.mapIdle(this.googlemap.getBounds());
+	  }
 	});
 
-	exports['default'] = Map;
+	exports.default = Map;
 
 /***/ },
 /* 232 */
@@ -26313,7 +26269,7 @@
 	  _createClass(GoogleMapLoader, [{
 	    key: "mountGoogleMap",
 	    value: function mountGoogleMap(domEl) {
-	      if (this.state.map) {
+	      if (this.state.map || domEl === null) {
 	        return;
 	      }
 	      var _props$googleMapElement$props = this.props.googleMapElement.props;
@@ -29238,6 +29194,21 @@
 	        }
 	      };
 
+	      // If we're inside a MarkerClusterer, allow ourselves to be clustered
+	      if (overlayViewProps.anchorHolderRef) {
+	        if ("MarkerClusterer" === overlayViewProps.anchorHolderRef.getAnchorType()) {
+	          overlayView.getDraggable = function getDraggable() {
+	            return !!overlayViewProps.draggable;
+	          };
+
+	          overlayView.getPosition = function getPosition() {
+	            return new google.maps.LatLng(this.position);
+	          };
+
+	          overlayViewProps.anchorHolderRef.getAnchor().addMarker(overlayView);
+	        }
+	      }
+
 	      return overlayView;
 	    }
 	  }, {
@@ -30421,72 +30392,64 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var LocationInput = _react2['default'].createClass({
+	var LocationInput = _react2.default.createClass({
 	  displayName: 'LocationInput',
 
-	  render: function () {
-	    function render() {
-	      return _react2['default'].createElement(
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'row' },
+	      _react2.default.createElement(
 	        'div',
-	        { className: 'row' },
-	        _react2['default'].createElement(
-	          'div',
-	          { className: 'col-md-5' },
-	          _react2['default'].createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input' }),
-	          _react2['default'].createElement(
-	            'a',
-	            { className: 'bpe--location-input--reset', onClick: this.resetInput },
-	            '×'
-	          )
+	        { className: 'col-md-5' },
+	        _react2.default.createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input', value: this.props.value }),
+	        _react2.default.createElement(
+	          'a',
+	          { className: 'bpe--location-input--reset', onClick: this.resetInput },
+	          '×'
 	        )
-	      );
+	      )
+	    );
+	  },
+
+	  getInput: function getInput() {
+	    return _reactDom2.default.findDOMNode(this.refs.locationInput);
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var input = this.getInput();
+	    input.focus();
+	    this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
+	    google.maps.event.addListener(this.searchBox, 'places_changed', this.handlePlacesChanged);
+	  },
+	  resetInput: function resetInput() {
+	    var input = this.getInput();
+	    input.value = '';
+	    input.focus();
+	  },
+	  getGeometry: function getGeometry() {
+	    return this.searchBox.getPlaces()[0].geometry;
+	  },
+	  handlePlacesChanged: function handlePlacesChanged() {
+	    var geometry = this.getGeometry();
+
+	    if (!geometry) return false;
+
+	    var value = this.getInput().value.replace(', ', '--');
+
+	    if (geometry.viewport) {
+	      this.props.changeLocation(value, geometry.viewport.toJSON());
+	    } else {
+	      var lat = geometry.location.lat(),
+	          lng = geometry.location.lng(),
+	          rim = 0.05;
+	      this.props.changeLocation(value, { north: lat - rim, east: lng + rim, south: lat + rim, west: lng - rim });
 	    }
-
-	    return render;
-	  }(),
-
-	  componentDidMount: function () {
-	    function componentDidMount() {
-	      var input = _reactDom2['default'].findDOMNode(this.refs.locationInput);
-	      input.focus();
-	      this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
-	      google.maps.event.addListener(this.searchBox, 'places_changed', this.handlePlacesChanged);
-	    }
-
-	    return componentDidMount;
-	  }(),
-	  resetInput: function () {
-	    function resetInput() {
-	      var input = _reactDom2['default'].findDOMNode(this.refs.locationInput);
-	      input.value = '';
-	      input.focus();
-	    }
-
-	    return resetInput;
-	  }(),
-	  handlePlacesChanged: function () {
-	    function handlePlacesChanged() {
-	      var place = this.searchBox.getPlaces()[0];
-
-	      if (!place.geometry) return;
-
-	      if (place.geometry.viewport) {
-	        var value = _reactDom2['default'].findDOMNode(this.refs.locationInput).value.replace(', ', '--');
-	        this.props.changeLocation(value, place.geometry.viewport.toJSON());
-	      } else {
-	        // non-boundary place, maybe a shop or a building. Do nothing yet.
-	        //   map.setCenter(place.geometry.location);
-	        //   map.setZoom(16);
-	      }
-	    }
-
-	    return handlePlacesChanged;
-	  }()
+	  }
 	});
 
-	exports['default'] = LocationInput;
+	exports.default = LocationInput;
 
 /***/ },
 /* 278 */
@@ -30502,116 +30465,96 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var PrevButton = _react2["default"].createClass({
+	var PrevButton = _react2.default.createClass({
 	  displayName: "PrevButton",
 
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage > 1) {
-	        return _react2["default"].createElement(
-	          "li",
-	          { className: "previous" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "←"
-	            ),
-	            " zurück"
-	          )
-	        );
-	      } else {
-	        return null;
-	      }
+	  render: function render() {
+	    if (this.props.currentPage > 1) {
+	      return _react2.default.createElement(
+	        "li",
+	        { className: "previous" },
+	        _react2.default.createElement(
+	          "a",
+	          { href: "#", onClick: this.props.handleClick },
+	          _react2.default.createElement(
+	            "span",
+	            { "aria-hidden": "true" },
+	            "←"
+	          ),
+	          " zurück"
+	        )
+	      );
+	    } else {
+	      return null;
 	    }
-
-	    return render;
-	  }()
+	  }
 	});
 
-	var NextButton = _react2["default"].createClass({
+	var NextButton = _react2.default.createClass({
 	  displayName: "NextButton",
 
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage < this.props.totalPages) {
-	        return _react2["default"].createElement(
-	          "li",
-	          { className: "next" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            "weiter ",
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "→"
-	            )
+	  render: function render() {
+	    if (this.props.currentPage < this.props.totalPages) {
+	      return _react2.default.createElement(
+	        "li",
+	        { className: "next" },
+	        _react2.default.createElement(
+	          "a",
+	          { href: "#", onClick: this.props.handleClick },
+	          "weiter ",
+	          _react2.default.createElement(
+	            "span",
+	            { "aria-hidden": "true" },
+	            "→"
 	          )
-	        );
-	      } else {
-	        return null;
-	      }
+	        )
+	      );
+	    } else {
+	      return null;
 	    }
-
-	    return render;
-	  }()
+	  }
 	});
 
-	var Pagination = _react2["default"].createClass({
+	var Pagination = _react2.default.createClass({
 	  displayName: "Pagination",
 
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage) {
-	        return _react2["default"].createElement(
-	          "div",
-	          { className: "col-md-14" },
-	          _react2["default"].createElement(
-	            "nav",
-	            null,
-	            _react2["default"].createElement(
-	              "ul",
-	              { className: "pager" },
-	              _react2["default"].createElement(PrevButton, { currentPage: this.props.currentPage, handleClick: this.previousPage }),
-	              "Seite ",
-	              this.props.currentPage,
-	              " von ",
-	              this.props.totalPages,
-	              _react2["default"].createElement(NextButton, { currentPage: this.props.currentPage, totalPages: this.props.totalPages, handleClick: this.nextPage })
-	            )
+	  render: function render() {
+	    if (this.props.currentPage) {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "col-md-14" },
+	        _react2.default.createElement(
+	          "nav",
+	          null,
+	          _react2.default.createElement(
+	            "ul",
+	            { className: "pager" },
+	            _react2.default.createElement(PrevButton, { currentPage: this.props.currentPage, handleClick: this.previousPage }),
+	            "Seite ",
+	            this.props.currentPage,
+	            " von ",
+	            this.props.totalPages,
+	            _react2.default.createElement(NextButton, { currentPage: this.props.currentPage, totalPages: this.props.totalPages, handleClick: this.nextPage })
 	          )
-	        );
-	      } else {
-	        return null;
-	      }
+	        )
+	      );
+	    } else {
+	      return null;
 	    }
+	  },
 
-	    return render;
-	  }(),
+	  previousPage: function previousPage(event) {
+	    this.props.changePage(this.props.currentPage - 1);
+	  },
 
-	  previousPage: function () {
-	    function previousPage(event) {
-	      this.props.changePage(this.props.currentPage - 1);
-	    }
-
-	    return previousPage;
-	  }(),
-
-	  nextPage: function () {
-	    function nextPage(event) {
-	      this.props.changePage(this.props.currentPage + 1);
-	    }
-
-	    return nextPage;
-	  }()
+	  nextPage: function nextPage(event) {
+	    this.props.changePage(this.props.currentPage + 1);
+	  }
 	});
 
-	exports["default"] = Pagination;
+	exports.default = Pagination;
 
 /***/ }
 /******/ ]);
