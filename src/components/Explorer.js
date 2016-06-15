@@ -34,8 +34,8 @@ var Explorer = React.createClass({
         </div>
         <div className="row">
           <Pagination currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
-          <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} />
-          <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} />
+          <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} setHighlightRecord={this.setHighlightRecord} />
+          <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} highlightRecord={this.state.highlightRecord} />
         </div>
       </div>
     )
@@ -80,6 +80,10 @@ var Explorer = React.createClass({
     bounds = bounds.toJSON()
     this.updateURLBounds(bounds)
     this.load('https://www.betterplace.org/de/api_v4/volunteering?nelat='+bounds.north+'&nelng='+bounds.east+'&swlat='+bounds.south+'&swlng='+bounds.west+'&per_page=20')
+  },
+
+  setHighlightRecord: function(record) {
+    this.setState({ highlightRecord: record })
   }
 });
 

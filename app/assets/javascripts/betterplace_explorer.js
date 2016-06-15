@@ -116,8 +116,8 @@
 	          'div',
 	          { className: 'row' },
 	          _react2['default'].createElement(_Pagination2['default'], { currentPage: this.state.currentPage, totalPages: this.state.totalPages, changePage: this.changePage }),
-	          _react2['default'].createElement(_VolunteeringList2['default'], { records: this.state.records, totalEntries: this.state.totalEntries }),
-	          _react2['default'].createElement(_Map2['default'], { records: this.state.records, mapIdle: this.loadByBoundingBox, changeBounds: this.state.changeBounds })
+	          _react2['default'].createElement(_VolunteeringList2['default'], { records: this.state.records, totalEntries: this.state.totalEntries, setHighlightRecord: this.setHighlightRecord }),
+	          _react2['default'].createElement(_Map2['default'], { records: this.state.records, mapIdle: this.loadByBoundingBox, changeBounds: this.state.changeBounds, highlightRecord: this.state.highlightRecord })
 	        )
 	      );
 	    }
@@ -193,6 +193,14 @@
 	    }
 
 	    return loadByBoundingBox;
+	  }(),
+
+	  setHighlightRecord: function () {
+	    function setHighlightRecord(record) {
+	      this.setState({ highlightRecord: record });
+	    }
+
+	    return setHighlightRecord;
 	  }()
 	});
 
@@ -313,31 +321,6 @@
 	// shim for using process in browser
 
 	var process = module.exports = {};
-
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-
-	var cachedSetTimeout;
-	var cachedClearTimeout;
-
-	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
-	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
-	    }
-	  }
-	} ())
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -362,7 +345,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = setTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -379,7 +362,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    clearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -391,7 +374,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        setTimeout(drainQueue, 0);
 	    }
 	};
 
@@ -1279,7 +1262,7 @@
 	var warning = emptyFunction;
 
 	if (process.env.NODE_ENV !== 'production') {
-	  warning = function warning(condition, format) {
+	  warning = function (condition, format) {
 	    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
 	      args[_key - 2] = arguments[_key];
 	    }
@@ -1327,7 +1310,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * 
 	 */
 
 	function makeEmptyFunction(arg) {
@@ -1341,7 +1323,7 @@
 	 * primarily useful idiomatically for overridable function endpoints which
 	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
 	 */
-	var emptyFunction = function emptyFunction() {};
+	function emptyFunction() {}
 
 	emptyFunction.thatReturns = makeEmptyFunction;
 	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
@@ -2230,11 +2212,11 @@
 	 * because of Facebook's testing infrastructure.
 	 */
 	if (performance.now) {
-	  performanceNow = function performanceNow() {
+	  performanceNow = function () {
 	    return performance.now();
 	  };
 	} else {
-	  performanceNow = function performanceNow() {
+	  performanceNow = function () {
 	    return Date.now();
 	  };
 	}
@@ -3322,7 +3304,7 @@
 	 * @param {object} obj
 	 * @return {object}
 	 */
-	var keyMirror = function keyMirror(obj) {
+	var keyMirror = function (obj) {
 	  var ret = {};
 	  var key;
 	  !(obj instanceof Object && !Array.isArray(obj)) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'keyMirror(...): Argument must be an object.') : invariant(false) : void 0;
@@ -3394,7 +3376,7 @@
 	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
 	 * reuse those resolutions.
 	 */
-	var keyOf = function keyOf(oneKeyObj) {
+	var keyOf = function (oneKeyObj) {
 	  var key;
 	  for (key in oneKeyObj) {
 	    if (!oneKeyObj.hasOwnProperty(key)) {
@@ -8528,11 +8510,11 @@
 	    arity: true
 	};
 
-	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
+	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent) {
 	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
 	        var keys = Object.getOwnPropertyNames(sourceComponent);
-	        for (var i = 0; i < keys.length; ++i) {
-	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
+	        for (var i=0; i<keys.length; ++i) {
+	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]]) {
 	                try {
 	                    targetComponent[keys[i]] = sourceComponent[keys[i]];
 	                } catch (error) {
@@ -9707,11 +9689,7 @@
 	  var useRefresh = !isSupported || forceRefresh;
 
 	  function getCurrentLocation(historyState) {
-	    try {
-	      historyState = historyState || window.history.state || {};
-	    } catch (e) {
-	      historyState = {};
-	    }
+	    historyState = historyState || window.history.state || {};
 
 	    var path = _DOMUtils.getWindowPath();
 	    var _historyState = historyState;
@@ -17395,7 +17373,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * 
 	 * @typechecks static-only
 	 */
 
@@ -17403,6 +17380,9 @@
 
 	/**
 	 * Memoizes the return value of a function that accepts one string argument.
+	 *
+	 * @param {function} callback
+	 * @return {function}
 	 */
 
 	function memoizeStringOnly(callback) {
@@ -22647,18 +22627,18 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  listen: function listen(target, eventType, callback) {
+	  listen: function (target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, false);
 	      return {
-	        remove: function remove() {
+	        remove: function () {
 	          target.removeEventListener(eventType, callback, false);
 	        }
 	      };
 	    } else if (target.attachEvent) {
 	      target.attachEvent('on' + eventType, callback);
 	      return {
-	        remove: function remove() {
+	        remove: function () {
 	          target.detachEvent('on' + eventType, callback);
 	        }
 	      };
@@ -22673,11 +22653,11 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  capture: function capture(target, eventType, callback) {
+	  capture: function (target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, true);
 	      return {
-	        remove: function remove() {
+	        remove: function () {
 	          target.removeEventListener(eventType, callback, true);
 	        }
 	      };
@@ -22691,7 +22671,7 @@
 	    }
 	  },
 
-	  registerDefault: function registerDefault() {}
+	  registerDefault: function () {}
 	};
 
 	module.exports = EventListener;
@@ -23387,7 +23367,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * 
+	 * @typechecks
 	 */
 
 	var isTextNode = __webpack_require__(205);
@@ -23396,6 +23376,10 @@
 
 	/**
 	 * Checks if a given DOM node contains or is another DOM node.
+	 *
+	 * @param {?DOMNode} outerNode Outer DOM node.
+	 * @param {?DOMNode} innerNode Inner DOM node.
+	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
 	 */
 	function containsNode(outerNode, innerNode) {
 	  if (!outerNode || !innerNode) {
@@ -23406,7 +23390,7 @@
 	    return false;
 	  } else if (isTextNode(innerNode)) {
 	    return containsNode(outerNode, innerNode.parentNode);
-	  } else if ('contains' in outerNode) {
+	  } else if (outerNode.contains) {
 	    return outerNode.contains(innerNode);
 	  } else if (outerNode.compareDocumentPosition) {
 	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
@@ -26033,8 +26017,10 @@
 
 	  render: function () {
 	    function render() {
+	      var _this = this;
+
 	      var volunteeringNodes = this.props.records.map(function (record) {
-	        return _react2['default'].createElement(_Volunteering2['default'], { record: record, key: record.id });
+	        return _react2['default'].createElement(_Volunteering2['default'], { record: record, key: record.id, setHighlightRecord: _this.props.setHighlightRecord });
 	      });
 
 	      return _react2['default'].createElement(
@@ -26088,7 +26074,7 @@
 
 	      return _react2['default'].createElement(
 	        'a',
-	        { href: '#' },
+	        { href: '#', onMouseEnter: this.handleMouseEnter, onMouseLeave: this.handleMouseLeave },
 	        _react2['default'].createElement(
 	          'div',
 	          { className: 'bpe--volunteering media' },
@@ -26126,6 +26112,22 @@
 	    }
 
 	    return findLink;
+	  }(),
+
+	  handleMouseEnter: function () {
+	    function handleMouseEnter() {
+	      this.props.setHighlightRecord(this.props.record);
+	    }
+
+	    return handleMouseEnter;
+	  }(),
+
+	  handleMouseLeave: function () {
+	    function handleMouseLeave() {
+	      this.props.setHighlightRecord(null);
+	    }
+
+	    return handleMouseLeave;
 	  }()
 	});
 
@@ -26156,6 +26158,29 @@
 	    function render() {
 	      var _this = this;
 
+	      var image = {
+	        url: 'images/explorer-pin-normal.png',
+	        size: new google.maps.Size(32, 32),
+	        origin: new google.maps.Point(0, 0),
+	        anchor: new google.maps.Point(16, 16)
+	      };
+
+	      var highlightImage = {
+	        url: 'images/explorer-pin-mouseover.png',
+	        size: new google.maps.Size(32, 32),
+	        origin: new google.maps.Point(0, 0),
+	        anchor: new google.maps.Point(16, 16)
+	      };
+
+	      var markers = this.props.records.map(function (record) {
+	        return _react2['default'].createElement(_reactGoogleMaps.Marker, {
+	          position: { lat: record.latitude, lng: record.longitude },
+	          key: record.id,
+	          icon: record == _this.props.highlightRecord ? highlightImage : image,
+	          zIndex: record == _this.props.highlightRecord ? 10000 : null
+	        });
+	      });
+
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'col-md-10' },
@@ -26178,9 +26203,7 @@
 	                defaultCenter: { lat: 52.49928, lng: 13.44944 },
 	                onIdle: this.idle
 	              },
-	              this.props.records.map(function (record, index) {
-	                return _react2['default'].createElement(_reactGoogleMaps.Marker, { position: { lat: record.latitude, lng: record.longitude }, key: record.id });
-	              })
+	              markers
 	            )
 	          })
 	        )
@@ -26341,7 +26364,7 @@
 	  _createClass(GoogleMapLoader, [{
 	    key: "mountGoogleMap",
 	    value: function mountGoogleMap(domEl) {
-	      if (this.state.map || domEl === null) {
+	      if (this.state.map) {
 	        return;
 	      }
 	      var _props$googleMapElement$props = this.props.googleMapElement.props;
@@ -29265,21 +29288,6 @@
 	          return getPixelPositionOffset(this._containerElement.offsetWidth, this._containerElement.offsetHeight);
 	        }
 	      };
-
-	      // If we're inside a MarkerClusterer, allow ourselves to be clustered
-	      if (overlayViewProps.anchorHolderRef) {
-	        if ("MarkerClusterer" === overlayViewProps.anchorHolderRef.getAnchorType()) {
-	          overlayView.getDraggable = function getDraggable() {
-	            return !!overlayViewProps.draggable;
-	          };
-
-	          overlayView.getPosition = function getPosition() {
-	            return new google.maps.LatLng(this.position);
-	          };
-
-	          overlayViewProps.anchorHolderRef.getAnchor().addMarker(overlayView);
-	        }
-	      }
 
 	      return overlayView;
 	    }

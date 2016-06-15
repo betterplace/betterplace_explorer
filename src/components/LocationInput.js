@@ -6,7 +6,7 @@ var LocationInput = React.createClass({
     return (
       <div className='row'>
         <div className='col-md-5'>
-          <input type='text' placeholder='Ort' ref='locationInput' className='bpe--location-input--input' value={this.props.value}/>
+          <input type='text' placeholder='Ort' ref='locationInput' className='bpe--location-input--input' value={this.props.value} />
           <a className='bpe--location-input--reset' onClick={this.resetInput}>&times;</a>
         </div>
       </div>

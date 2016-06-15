@@ -6,7 +6,7 @@ var Volunteering = React.createClass({
     var carrier  = this.props.record.carrier || {}
 
     return (
-      <a href='#'>
+      <a href='#' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
         <div className="bpe--volunteering media">
           <img className="bpe--volunteering--image" src={imageUrl} alt="{this.props.record.title}" />
           <div className="bpe--volunteering--body">
@@ -23,6 +23,14 @@ var Volunteering = React.createClass({
       if(links[i].rel === rel)
         return links[i].href
     }
+  },
+
+  handleMouseEnter: function() {
+    this.props.setHighlightRecord(this.props.record)
+  },
+
+  handleMouseLeave: function() {
+    this.props.setHighlightRecord(null)
   }
 });
 

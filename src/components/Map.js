@@ -4,6 +4,31 @@ import React from 'react'
 
 var Map = React.createClass({
   render: function() {
+    var image = {
+      url: 'images/explorer-pin-normal.png',
+      size: new google.maps.Size(32, 32),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(16, 16)
+    }
+
+    var highlightImage = {
+      url: 'images/explorer-pin-mouseover.png',
+      size: new google.maps.Size(32, 32),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(16, 16)
+    }
+
+    var markers = this.props.records.map(
+      record => <Marker
+                  position={{ lat: record.latitude, lng: record.longitude }}
+                  key={record.id}
+                  icon={record == this.props.highlightRecord ? highlightImage : image}
+                  zIndex={record == this.props.highlightRecord ? 10000 : null}
+                />
+    )
+
+
+
     return (
       <div className='col-md-10'>
         <section style={{ height: "800px", width: "100%" }}>
@@ -18,13 +43,7 @@ var Map = React.createClass({
                 defaultCenter={{ lat: 52.49928, lng: 13.44944 }}
                 onIdle={this.idle}
               >
-                {
-                  this.props.records.map((record, index) => {
-                    return (
-                      <Marker position={{ lat: record.latitude, lng: record.longitude }} key={record.id} />
-                    );
-                  })
-                }
+                {markers}
               </GoogleMap>
             }
           />
