@@ -4,11 +4,6 @@ import React from 'react'
 
 var Map = React.createClass({
   render: function() {
-    console.log(this.props)
-    // console.log(this.googlemap)
-
-    // if(this.props.bounds)
-    //   this.googlemap.fitBounds(this.props.bounds)
     return (
       <div className='col-md-10'>
         <section style={{ height: "800px", width: "100%" }}>
@@ -39,7 +34,7 @@ var Map = React.createClass({
   },
 
   componentDidUpdate: function(next, prev) {
-    if(this.props.changeBounds) {
+    if (this.props.changeBounds) {
       this.googlemap.fitBounds(this.props.changeBounds)
       this.googlemap.props.map.setZoom(this.googlemap.getZoom()+1)
     }
@@ -50,8 +45,16 @@ var Map = React.createClass({
     // this.googlemap.event.trigger(@map, "resize")
   },
 
+  // Trigger loading of new API results for the current bounds. Since it triggers
+  // multiple times when `fitBounds` is called, we prevent multiple API calls
+  // by comparing the last loaded bounds with the current ones.
   idle: function() {
-    this.props.mapIdle(this.googlemap.getBounds())
+    var newBounds = JSON.stringify(this.googlemap.getBounds())
+
+    if (this.loadedBounds != newBounds) {
+      this.loadedBounds = newBounds
+      this.props.mapIdle(this.googlemap.getBounds())
+    }
   }
 });
 
