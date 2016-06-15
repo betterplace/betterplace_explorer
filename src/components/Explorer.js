@@ -87,5 +87,6 @@ ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={Explorer}/>
     <Route path="/l/:location" component={Explorer}/>
+    <Route path="/*" component={Explorer}/>
   </Router>
 ), document.getElementById('betterplace-explorer'))

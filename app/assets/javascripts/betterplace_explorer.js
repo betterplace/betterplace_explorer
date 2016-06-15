@@ -200,7 +200,8 @@
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
 	  _react2['default'].createElement(_reactRouter.Route, { path: '/', component: Explorer }),
-	  _react2['default'].createElement(_reactRouter.Route, { path: '/l/:location', component: Explorer })
+	  _react2['default'].createElement(_reactRouter.Route, { path: '/l/:location', component: Explorer }),
+	  _react2['default'].createElement(_reactRouter.Route, { path: '/*', component: Explorer })
 	), document.getElementById('betterplace-explorer'));
 
 /***/ },
