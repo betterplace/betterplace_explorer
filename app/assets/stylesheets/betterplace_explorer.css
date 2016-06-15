@@ -1,14 +1,16 @@
+betterplace-explorer {
+  height: 97vh;
+}
+
 .bpe--volunteering-list {
-  /*position: fixed;*/
-  /*top: 0;*/
-  /*left: 0;*/
-  /*overflow-y: scroll;*/
-  /*css wtf*/
+  height: 80vh;
+  overflow: scroll;
 }
 
 .bpe--volunteering {
   display: flex;
   margin-bottom: 20px;
+  border: 1px solid #ccc;
 }
 
 .bpe--volunteering--image {

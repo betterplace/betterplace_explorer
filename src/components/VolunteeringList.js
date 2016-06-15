@@ -8,9 +8,9 @@ var VolunteeringList = React.createClass({
     });
 
     return (
-      <div className='col-md-14'>
+      <div className='col-md-14 bpe--volunteering-list'>
         <h1>{this.props.records.length} von {this.props.totalEntries} Ehrenämter</h1>
-        <div className='bpe--volunteering-list'>
+        <div>
           {volunteeringNodes}
         </div>
       </div>
