@@ -39,7 +39,7 @@ var Explorer = React.createClass({
         <LocationInput changeLocation={this.changeLocation} />
         <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} setHighlightRecord={this.setHighlightRecord} />
         <Pagination currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
-        <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} highlightRecord={this.state.highlightRecord} />
+        <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} highlightRecord={this.state.highlightRecord} setHighlightRecord={this.setHighlightRecord} />
       </div>
     )
   },

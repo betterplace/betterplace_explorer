@@ -21,17 +21,21 @@ var Volunteering = React.createClass({
 
   findLink: function(links, rel) {
     for (var i = 0; i < links.length; i++) {
-      if(links[i].rel === rel)
+      if (links[i].rel === rel)
         return links[i].href
     }
   },
 
   handleMouseEnter: function() {
-    this.props.setHighlightRecord(this.props.record)
+    this.setHighlightRecord(this.props.record)
   },
 
   handleMouseLeave: function() {
-    this.props.setHighlightRecord(null)
+    this.setHighlightRecord(null)
+  },
+
+  setHighlightRecord: function(record) {
+    this.props.setHighlightRecord && this.props.setHighlightRecord(record)
   }
 });
 
