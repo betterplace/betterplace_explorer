@@ -23,7 +23,7 @@ var config = {
 
 var WebpackDevServer = require('webpack-dev-server');
 var host = '0.0.0.0';
-var port = '9000';
+var port = '9999';
 
 if (env === 'dev') {
   new WebpackDevServer(webpack(config), {

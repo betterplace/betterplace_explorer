@@ -33,26 +33,24 @@ var Map = React.createClass({
     )
 
     return (
-      <div className='col-md-10'>
-        <section style={{ height: "800px", width: "100%" }}>
-          <GoogleMapLoader
-            containerElement={
-              <div style={{height: "100%"}}/>
-            }
-            googleMapElement={
-              <GoogleMap
-                ref={(map) => this.googlemap = map }
-                defaultZoom={5}
-                defaultCenter={{ lat: 52.49928, lng: 13.44944 }}
-                onIdle={this.idle}
-                onClick={this.handleMapClick}
-              >
-                {markers}
-              </GoogleMap>
-            }
-          />
-        </section>
-      </div>
+      <section className='bpe--map'>
+        <GoogleMapLoader
+          containerElement={
+            <div style={{height: "100%"}}/>
+          }
+          googleMapElement={
+            <GoogleMap
+              ref={(map) => this.googlemap = map }
+              defaultZoom={5}
+              defaultCenter={{ lat: 52.49928, lng: 13.44944 }}
+              onIdle={this.idle}
+              onClick={this.handleMapClick}
+            >
+              {markers}
+            </GoogleMap>
+          }
+        />
+      </section>
     )
   },
 
@@ -107,10 +105,10 @@ var Map = React.createClass({
       map: this.googlemap.props.map,
       borderRadius: 0,
       shadowStyle: 0,
-      minWidth: 200,
-      maxWidth: 300,
-      minHeight: 200,
-      maxHeight: 200,
+      minWidth: 212,
+      maxWidth: 212,
+      minHeight: 290,
+      maxHeight: 290,
       hideCloseButton: true,
       padding: 0,
     })

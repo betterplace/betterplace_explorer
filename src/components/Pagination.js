@@ -32,15 +32,13 @@ var Pagination = React.createClass({
   render: function() {
     if(this.props.currentPage) {
       return (
-        <div className='col-md-14'>
-          <nav>
-            <ul className="pager">
-              <PrevButton currentPage={this.props.currentPage} handleClick={this.previousPage} />
-              Seite {this.props.currentPage} von {this.props.totalPages}
-              <NextButton currentPage={this.props.currentPage} totalPages={this.props.totalPages} handleClick={this.nextPage} />
-            </ul>
-          </nav>
-        </div>
+        <nav className="bpe--pagination">
+          <ul className="pager">
+            <PrevButton currentPage={this.props.currentPage} handleClick={this.previousPage} />
+            Seite {this.props.currentPage} von {this.props.totalPages}
+            <NextButton currentPage={this.props.currentPage} totalPages={this.props.totalPages} handleClick={this.nextPage} />
+          </ul>
+        </nav>
       )
     } else {
       return null

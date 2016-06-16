@@ -1,45 +1,6 @@
-betterplace-explorer {
-  height: 97vh;
-}
-
-.bpe--volunteering-list {
-  height: 80vh;
-  overflow: scroll;
-}
-
-.bpe--volunteering {
-  display: flex;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-}
-
-.bpe--volunteering--image {
-  margin-right: 10px;
-  /*width: 100px;*/
-}
-
-.bpe--volunteering--body {
-  flex-grow: 1;
-}
-
-.bpe--location-input--input {
-  display: block;
-  margin: 20px;
-  padding: 5px;
-  padding-right: 30px;
-  width: 100%;
-}
-
-.bpe--location-input--reset {
-  position: absolute;
-  right: 0px;
-  top: 13px;
-  z-index: 1000;
-  font-size: 3rem;
-  font-weight: 100;
-  cursor: pointer;
-}
-.bpe--location-input--reset:hover {
-  text-decoration: none;
-}
-
+@import '_explorer.css';
+@import '_location_input.css';
+@import '_map.css';
+@import '_pagination.css';
+@import '_volunteering_list.css';
+@import '_volunteering.css';

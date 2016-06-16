@@ -8,11 +8,14 @@ var VolunteeringList = React.createClass({
     )
 
     return (
-      <div className='col-md-14 bpe--volunteering-list'>
+      <div className='bpe--volunteering-list'>
         <h1>{this.props.records.length} von {this.props.totalEntries} Ehrenämter</h1>
         <div>
           {volunteeringNodes}
         </div>
+
+        / todo: put pagination here
+
       </div>
     )
   },

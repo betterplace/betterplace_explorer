@@ -1,0 +1,8 @@
+.bpe--map {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 70;
+  width: calc(100% - 600px);
+  height: 100vh;
+}

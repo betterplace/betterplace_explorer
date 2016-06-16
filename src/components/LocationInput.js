@@ -4,11 +4,9 @@ import ReactDOM from 'react-dom'
 var LocationInput = React.createClass({
   render: function() {
     return (
-      <div className='row'>
-        <div className='col-md-5'>
-          <input type='text' placeholder='Ort' ref='locationInput' className='bpe--location-input--input' value={this.props.value} />
-          <a className='bpe--location-input--reset' onClick={this.resetInput}>&times;</a>
-        </div>
+      <div className='bpe--location-input'>
+        <input type='text' placeholder='Ort' ref='locationInput' className='bpe--location-input--input' value={this.props.value} />
+        <a className='bpe--location-input--reset' onClick={this.resetInput}>&times;</a>
       </div>
     )
   },

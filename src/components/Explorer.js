@@ -36,14 +36,10 @@ var Explorer = React.createClass({
   render: function() {
     return (
       <div className="betterplace-explorer">
-        <div className="row">
-          <LocationInput changeLocation={this.changeLocation} />
-        </div>
-        <div className="row">
-          <Pagination currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
-          <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} setHighlightRecord={this.setHighlightRecord} />
-          <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} highlightRecord={this.state.highlightRecord} />
-        </div>
+        <LocationInput changeLocation={this.changeLocation} />
+        <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} setHighlightRecord={this.setHighlightRecord} />
+        <Pagination currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
+        <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} highlightRecord={this.state.highlightRecord} />
       </div>
     )
   },
