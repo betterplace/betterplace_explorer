@@ -84,7 +84,7 @@ var Map = React.createClass({
 
     if (this.loadedBounds != newBounds) {
       this.loadedBounds = newBounds
-      this.props.mapIdle(this.googlemap.getBounds())
+      this.props.mapIdle(this.googlemap.getBounds().toJSON())
     }
   },
 

@@ -207,7 +207,6 @@
 
 	  loadByBoundingBox: function () {
 	    function loadByBoundingBox(bounds) {
-	      bounds = bounds.toJSON();
 	      this.setState({ currentBounds: bounds, currentPage: 1 });
 	      this.updateURLBounds(bounds);
 	      this.load(bounds, 1);
@@ -26287,7 +26286,7 @@
 
 	      if (this.loadedBounds != newBounds) {
 	        this.loadedBounds = newBounds;
-	        this.props.mapIdle(this.googlemap.getBounds());
+	        this.props.mapIdle(this.googlemap.getBounds().toJSON());
 	      }
 	    }
 

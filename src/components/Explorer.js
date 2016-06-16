@@ -95,7 +95,6 @@ var Explorer = React.createClass({
   },
 
   loadByBoundingBox: function(bounds) {
-    bounds = bounds.toJSON()
     this.setState({ currentBounds: bounds, currentPage: 1 })
     this.updateURLBounds(bounds)
     this.load(bounds, 1)
