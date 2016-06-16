@@ -1,6 +1,9 @@
-import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
-
+require('js-info-bubble')
+import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps'
 import React from 'react'
+import ReactDOM         from 'react-dom'
+import Volunteering from './Volunteering'
+
 
 var Map = React.createClass({
   render: function() {
@@ -24,10 +27,10 @@ var Map = React.createClass({
                   key={record.id}
                   icon={record == this.props.highlightRecord ? highlightImage : image}
                   zIndex={record == this.props.highlightRecord ? 10000 : null}
+                  onClick={this.handleMarkerClick.bind(this, record)}
+                  customInfo="Marker A"
                 />
     )
-
-
 
     return (
       <div className='col-md-10'>
@@ -42,6 +45,7 @@ var Map = React.createClass({
                 defaultZoom={5}
                 defaultCenter={{ lat: 52.49928, lng: 13.44944 }}
                 onIdle={this.idle}
+                onClick={this.handleMapClick}
               >
                 {markers}
               </GoogleMap>
@@ -68,13 +72,52 @@ var Map = React.createClass({
   // multiple times when `fitBounds` is called, we prevent multiple API calls
   // by comparing the last loaded bounds with the current ones.
   idle: function() {
+    if (this.preventReloadOnce) {
+      this.preventReloadOnce = false
+      return
+    }
+
+    if (this.infoBubble)
+      this.infoBubble.close()
+
     var newBounds = JSON.stringify(this.googlemap.getBounds())
 
     if (this.loadedBounds != newBounds) {
       this.loadedBounds = newBounds
       this.props.mapIdle(this.googlemap.getBounds())
     }
-  }
+  },
+
+  handleMapClick: function() {
+    if (this.infoBubble)
+      this.infoBubble.close()
+  },
+
+  handleMarkerClick: function(record) {
+    if (this.infoBubble)
+      this.infoBubble.close()
+
+    var div = document.createElement('div')
+    ReactDOM.render(<Volunteering record={record} key={record.id}/>, div)
+
+    this.infoBubble = new InfoBubble({
+      content: div,
+      maxWidth: 300,
+      position: new google.maps.LatLng(record.latitude, record.longitude),
+      map: this.googlemap.props.map,
+      borderRadius: 0,
+      shadowStyle: 0,
+      minWidth: 200,
+      maxWidth: 300,
+      minHeight: 200,
+      maxHeight: 200,
+      hideCloseButton: true,
+      padding: 0,
+    })
+
+    this.preventReloadOnce = true
+    this.infoBubble.open()
+  },
 });
 
 export default Map

@@ -2,11 +2,12 @@ import React from 'react'
 
 var Volunteering = React.createClass({
   render: function() {
-    var imageUrl = this.findLink(this.props.record.image.links, "fill_270x141")
+    var imageUrl = this.findLink(this.props.record.image.links, 'fill_270x141')
     var carrier  = this.props.record.carrier || {}
+    var selfUrl  = `/volunteering/${this.props.record.id}` // this.findLink(this.props.record.links, 'platform')
 
     return (
-      <a href='#' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
+      <a href={selfUrl} target='_blank' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
         <div className="bpe--volunteering media">
           <img className="bpe--volunteering--image" src={imageUrl} alt="{this.props.record.title}" />
           <div className="bpe--volunteering--body">
