@@ -78,7 +78,7 @@
 	  displayName: 'Explorer',
 	  getInitialState: function () {
 	    function getInitialState() {
-	      return { records: [] };
+	      return { records: [], currentBounds: {}, currentPage: 1 };
 	    }
 
 	    return getInitialState;
@@ -92,10 +92,17 @@
 	          north: parseFloat(this.props.location.query.north),
 	          south: parseFloat(this.props.location.query.south)
 	        };
-	        this.setState({ records: [], changeBounds: currentBounds });
+	        this.setState({ currentBounds: currentBounds, changeBounds: currentBounds });
 	      } else {
-	        this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20');
+	        var defaultBounds = {
+	          east: 19.90940093749998,
+	          north: 61.493695009727325,
+	          south: 39.728030772041244,
+	          west: -4.612083437500019
+	        };
+	        this.setState({ currentBounds: defaultBounds, changeBounds: defaultBounds });
 	      }
+	      // this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20')
 	    }
 
 	    return componentDidMount;
@@ -142,8 +149,7 @@
 	  changePage: function () {
 	    function changePage(page) {
 	      this.setState({ currentPage: page });
-	      this.loadByBoundingBox();
-	      // this.load(`https://www.betterplace.org/de/api_v4/volunteering?per_page=20&page=${page}`)
+	      this.load(this.state.currentBounds, page);
 	    }
 
 	    return changePage;
@@ -165,16 +171,28 @@
 	      // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
 
 	      this.updateURLBounds(bounds);
-	      this.setState({ changeBounds: bounds });
+	      this.setState({ currentBounds: bounds, changeBounds: bounds, currentPage: 1 });
 	    }
 
 	    return changeLocation;
 	  }(),
 
 	  load: function () {
-	    function load(url) {
+	    function load(bounds, page) {
 	      var _this = this;
 
+	      var params = {
+	        nelat: bounds.north,
+	        nelng: bounds.east,
+	        swlat: bounds.south,
+	        swlng: bounds.west,
+	        page: page,
+	        per_page: 20
+	      };
+	      var query = Object.keys(params).map(function (k, _) {
+	        return k + '=' + params[k];
+	      }).join('&');
+	      var url = 'https://www.betterplace.org/de/api_v4/volunteering?' + query;
 	      fetch(url).then(function (response) {
 	        return response.json();
 	      }).then(function (json) {
@@ -190,8 +208,9 @@
 	  loadByBoundingBox: function () {
 	    function loadByBoundingBox(bounds) {
 	      bounds = bounds.toJSON();
+	      this.setState({ currentBounds: bounds, currentPage: 1 });
 	      this.updateURLBounds(bounds);
-	      this.load('https://www.betterplace.org/de/api_v4/volunteering?nelat=' + bounds.north + '&nelng=' + bounds.east + '&swlat=' + bounds.south + '&swlng=' + bounds.west + '&per_page=20');
+	      this.load(bounds, 1);
 	    }
 
 	    return loadByBoundingBox;
