@@ -1,5 +1,5 @@
 import React from 'react'
-import Volunteering from './Volunteering'
+import Volunteering from './Volunteering.jsx'
 
 var VolunteeringList = React.createClass({
   render: function() {

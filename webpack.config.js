@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var env = process.env.WEBPACK_ENV;
 
 var config = {
-  entry: "./src/components/Explorer.js",
+  entry: "./src/components/Explorer.jsx",
   output: {
     path:     __dirname + '/app/assets/javascripts/',
     filename: 'betterplace_explorer.js',

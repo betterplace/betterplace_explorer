@@ -64,11 +64,11 @@
 
 	var _Map2 = _interopRequireDefault(_Map);
 
-	var _LocationInput = __webpack_require__(232);
+	var _LocationInput = __webpack_require__(278);
 
 	var _LocationInput2 = _interopRequireDefault(_LocationInput);
 
-	var _Pagination = __webpack_require__(233);
+	var _Pagination = __webpack_require__(279);
 
 	var _Pagination2 = _interopRequireDefault(_Pagination);
 
@@ -26189,7 +26189,7 @@
 	  value: true
 	});
 
-	var _reactGoogleMaps = __webpack_require__(234);
+	var _reactGoogleMaps = __webpack_require__(232);
 
 	var _react = __webpack_require__(1);
 
@@ -26207,7 +26207,7 @@
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	__webpack_require__(279);
+	__webpack_require__(277);
 
 
 	var defaultPin = {
@@ -26389,224 +26389,6 @@
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(99);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var LocationInput = _react2['default'].createClass({
-	  displayName: 'LocationInput',
-
-	  render: function () {
-	    function render() {
-	      return _react2['default'].createElement(
-	        'div',
-	        { className: 'bpe--location-input' },
-	        _react2['default'].createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input', value: this.props.value }),
-	        _react2['default'].createElement(
-	          'a',
-	          { className: 'bpe--location-input--reset', onClick: this.resetInput },
-	          '×'
-	        )
-	      );
-	    }
-
-	    return render;
-	  }(),
-
-	  getInput: function () {
-	    function getInput() {
-	      return _reactDom2['default'].findDOMNode(this.refs.locationInput);
-	    }
-
-	    return getInput;
-	  }(),
-	  componentDidMount: function () {
-	    function componentDidMount() {
-	      var input = this.getInput();
-	      input.focus();
-	      this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
-	      google.maps.event.addListener(this.searchBox, 'places_changed', this.handlePlacesChanged);
-	    }
-
-	    return componentDidMount;
-	  }(),
-	  resetInput: function () {
-	    function resetInput() {
-	      var input = this.getInput();
-	      input.value = '';
-	      input.focus();
-	    }
-
-	    return resetInput;
-	  }(),
-	  getGeometry: function () {
-	    function getGeometry() {
-	      return this.searchBox.getPlaces()[0].geometry;
-	    }
-
-	    return getGeometry;
-	  }(),
-	  handlePlacesChanged: function () {
-	    function handlePlacesChanged() {
-	      var geometry = this.getGeometry();
-
-	      if (!geometry) return false;
-
-	      var value = this.getInput().value.replace(', ', '--');
-
-	      if (geometry.viewport) {
-	        this.props.changeLocation(value, geometry.viewport.toJSON());
-	      } else {
-	        var lat = geometry.location.lat(),
-	            lng = geometry.location.lng(),
-	            rim = 0.05;
-	        this.props.changeLocation(value, { north: lat - rim, east: lng + rim, south: lat + rim, west: lng - rim });
-	      }
-	    }
-
-	    return handlePlacesChanged;
-	  }()
-	});
-
-	exports['default'] = LocationInput;
-
-/***/ },
-/* 233 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-	var PrevButton = _react2["default"].createClass({
-	  displayName: "PrevButton",
-
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage > 1) {
-	        return _react2["default"].createElement(
-	          "li",
-	          { className: "previous" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "←"
-	            ),
-	            " zurück"
-	          )
-	        );
-	      } else {
-	        return null;
-	      }
-	    }
-
-	    return render;
-	  }()
-	});
-
-	var NextButton = _react2["default"].createClass({
-	  displayName: "NextButton",
-
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage < this.props.totalPages) {
-	        return _react2["default"].createElement(
-	          "li",
-	          { className: "next" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            "weiter ",
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "→"
-	            )
-	          )
-	        );
-	      } else {
-	        return null;
-	      }
-	    }
-
-	    return render;
-	  }()
-	});
-
-	var Pagination = _react2["default"].createClass({
-	  displayName: "Pagination",
-
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage) {
-	        return _react2["default"].createElement(
-	          "nav",
-	          { className: "bpe--pagination" },
-	          _react2["default"].createElement(
-	            "ul",
-	            { className: "pager" },
-	            _react2["default"].createElement(PrevButton, { currentPage: this.props.currentPage, handleClick: this.previousPage }),
-	            "Seite ",
-	            this.props.currentPage,
-	            " von ",
-	            this.props.totalPages,
-	            _react2["default"].createElement(NextButton, { currentPage: this.props.currentPage, totalPages: this.props.totalPages, handleClick: this.nextPage })
-	          )
-	        );
-	      } else {
-	        return null;
-	      }
-	    }
-
-	    return render;
-	  }(),
-
-	  previousPage: function () {
-	    function previousPage(event) {
-	      this.props.changePage(this.props.currentPage - 1);
-	    }
-
-	    return previousPage;
-	  }(),
-
-	  nextPage: function () {
-	    function nextPage(event) {
-	      this.props.changePage(this.props.currentPage + 1);
-	    }
-
-	    return nextPage;
-	  }()
-	});
-
-	exports["default"] = Pagination;
-
-/***/ },
-/* 234 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -26615,60 +26397,60 @@
 
 	function _interopRequire(obj) { return obj && obj.__esModule ? obj["default"] : obj; }
 
-	var _GoogleMapLoader = __webpack_require__(235);
+	var _GoogleMapLoader = __webpack_require__(233);
 
 	exports.GoogleMapLoader = _interopRequire(_GoogleMapLoader);
 
-	var _GoogleMap = __webpack_require__(244);
+	var _GoogleMap = __webpack_require__(242);
 
 	exports.GoogleMap = _interopRequire(_GoogleMap);
 
-	var _Circle = __webpack_require__(245);
+	var _Circle = __webpack_require__(243);
 
 	exports.Circle = _interopRequire(_Circle);
 
-	var _DirectionsRenderer = __webpack_require__(249);
+	var _DirectionsRenderer = __webpack_require__(247);
 
 	exports.DirectionsRenderer = _interopRequire(_DirectionsRenderer);
 
-	var _DrawingManager = __webpack_require__(252);
+	var _DrawingManager = __webpack_require__(250);
 
 	exports.DrawingManager = _interopRequire(_DrawingManager);
 
-	var _InfoWindow = __webpack_require__(255);
+	var _InfoWindow = __webpack_require__(253);
 
 	exports.InfoWindow = _interopRequire(_InfoWindow);
 
-	var _KmlLayer = __webpack_require__(259);
+	var _KmlLayer = __webpack_require__(257);
 
 	exports.KmlLayer = _interopRequire(_KmlLayer);
 
-	var _Marker = __webpack_require__(262);
+	var _Marker = __webpack_require__(260);
 
 	exports.Marker = _interopRequire(_Marker);
 
-	var _OverlayView = __webpack_require__(265);
+	var _OverlayView = __webpack_require__(263);
 
 	exports.OverlayView = _interopRequire(_OverlayView);
 
-	var _Polygon = __webpack_require__(267);
+	var _Polygon = __webpack_require__(265);
 
 	exports.Polygon = _interopRequire(_Polygon);
 
-	var _Polyline = __webpack_require__(270);
+	var _Polyline = __webpack_require__(268);
 
 	exports.Polyline = _interopRequire(_Polyline);
 
-	var _Rectangle = __webpack_require__(273);
+	var _Rectangle = __webpack_require__(271);
 
 	exports.Rectangle = _interopRequire(_Rectangle);
 
-	var _SearchBox = __webpack_require__(276);
+	var _SearchBox = __webpack_require__(274);
 
 	exports.SearchBox = _interopRequire(_SearchBox);
 
 /***/ },
-/* 235 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -26693,7 +26475,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _creatorsGoogleMapHolder = __webpack_require__(236);
+	var _creatorsGoogleMapHolder = __webpack_require__(234);
 
 	var _creatorsGoogleMapHolder2 = _interopRequireDefault(_creatorsGoogleMapHolder);
 
@@ -26780,7 +26562,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 236 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -26807,23 +26589,23 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _eventListsGoogleMapEventList = __webpack_require__(237);
+	var _eventListsGoogleMapEventList = __webpack_require__(235);
 
 	var _eventListsGoogleMapEventList2 = _interopRequireDefault(_eventListsGoogleMapEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
@@ -26940,7 +26722,7 @@
 	exports["default"] = GoogleMapHolder;
 
 /***/ },
-/* 237 */
+/* 235 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Map
@@ -26954,7 +26736,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 238 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27006,7 +26788,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 239 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27018,7 +26800,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _addDefaultPrefix = __webpack_require__(240);
+	var _addDefaultPrefix = __webpack_require__(238);
 
 	var _addDefaultPrefix2 = _interopRequireDefault(_addDefaultPrefix);
 
@@ -27032,7 +26814,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 240 */
+/* 238 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27049,7 +26831,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 241 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27064,7 +26846,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _controlledOrDefault = __webpack_require__(242);
+	var _controlledOrDefault = __webpack_require__(240);
 
 	var _controlledOrDefault2 = _interopRequireDefault(_controlledOrDefault);
 
@@ -27088,7 +26870,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 242 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27100,7 +26882,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _addDefaultPrefix = __webpack_require__(240);
+	var _addDefaultPrefix = __webpack_require__(238);
 
 	var _addDefaultPrefix2 = _interopRequireDefault(_addDefaultPrefix);
 
@@ -27117,7 +26899,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 243 */
+/* 241 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27207,7 +26989,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 244 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27238,11 +27020,11 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _creatorsGoogleMapHolder = __webpack_require__(236);
+	var _creatorsGoogleMapHolder = __webpack_require__(234);
 
 	var _creatorsGoogleMapHolder2 = _interopRequireDefault(_creatorsGoogleMapHolder);
 
-	var _GoogleMapLoader = __webpack_require__(235);
+	var _GoogleMapLoader = __webpack_require__(233);
 
 	var _GoogleMapLoader2 = _interopRequireDefault(_GoogleMapLoader);
 
@@ -27409,7 +27191,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 245 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27434,11 +27216,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsCircleCreator = __webpack_require__(247);
+	var _creatorsCircleCreator = __webpack_require__(245);
 
 	var _creatorsCircleCreator2 = _interopRequireDefault(_creatorsCircleCreator);
 
@@ -27541,7 +27323,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 246 */
+/* 244 */
 /***/ function(module, exports) {
 
 	var canUseDOM = !!(
@@ -27553,7 +27335,7 @@
 	module.exports = canUseDOM;
 
 /***/ },
-/* 247 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27576,27 +27358,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsCircleEventList = __webpack_require__(248);
+	var _eventListsCircleEventList = __webpack_require__(246);
 
 	var _eventListsCircleEventList2 = _interopRequireDefault(_eventListsCircleEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -27701,7 +27483,7 @@
 	exports["default"] = CircleCreator;
 
 /***/ },
-/* 248 */
+/* 246 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Circle
@@ -27715,7 +27497,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 249 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27740,11 +27522,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsDirectionsRendererCreator = __webpack_require__(250);
+	var _creatorsDirectionsRendererCreator = __webpack_require__(248);
 
 	var _creatorsDirectionsRendererCreator2 = _interopRequireDefault(_creatorsDirectionsRendererCreator);
 
@@ -27832,7 +27614,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 250 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27855,27 +27637,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsDirectionsRendererEventList = __webpack_require__(251);
+	var _eventListsDirectionsRendererEventList = __webpack_require__(249);
 
 	var _eventListsDirectionsRendererEventList2 = _interopRequireDefault(_eventListsDirectionsRendererEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -27983,7 +27765,7 @@
 	exports["default"] = DirectionsRendererCreator;
 
 /***/ },
-/* 251 */
+/* 249 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#DirectionsRenderer
@@ -27997,7 +27779,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 252 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28022,11 +27804,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsDrawingManagerCreator = __webpack_require__(253);
+	var _creatorsDrawingManagerCreator = __webpack_require__(251);
 
 	var _creatorsDrawingManagerCreator2 = _interopRequireDefault(_creatorsDrawingManagerCreator);
 
@@ -28104,7 +27886,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 253 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28127,27 +27909,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsDrawingManagerEventList = __webpack_require__(254);
+	var _eventListsDrawingManagerEventList = __webpack_require__(252);
 
 	var _eventListsDrawingManagerEventList2 = _interopRequireDefault(_eventListsDrawingManagerEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -28236,7 +28018,7 @@
 	exports["default"] = DrawingManagerCreator;
 
 /***/ },
-/* 254 */
+/* 252 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#DrawingManager
@@ -28250,7 +28032,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 255 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28275,11 +28057,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsInfoWindowCreator = __webpack_require__(256);
+	var _creatorsInfoWindowCreator = __webpack_require__(254);
 
 	var _creatorsInfoWindowCreator2 = _interopRequireDefault(_creatorsInfoWindowCreator);
 
@@ -28360,7 +28142,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 256 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28383,31 +28165,31 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsInfoWindowEventList = __webpack_require__(257);
+	var _eventListsInfoWindowEventList = __webpack_require__(255);
 
 	var _eventListsInfoWindowEventList2 = _interopRequireDefault(_eventListsInfoWindowEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsSetContentForOptionalReactElement = __webpack_require__(258);
+	var _utilsSetContentForOptionalReactElement = __webpack_require__(256);
 
 	var _utilsSetContentForOptionalReactElement2 = _interopRequireDefault(_utilsSetContentForOptionalReactElement);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -28517,7 +28299,7 @@
 	exports["default"] = InfoWindowCreator;
 
 /***/ },
-/* 257 */
+/* 255 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#InfoWindow
@@ -28531,7 +28313,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 258 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28574,7 +28356,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 259 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28599,11 +28381,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsKmlLayerCreator = __webpack_require__(260);
+	var _creatorsKmlLayerCreator = __webpack_require__(258);
 
 	var _creatorsKmlLayerCreator2 = _interopRequireDefault(_creatorsKmlLayerCreator);
 
@@ -28696,7 +28478,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 260 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28719,27 +28501,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsKmlLayerEventList = __webpack_require__(261);
+	var _eventListsKmlLayerEventList = __webpack_require__(259);
 
 	var _eventListsKmlLayerEventList2 = _interopRequireDefault(_eventListsKmlLayerEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -28856,7 +28638,7 @@
 	exports["default"] = KmlLayerCreator;
 
 /***/ },
-/* 261 */
+/* 259 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#KmlLayer
@@ -28870,7 +28652,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 262 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28895,11 +28677,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsMarkerCreator = __webpack_require__(263);
+	var _creatorsMarkerCreator = __webpack_require__(261);
 
 	var _creatorsMarkerCreator2 = _interopRequireDefault(_creatorsMarkerCreator);
 
@@ -29053,7 +28835,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 263 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -29076,27 +28858,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsMarkerEventList = __webpack_require__(264);
+	var _eventListsMarkerEventList = __webpack_require__(262);
 
 	var _eventListsMarkerEventList2 = _interopRequireDefault(_eventListsMarkerEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -29271,7 +29053,7 @@
 	exports["default"] = MarkerCreator;
 
 /***/ },
-/* 264 */
+/* 262 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker
@@ -29285,7 +29067,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 265 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -29310,11 +29092,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsOverlayViewCreator = __webpack_require__(266);
+	var _creatorsOverlayViewCreator = __webpack_require__(264);
 
 	var _creatorsOverlayViewCreator2 = _interopRequireDefault(_creatorsOverlayViewCreator);
 
@@ -29421,7 +29203,7 @@
 	// Controlled [props] - used in componentDidMount/componentDidUpdate
 
 /***/ },
-/* 266 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -29450,15 +29232,15 @@
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -29673,7 +29455,7 @@
 	exports["default"] = OverlayViewCreator;
 
 /***/ },
-/* 267 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -29698,11 +29480,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsPolygonCreator = __webpack_require__(268);
+	var _creatorsPolygonCreator = __webpack_require__(266);
 
 	var _creatorsPolygonCreator2 = _interopRequireDefault(_creatorsPolygonCreator);
 
@@ -29795,7 +29577,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 268 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -29818,27 +29600,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsPolygonEventList = __webpack_require__(269);
+	var _eventListsPolygonEventList = __webpack_require__(267);
 
 	var _eventListsPolygonEventList2 = _interopRequireDefault(_eventListsPolygonEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -29943,7 +29725,7 @@
 	exports["default"] = PolygonCreator;
 
 /***/ },
-/* 269 */
+/* 267 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Polygon
@@ -29957,7 +29739,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 270 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -29982,11 +29764,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsPolylineCreator = __webpack_require__(271);
+	var _creatorsPolylineCreator = __webpack_require__(269);
 
 	var _creatorsPolylineCreator2 = _interopRequireDefault(_creatorsPolylineCreator);
 
@@ -30074,7 +29856,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 271 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -30097,27 +29879,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsPolylineEventList = __webpack_require__(272);
+	var _eventListsPolylineEventList = __webpack_require__(270);
 
 	var _eventListsPolylineEventList2 = _interopRequireDefault(_eventListsPolylineEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -30218,7 +30000,7 @@
 	exports["default"] = PolylineCreator;
 
 /***/ },
-/* 272 */
+/* 270 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Polyline
@@ -30232,7 +30014,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 273 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -30257,11 +30039,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsRectangleCreator = __webpack_require__(274);
+	var _creatorsRectangleCreator = __webpack_require__(272);
 
 	var _creatorsRectangleCreator2 = _interopRequireDefault(_creatorsRectangleCreator);
 
@@ -30354,7 +30136,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 274 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -30377,27 +30159,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsRectangleEventList = __webpack_require__(275);
+	var _eventListsRectangleEventList = __webpack_require__(273);
 
 	var _eventListsRectangleEventList2 = _interopRequireDefault(_eventListsRectangleEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -30498,7 +30280,7 @@
 	exports["default"] = RectangleCreator;
 
 /***/ },
-/* 275 */
+/* 273 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Rectangle
@@ -30512,7 +30294,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 276 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -30539,11 +30321,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(246);
+	var _canUseDom = __webpack_require__(244);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsSearchBoxCreator = __webpack_require__(277);
+	var _creatorsSearchBoxCreator = __webpack_require__(275);
 
 	var _creatorsSearchBoxCreator2 = _interopRequireDefault(_creatorsSearchBoxCreator);
 
@@ -30650,7 +30432,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 277 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -30673,27 +30455,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsSearchBoxEventList = __webpack_require__(278);
+	var _eventListsSearchBoxEventList = __webpack_require__(276);
 
 	var _eventListsSearchBoxEventList2 = _interopRequireDefault(_eventListsSearchBoxEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(238);
+	var _utilsEventHandlerCreator = __webpack_require__(236);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(239);
+	var _utilsDefaultPropsCreator = __webpack_require__(237);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(241);
+	var _utilsComposeOptions = __webpack_require__(239);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(243);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(241);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(236);
+	var _GoogleMapHolder = __webpack_require__(234);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -30807,7 +30589,7 @@
 	exports["default"] = SearchBoxCreator;
 
 /***/ },
-/* 278 */
+/* 276 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#SearchBox
@@ -30821,7 +30603,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 279 */
+/* 277 */
 /***/ function(module, exports) {
 
 	// ==ClosureCompiler==
@@ -32604,6 +32386,224 @@
 	  this.close_.style['top'] = this.px(top);
 	};
 
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(99);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var LocationInput = _react2['default'].createClass({
+	  displayName: 'LocationInput',
+
+	  render: function () {
+	    function render() {
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'bpe--location-input' },
+	        _react2['default'].createElement('input', { type: 'text', placeholder: 'Ort', ref: 'locationInput', className: 'bpe--location-input--input', value: this.props.value }),
+	        _react2['default'].createElement(
+	          'a',
+	          { className: 'bpe--location-input--reset', onClick: this.resetInput },
+	          '×'
+	        )
+	      );
+	    }
+
+	    return render;
+	  }(),
+
+	  getInput: function () {
+	    function getInput() {
+	      return _reactDom2['default'].findDOMNode(this.refs.locationInput);
+	    }
+
+	    return getInput;
+	  }(),
+	  componentDidMount: function () {
+	    function componentDidMount() {
+	      var input = this.getInput();
+	      input.focus();
+	      this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
+	      google.maps.event.addListener(this.searchBox, 'places_changed', this.handlePlacesChanged);
+	    }
+
+	    return componentDidMount;
+	  }(),
+	  resetInput: function () {
+	    function resetInput() {
+	      var input = this.getInput();
+	      input.value = '';
+	      input.focus();
+	    }
+
+	    return resetInput;
+	  }(),
+	  getGeometry: function () {
+	    function getGeometry() {
+	      return this.searchBox.getPlaces()[0].geometry;
+	    }
+
+	    return getGeometry;
+	  }(),
+	  handlePlacesChanged: function () {
+	    function handlePlacesChanged() {
+	      var geometry = this.getGeometry();
+
+	      if (!geometry) return false;
+
+	      var value = this.getInput().value.replace(', ', '--');
+
+	      if (geometry.viewport) {
+	        this.props.changeLocation(value, geometry.viewport.toJSON());
+	      } else {
+	        var lat = geometry.location.lat(),
+	            lng = geometry.location.lng(),
+	            rim = 0.05;
+	        this.props.changeLocation(value, { north: lat - rim, east: lng + rim, south: lat + rim, west: lng - rim });
+	      }
+	    }
+
+	    return handlePlacesChanged;
+	  }()
+	});
+
+	exports['default'] = LocationInput;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var PrevButton = _react2["default"].createClass({
+	  displayName: "PrevButton",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage > 1) {
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "previous" },
+	          _react2["default"].createElement(
+	            "a",
+	            { href: "#", onClick: this.props.handleClick },
+	            _react2["default"].createElement(
+	              "span",
+	              { "aria-hidden": "true" },
+	              "←"
+	            ),
+	            " zurück"
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }()
+	});
+
+	var NextButton = _react2["default"].createClass({
+	  displayName: "NextButton",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage < this.props.totalPages) {
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "next" },
+	          _react2["default"].createElement(
+	            "a",
+	            { href: "#", onClick: this.props.handleClick },
+	            "weiter ",
+	            _react2["default"].createElement(
+	              "span",
+	              { "aria-hidden": "true" },
+	              "→"
+	            )
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }()
+	});
+
+	var Pagination = _react2["default"].createClass({
+	  displayName: "Pagination",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage) {
+	        return _react2["default"].createElement(
+	          "nav",
+	          { className: "bpe--pagination" },
+	          _react2["default"].createElement(
+	            "ul",
+	            { className: "pager" },
+	            _react2["default"].createElement(PrevButton, { currentPage: this.props.currentPage, handleClick: this.previousPage }),
+	            "Seite ",
+	            this.props.currentPage,
+	            " von ",
+	            this.props.totalPages,
+	            _react2["default"].createElement(NextButton, { currentPage: this.props.currentPage, totalPages: this.props.totalPages, handleClick: this.nextPage })
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }(),
+
+	  previousPage: function () {
+	    function previousPage(event) {
+	      this.props.changePage(this.props.currentPage - 1);
+	    }
+
+	    return previousPage;
+	  }(),
+
+	  nextPage: function () {
+	    function nextPage(event) {
+	      this.props.changePage(this.props.currentPage + 1);
+	    }
+
+	    return nextPage;
+	  }()
+	});
+
+	exports["default"] = Pagination;
 
 /***/ }
 /******/ ]);

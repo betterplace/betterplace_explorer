@@ -1,10 +1,10 @@
 import React from 'react'
 import { Router, Route, Link, browserHistory } from 'react-router'
 import ReactDOM         from 'react-dom'
-import VolunteeringList from './VolunteeringList'
-import Map              from './Map.js'
-import LocationInput    from './LocationInput.js'
-import Pagination       from './Pagination.js'
+import VolunteeringList from './VolunteeringList.jsx'
+import Map              from './Map.jsx'
+import LocationInput    from './LocationInput.jsx'
+import Pagination       from './Pagination.jsx'
 
 var Explorer = React.createClass({
   getInitialState() {
