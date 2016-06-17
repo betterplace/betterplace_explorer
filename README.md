@@ -12,6 +12,14 @@ npm run dev
 open http://localhost:9000
 ```
 
+## How to release
+
+```
+# update version in betterplace_explorer.gemspec
+webpack --progress --p
+rake release
+```
+
 Contact
 -------
 
