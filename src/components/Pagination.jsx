@@ -1,10 +1,10 @@
-import React from 'react'
+import React                from 'react'
 import PaginationNextButton from './PaginationNextButton.jsx'
 import PaginationPrevButton from './PaginationPrevButton.jsx'
 
 var Pagination = React.createClass({
   render: function() {
-    if(this.props.currentPage) {
+    if (this.props.currentPage) {
       return (
         <nav className="bpe--pagination">
           <ul className="pager">
