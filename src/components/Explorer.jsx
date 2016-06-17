@@ -4,7 +4,6 @@ import ReactDOM         from 'react-dom'
 import VolunteeringList from './VolunteeringList.jsx'
 import Map              from './Map.jsx'
 import LocationInput    from './LocationInput.jsx'
-import Pagination       from './Pagination.jsx'
 
 var Explorer = React.createClass({
   getInitialState() {
@@ -37,8 +36,7 @@ var Explorer = React.createClass({
     return (
       <div className="betterplace-explorer">
         <LocationInput changeLocation={this.changeLocation} />
-        <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} setHighlightRecord={this.setHighlightRecord} />
-        <Pagination currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
+        <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} setHighlightRecord={this.setHighlightRecord}  currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
         <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} highlightRecord={this.state.highlightRecord} setHighlightRecord={this.setHighlightRecord} />
       </div>
     )
