@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "betterplace_explorer"
-  spec.version       = '0.0.1-alpha4'
+  spec.version       = '0.0.1-alpha5'
   spec.authors       = ["betterplace developers"]
   spec.email         = ["developers@betterplace.org"]
   spec.description   = %q{An awesome explorer}
