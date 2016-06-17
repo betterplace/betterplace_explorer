@@ -4,6 +4,9 @@ import VolunteeringList from './VolunteeringList.jsx'
 import Map              from './Map.jsx'
 import LocationInput    from './LocationInput.jsx'
 
+require('es6-promise').polyfill();
+import 'whatwg-fetch'
+
 var Explorer = React.createClass({
   getInitialState() {
     return {
