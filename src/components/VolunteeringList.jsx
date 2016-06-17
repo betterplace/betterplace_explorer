@@ -1,4 +1,5 @@
-import React from 'react'
+import React        from 'react'
+import Pagination   from './Pagination.jsx'
 import Volunteering from './Volunteering.jsx'
 
 var VolunteeringList = React.createClass({
@@ -13,9 +14,9 @@ var VolunteeringList = React.createClass({
         <div>
           {volunteeringNodes}
         </div>
-
-        / todo: put pagination here
-
+        <div>
+          <Pagination currentPage={this.props.currentPage} totalPages={this.props.totalPages} changePage={this.props.changePage} />
+        </div>
       </div>
     )
   },

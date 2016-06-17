@@ -68,10 +68,6 @@
 
 	var _LocationInput2 = _interopRequireDefault(_LocationInput);
 
-	var _Pagination = __webpack_require__(279);
-
-	var _Pagination2 = _interopRequireDefault(_Pagination);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var Explorer = _react2['default'].createClass({
@@ -115,8 +111,7 @@
 	        'div',
 	        { className: 'betterplace-explorer' },
 	        _react2['default'].createElement(_LocationInput2['default'], { changeLocation: this.changeLocation }),
-	        _react2['default'].createElement(_VolunteeringList2['default'], { records: this.state.records, totalEntries: this.state.totalEntries, setHighlightRecord: this.setHighlightRecord }),
-	        _react2['default'].createElement(_Pagination2['default'], { currentPage: this.state.currentPage, totalPages: this.state.totalPages, changePage: this.changePage }),
+	        _react2['default'].createElement(_VolunteeringList2['default'], { records: this.state.records, totalEntries: this.state.totalEntries, setHighlightRecord: this.setHighlightRecord, currentPage: this.state.currentPage, totalPages: this.state.totalPages, changePage: this.changePage }),
 	        _react2['default'].createElement(_Map2['default'], { records: this.state.records, mapIdle: this.loadByBoundingBox, changeBounds: this.state.changeBounds, highlightRecord: this.state.highlightRecord, setHighlightRecord: this.setHighlightRecord })
 	      );
 	    }
@@ -26042,6 +26037,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Pagination = __webpack_require__(279);
+
+	var _Pagination2 = _interopRequireDefault(_Pagination);
+
 	var _Volunteering = __webpack_require__(230);
 
 	var _Volunteering2 = _interopRequireDefault(_Volunteering);
@@ -26075,7 +26074,11 @@
 	          null,
 	          volunteeringNodes
 	        ),
-	        '/ todo: put pagination here'
+	        _react2['default'].createElement(
+	          'div',
+	          null,
+	          _react2['default'].createElement(_Pagination2['default'], { currentPage: this.props.currentPage, totalPages: this.props.totalPages, changePage: this.props.changePage })
+	        )
 	      );
 	    }
 
