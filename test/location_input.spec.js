@@ -16,6 +16,8 @@ describe('<LocationInput/>', function () {
   const input       = wrapper.find('input')
   const resetButton = wrapper.find('.bpe--location-input--reset')
 
+  wrapper.setProps( { changeLocation: function() { /* stub */ } })
+
   it('has an input', function () {
     expect(input).to.have.length(1)
   })
@@ -46,24 +48,24 @@ describe('<LocationInput/>', function () {
     })
 
     context('if a place with viewport has been found', function() {
-      it('triggers the changeLocation callback', function () {
+      it('triggers the changeBounds callback', function () {
         wrapper.instance().getGeometry = function () {
           return { viewport: { toJSON: function(){} } }
         }
         var callback = sinon.spy()
-        wrapper.setProps({ changeLocation: callback })
+        wrapper.setProps({ changeBounds: callback })
         wrapper.instance().handlePlacesChanged()
         expect(callback).to.be.calledOnce
       })
     })
 
     context('if a place without viewport but with a location has been found', function() {
-      it('triggers the changeLocation callback', function () {
+      it('triggers the changeBounds callback', function () {
         wrapper.instance().getGeometry = function () {
           return { viewport: null, location: { lat: function() { 42 }, lng: function() { 42 } } }
         }
         var callback = sinon.spy()
-        wrapper.setProps({ changeLocation: callback })
+        wrapper.setProps({ changeBounds: callback })
         wrapper.instance().handlePlacesChanged()
         expect(callback).to.be.calledOnce
       })

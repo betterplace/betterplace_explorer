@@ -7,10 +7,11 @@ import LocationInput    from './LocationInput.jsx'
 var Explorer = React.createClass({
   getInitialState() {
     return {
-      changeBounds: this.props.initialBounds,
-      currentBounds: this.props.initialBounds,
-      currentPage: 1,
-      records: [],
+      currentBounds:    this.props.initialBounds,
+      currentPage:      1,
+      location:         '',
+      newBounds:        this.props.initialBounds,
+      records:          [],
       visitedRecordIds: [],
     }
   },
@@ -20,7 +21,7 @@ var Explorer = React.createClass({
     try { hashParams = JSON.parse(window.location.hash.replace('#','')) } catch(e) {}
 
     if (hashParams) {
-      this.setState({ currentBounds: hashParams.bounds, changeBounds: hashParams.bounds })
+      this.setState({ currentBounds: hashParams.bounds, newBounds: hashParams.bounds })
     }
   },
 
@@ -33,6 +34,8 @@ var Explorer = React.createClass({
       <div className="betterplace-explorer">
         <LocationInput
           changeLocation={this.changeLocation}
+          changeBounds={this.changeBounds}
+          value={this.state.location}
         />
         <VolunteeringList
           changePage={this.changePage}
@@ -43,9 +46,9 @@ var Explorer = React.createClass({
           totalPages={this.state.totalPages}
         />
         <Map
-          changeBounds={this.state.changeBounds}
           highlightRecord={this.state.highlightRecord}
           mapIdle={this.loadByBoundingBox}
+          newBounds={this.state.newBounds}
           records={this.state.records}
           setHighlightRecord={this.setHighlightRecord}
           setRecordVisited={this.setRecordVisited}
@@ -57,11 +60,11 @@ var Explorer = React.createClass({
 
   assignApiResult: function(json) {
     this.setState({
-      records:      json.data,
       currentPage:  json.current_page,
-      totalPages:   json.total_pages,
+      newBounds:    null,
+      records:      json.data,
       totalEntries: json.total_entries,
-      changeBounds: null,
+      totalPages:   json.total_pages,
     })
   },
 
@@ -70,8 +73,12 @@ var Explorer = React.createClass({
     this.load(this.state.currentBounds, page)
   },
 
-  changeLocation: function(location, bounds) {
-    this.setState({ currentBounds: bounds, changeBounds: bounds, currentPage: 1 })
+  changeLocation: function(location) {
+    this.setState({ location: location })
+  },
+
+  changeBounds: function(bounds) {
+    this.setState({ currentBounds: bounds, currentPage: 1, newBounds: bounds })
   },
 
   load: function(bounds, page) {

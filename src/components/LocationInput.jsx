@@ -5,14 +5,30 @@ var LocationInput = React.createClass({
   render: function() {
     return (
       <div className='bpe--location-input'>
-        <input type='text' placeholder='Ort' ref='locationInput' className='bpe--location-input--input' value={this.props.value} />
-        <a className='bpe--location-input--reset' onClick={this.resetInput}>&times;</a>
+        <input
+          type='text' 
+          placeholder='Ort'
+          ref='locationInput'
+          className='bpe--location-input--input'
+          value={this.props.value}
+          onChange={this.updateLocation}
+        />
+        <a
+          className='bpe--location-input--reset'
+          onClick={this.resetInput}
+        >
+          &times;
+        </a>
       </div>
     )
   },
 
   getInput() {
     return ReactDOM.findDOMNode(this.refs.locationInput)
+  },
+
+  updateLocation() {
+    this.props.changeLocation(this.getInput().value)
   },
 
   componentDidMount() {
@@ -23,9 +39,8 @@ var LocationInput = React.createClass({
   },
 
   resetInput() {
-    var input = this.getInput()
-    input.value = ''
-    input.focus()
+    this.props.changeLocation('')
+    this.getInput().focus()
   },
 
   getGeometry() {
@@ -37,15 +52,15 @@ var LocationInput = React.createClass({
 
     if (!geometry) return false
 
-    var value = this.getInput().value.replace(', ', '--')
+    this.updateLocation()
 
     if (geometry.viewport) {
-      this.props.changeLocation(value, geometry.viewport.toJSON())
+      this.props.changeBounds(geometry.viewport.toJSON())
     } else {
       var lat = geometry.location.lat(),
           lng = geometry.location.lng(),
           rim = 0.05
-      this.props.changeLocation(value,
+      this.props.changeBounds(
         { north: lat - rim, east: lng + rim, south: lat + rim, west: lng - rim }
       )
     }
