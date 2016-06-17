@@ -121,4 +121,3 @@ ReactDOM.render((
     <Route path="/*" component={Explorer}/>
   </Router>
 ), document.getElementById('betterplace-explorer'))
-<
