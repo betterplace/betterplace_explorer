@@ -23,14 +23,14 @@ var Map = React.createClass({
 
     var markers = this.props.records.map(
       record => <Marker
-                  position={{ lat: record.latitude, lng: record.longitude }}
-                  key={record.id}
-                  icon={record == this.props.highlightRecord ? highlightPin : defaultPin}
-                  zIndex={record == this.props.highlightRecord ? 10000 : null}
-                  onClick={this.handleMarkerClick.bind(this, record)}
-                  onMouseover={this.handleMarkerMouseOver.bind(this, record)}
-                  onMouseout={this.handleMarkerMouseOut.bind(this, record)}
                   customInfo="Marker A"
+                  icon={record == this.props.highlightRecord ? highlightPin : defaultPin}
+                  key={record.id}
+                  onClick={this.handleMarkerClick.bind(this, record)}
+                  onMouseout={this.handleMarkerMouseOut.bind(this, record)}
+                  onMouseover={this.handleMarkerMouseOver.bind(this, record)}
+                  position={{ lat: record.latitude, lng: record.longitude }}
+                  zIndex={record == this.props.highlightRecord ? 10000 : null}
                 />
     )
 
@@ -42,11 +42,11 @@ var Map = React.createClass({
           }
           googleMapElement={
             <GoogleMap
-              ref={(map) => this.googlemap = map }
-              defaultZoom={5}
               defaultCenter={{ lat: 52.49928, lng: 13.44944 }}
-              onIdle={this.idle}
+              defaultZoom={5}
               onClick={this.handleMapClick}
+              onIdle={this.idle}
+              ref={(map) => this.googlemap = map }
             >
               {markers}
             </GoogleMap>

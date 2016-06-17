@@ -5,7 +5,11 @@ import Volunteering from './Volunteering.jsx'
 var VolunteeringList = React.createClass({
   render: function() {
     var volunteeringNodes = this.props.records.map(
-      record => <Volunteering record={record} key={record.id} setHighlightRecord={this.props.setHighlightRecord} />
+      record => <Volunteering
+                  key={record.id}
+                  record={record}
+                  setHighlightRecord={this.props.setHighlightRecord}
+                />
     )
 
     return (
@@ -15,7 +19,11 @@ var VolunteeringList = React.createClass({
           {volunteeringNodes}
         </div>
         <div>
-          <Pagination currentPage={this.props.currentPage} totalPages={this.props.totalPages} changePage={this.props.changePage} />
+          <Pagination
+            changePage={this.props.changePage}
+            currentPage={this.props.currentPage}
+            totalPages={this.props.totalPages}
+          />
         </div>
       </div>
     )

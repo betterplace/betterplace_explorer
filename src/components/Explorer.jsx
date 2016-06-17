@@ -35,9 +35,24 @@ var Explorer = React.createClass({
   render: function() {
     return (
       <div className="betterplace-explorer">
-        <LocationInput changeLocation={this.changeLocation} />
-        <VolunteeringList records={this.state.records} totalEntries={this.state.totalEntries} setHighlightRecord={this.setHighlightRecord}  currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage} />
-        <Map records={this.state.records} mapIdle={this.loadByBoundingBox} changeBounds={this.state.changeBounds} highlightRecord={this.state.highlightRecord} setHighlightRecord={this.setHighlightRecord} />
+        <LocationInput
+          changeLocation={this.changeLocation}
+        />
+        <VolunteeringList
+          changePage={this.changePage}
+          currentPage={this.state.currentPage}
+          records={this.state.records}
+          setHighlightRecord={this.setHighlightRecord}
+          totalEntries={this.state.totalEntries}
+          totalPages={this.state.totalPages}
+        />
+        <Map
+          changeBounds={this.state.changeBounds}
+          highlightRecord={this.state.highlightRecord}
+          mapIdle={this.loadByBoundingBox}
+          records={this.state.records}
+          setHighlightRecord={this.setHighlightRecord}
+        />
       </div>
     )
   },
@@ -106,3 +121,4 @@ ReactDOM.render((
     <Route path="/*" component={Explorer}/>
   </Router>
 ), document.getElementById('betterplace-explorer'))
+<
