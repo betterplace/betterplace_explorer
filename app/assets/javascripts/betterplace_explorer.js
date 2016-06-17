@@ -26115,7 +26115,7 @@
 /* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -26125,91 +26125,41 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	var _PaginationNextButton = __webpack_require__(280);
 
-	var PrevButton = _react2["default"].createClass({
-	  displayName: "PrevButton",
+	var _PaginationNextButton2 = _interopRequireDefault(_PaginationNextButton);
 
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage > 1) {
-	        return _react2["default"].createElement(
-	          "li",
-	          { className: "previous" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "←"
-	            ),
-	            " zurück"
-	          )
-	        );
-	      } else {
-	        return null;
-	      }
-	    }
+	var _PaginationPrevButton = __webpack_require__(281);
 
-	    return render;
-	  }()
-	});
+	var _PaginationPrevButton2 = _interopRequireDefault(_PaginationPrevButton);
 
-	var NextButton = _react2["default"].createClass({
-	  displayName: "NextButton",
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	  render: function () {
-	    function render() {
-	      if (this.props.currentPage < this.props.totalPages) {
-	        return _react2["default"].createElement(
-	          "li",
-	          { className: "next" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            "weiter ",
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "→"
-	            )
-	          )
-	        );
-	      } else {
-	        return null;
-	      }
-	    }
-
-	    return render;
-	  }()
-	});
-
-	var Pagination = _react2["default"].createClass({
-	  displayName: "Pagination",
+	var Pagination = _react2['default'].createClass({
+	  displayName: 'Pagination',
 
 	  render: function () {
 	    function render() {
 	      if (this.props.currentPage) {
-	        return _react2["default"].createElement(
-	          "nav",
-	          { className: "bpe--pagination" },
-	          _react2["default"].createElement(
-	            "ul",
-	            { className: "pager" },
-	            _react2["default"].createElement(PrevButton, {
+	        return _react2['default'].createElement(
+	          'nav',
+	          { className: 'bpe--pagination' },
+	          _react2['default'].createElement(
+	            'ul',
+	            { className: 'pager' },
+	            _react2['default'].createElement(_PaginationPrevButton2['default'], {
 	              currentPage: this.props.currentPage,
 	              handleClick: this.previousPage
 	            }),
-	            _react2["default"].createElement(
-	              "li",
-	              { className: "text-muted" },
-	              "Seite ",
+	            _react2['default'].createElement(
+	              'li',
+	              { className: 'text-muted' },
+	              'Seite ',
 	              this.props.currentPage,
-	              " von ",
+	              ' von ',
 	              this.props.totalPages
 	            ),
-	            _react2["default"].createElement(NextButton, {
+	            _react2['default'].createElement(_PaginationNextButton2['default'], {
 	              currentPage: this.props.currentPage,
 	              handleClick: this.nextPage,
 	              totalPages: this.props.totalPages
@@ -26249,7 +26199,7 @@
 	  }()
 	});
 
-	exports["default"] = Pagination;
+	exports['default'] = Pagination;
 
 /***/ },
 /* 231 */
@@ -32634,6 +32584,100 @@
 	});
 
 	exports['default'] = LocationInput;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var PaginationNextButton = _react2["default"].createClass({
+	  displayName: "PaginationNextButton",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage < this.props.totalPages) {
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "next" },
+	          _react2["default"].createElement(
+	            "a",
+	            { href: "#", onClick: this.props.handleClick },
+	            "weiter ",
+	            _react2["default"].createElement(
+	              "span",
+	              { "aria-hidden": "true" },
+	              "→"
+	            )
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }()
+	});
+
+	exports["default"] = PaginationNextButton;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var PaginationPrevButton = _react2["default"].createClass({
+	  displayName: "PaginationPrevButton",
+
+	  render: function () {
+	    function render() {
+	      if (this.props.currentPage > 1) {
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "previous" },
+	          _react2["default"].createElement(
+	            "a",
+	            { href: "#", onClick: this.props.handleClick },
+	            _react2["default"].createElement(
+	              "span",
+	              { "aria-hidden": "true" },
+	              "←"
+	            ),
+	            " zurück"
+	          )
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+
+	    return render;
+	  }()
+	});
+
+	exports["default"] = PaginationPrevButton;
 
 /***/ }
 /******/ ]);

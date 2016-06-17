@@ -1,32 +1,6 @@
 import React from 'react'
-
-var PrevButton = React.createClass({
-  render: function() {
-    if(this.props.currentPage > 1) {
-      return (
-        <li className="previous">
-          <a href="#" onClick={this.props.handleClick}><span aria-hidden="true">&larr;</span> zurück</a>
-        </li>
-      )
-    } else {
-      return null
-    }
-  }
-})
-
-var NextButton = React.createClass({
-  render: function() {
-    if(this.props.currentPage < this.props.totalPages) {
-      return (
-        <li className="next">
-          <a href="#" onClick={this.props.handleClick}>weiter <span aria-hidden="true">&rarr;</span></a>
-        </li>
-      )
-    } else {
-      return null
-    }
-  }
-})
+import PaginationNextButton from './PaginationNextButton.jsx'
+import PaginationPrevButton from './PaginationPrevButton.jsx'
 
 var Pagination = React.createClass({
   render: function() {
@@ -34,14 +8,14 @@ var Pagination = React.createClass({
       return (
         <nav className="bpe--pagination">
           <ul className="pager">
-            <PrevButton
+            <PaginationPrevButton
               currentPage={this.props.currentPage}
               handleClick={this.previousPage}
             />
             <li className="text-muted">
               Seite {this.props.currentPage} von {this.props.totalPages}
             </li>
-            <NextButton
+            <PaginationNextButton
               currentPage={this.props.currentPage}
               handleClick={this.nextPage}
               totalPages={this.props.totalPages}
