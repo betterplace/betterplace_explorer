@@ -38,7 +38,9 @@ var Pagination = React.createClass({
               currentPage={this.props.currentPage}
               handleClick={this.previousPage}
             />
-            Seite {this.props.currentPage} von {this.props.totalPages}
+            <li className="text-muted">
+              Seite {this.props.currentPage} von {this.props.totalPages}
+            </li>
             <NextButton
               currentPage={this.props.currentPage}
               handleClick={this.nextPage}
