@@ -14,7 +14,7 @@ var VolunteeringList = React.createClass({
     )
 
     return (
-      <div className='bpe--volunteering-list'>
+      <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >
         <h1>{this.props.records.length} von {this.props.totalEntries} Ehrenämter</h1>
         <div>
           {volunteeringNodes}

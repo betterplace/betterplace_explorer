@@ -47,6 +47,7 @@ var Explorer = React.createClass({
           setHighlightRecord={this.setHighlightRecord}
           totalEntries={this.state.totalEntries}
           totalPages={this.state.totalPages}
+          isLoading={this.state.isLoading}
         />
         <Map
           highlightRecord={this.state.highlightRecord}
@@ -64,6 +65,7 @@ var Explorer = React.createClass({
   assignApiResult: function(json) {
     this.setState({
       currentPage:  json.current_page,
+      isLoading:    false,
       newBounds:    null,
       records:      json.data,
       totalEntries: json.total_entries,
@@ -86,15 +88,16 @@ var Explorer = React.createClass({
 
   load: function(bounds, page) {
     var params = {
-      nelat: bounds.north,
-      nelng: bounds.east,
-      swlat: bounds.south,
-      swlng: bounds.west,
-      page: page,
-      per_page: 20,
+      nelat:    bounds.north,
+      nelng:    bounds.east,
+      swlat:    bounds.south,
+      swlng:    bounds.west,
+      page:     page,
+      per_page: 12,
     }
     var query = Object.keys(params).map(function(k, _) { return k + '=' + params[k] }).join('&')
     var url = `${this.props.apiBaseUrl}?${query}`
+    this.setState({ isLoading: true })
     fetch(url)
       .then(response => response.json())
       .then(json => this.assignApiResult(json))
