@@ -1,5 +1,4 @@
-import React from 'react'
-import { Router, Route, Link, browserHistory } from 'react-router'
+import React            from 'react'
 import ReactDOM         from 'react-dom'
 import VolunteeringList from './VolunteeringList.jsx'
 import Map              from './Map.jsx'
@@ -7,29 +6,26 @@ import LocationInput    from './LocationInput.jsx'
 
 var Explorer = React.createClass({
   getInitialState() {
-    return { records: [], currentBounds: {}, currentPage: 1, visitedRecordIds: [] };
+    return {
+      changeBounds: this.props.initialBounds,
+      currentBounds: this.props.initialBounds,
+      currentPage: 1,
+      records: [],
+      visitedRecordIds: [],
+    }
   },
 
   componentDidMount() {
-    if(this.props.location.query.east) {
-      var currentBounds = {
-        east: parseFloat(this.props.location.query.east),
-        west: parseFloat(this.props.location.query.west),
-        north: parseFloat(this.props.location.query.north),
-        south: parseFloat(this.props.location.query.south),
-      }
-      this.setState({ currentBounds: currentBounds, changeBounds: currentBounds })
+    var hashParams = undefined
+    try { hashParams = JSON.parse(window.location.hash.replace('#','')) } catch(e) {}
 
-    } else {
-      var defaultBounds = {
-        east: 19.90940093749998,
-        north: 61.493695009727325,
-        south: 39.728030772041244,
-        west: -4.612083437500019,
-      }
-      this.setState({ currentBounds: defaultBounds, changeBounds: defaultBounds })
+    if (hashParams) {
+      this.setState({ currentBounds: hashParams.bounds, changeBounds: hashParams.bounds })
     }
-      // this.load('https://www.betterplace.org/de/api_v4/volunteering?per_page=20')
+  },
+
+  componentDidUpdate() {
+    window.location.hash = JSON.stringify({ bounds: this.state.currentBounds, page: this.state.currentPage })
   },
 
   render: function() {
@@ -74,17 +70,7 @@ var Explorer = React.createClass({
     this.load(this.state.currentBounds, page)
   },
 
-  updateURLBounds: function(bounds) {
-    var newQuery = Object.assign({}, this.props.location.query, bounds);
-    browserHistory.push({ pathname: this.props.location.pathname, query: newQuery })
-  },
-
   changeLocation: function(location, bounds) {
-    // console.log(location)
-
-    // browserHistory.push({ pathname: `/l/${location}`, query: this.props.location.query })
-
-    this.updateURLBounds(bounds)
     this.setState({ currentBounds: bounds, changeBounds: bounds, currentPage: 1 })
   },
 
@@ -98,7 +84,7 @@ var Explorer = React.createClass({
       per_page: 20,
     }
     var query = Object.keys(params).map(function(k, _) { return k + '=' + params[k] }).join('&')
-    var url = 'https://www.betterplace.org/de/api_v4/volunteering?' + query
+    var url = `${this.props.apiBaseUrl}?${query}`
     fetch(url)
       .then(response => response.json())
       .then(json => this.assignApiResult(json))
@@ -107,7 +93,6 @@ var Explorer = React.createClass({
 
   loadByBoundingBox: function(bounds) {
     this.setState({ currentBounds: bounds, currentPage: 1 })
-    this.updateURLBounds(bounds)
     this.load(bounds, 1)
   },
 
@@ -121,10 +106,12 @@ var Explorer = React.createClass({
   },
 });
 
-ReactDOM.render((
-  <Router history={browserHistory}>
-    <Route path="/" component={Explorer}/>
-    <Route path="/l/:location" component={Explorer}/>
-    <Route path="/*" component={Explorer}/>
-  </Router>
-), document.getElementById('betterplace-explorer'))
+var mountPoint = document.getElementById('betterplace-explorer')
+var apiBaseUrl = mountPoint.getAttribute('data-api-base-url')
+var initialBounds = {
+  north: parseFloat(mountPoint.getAttribute('data-north')),
+  south: parseFloat(mountPoint.getAttribute('data-south')),
+  east: parseFloat(mountPoint.getAttribute('data-east')),
+  west: parseFloat(mountPoint.getAttribute('data-west')),
+}
+ReactDOM.render(<Explorer apiBaseUrl={apiBaseUrl} initialBounds={initialBounds} />, mountPoint)
