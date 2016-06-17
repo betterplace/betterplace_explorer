@@ -27,17 +27,16 @@ const visitedPin = {
 
 var Map = React.createClass({
   render: function() {
-
     var markers = this.props.records.map(
       record => <Marker
-                  customInfo="Marker A"
+                  customInfo={record.title}
                   icon={this.getPinForRecord(record)}
                   key={record.id}
                   onClick={this.handleMarkerClick.bind(this, record)}
                   onMouseout={this.handleMarkerMouseOut.bind(this, record)}
                   onMouseover={this.handleMarkerMouseOver.bind(this, record)}
                   position={{ lat: record.latitude, lng: record.longitude }}
-                  zIndex={record == this.props.highlightRecord ? 10000 : null}
+                  zIndex={record === this.getHighlightRecord() ? 10000 : null}
                 />
     )
 
@@ -146,7 +145,7 @@ var Map = React.createClass({
   },
 
   getPinForRecord: function(record) {
-    if (record == this.getHighlightRecord())
+    if (record === this.getHighlightRecord())
       return highlightPin
     else if (this.props.visitedRecordIds.indexOf(record.id) !== -1)
       return visitedPin
