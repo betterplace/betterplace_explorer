@@ -53,12 +53,16 @@ var Pagination = React.createClass({
   },
 
   previousPage: function(event) {
-    this.props.changePage(this.props.currentPage - 1)
+    this.changePage(this.props.currentPage - 1)
   },
 
   nextPage: function(event) {
-    this.props.changePage(this.props.currentPage + 1)
-  }
+    this.changePage(this.props.currentPage + 1)
+  },
+
+  changePage: function(toPage) {
+    this.props.changePage(toPage)
+  },
 })
 
 export default Pagination

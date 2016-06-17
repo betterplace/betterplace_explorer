@@ -56,7 +56,7 @@ var Map = React.createClass({
     )
   },
 
-  componentDidUpdate: function(next, prev) {
+  componentDidUpdate: function(prevProps, prevState) {
     if (this.props.changeBounds) {
       this.googlemap.fitBounds(this.props.changeBounds)
       this.googlemap.props.map.setZoom(this.googlemap.getZoom()+1)

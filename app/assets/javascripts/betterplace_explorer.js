@@ -110,9 +110,24 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'betterplace-explorer' },
-	        _react2['default'].createElement(_LocationInput2['default'], { changeLocation: this.changeLocation }),
-	        _react2['default'].createElement(_VolunteeringList2['default'], { records: this.state.records, totalEntries: this.state.totalEntries, setHighlightRecord: this.setHighlightRecord, currentPage: this.state.currentPage, totalPages: this.state.totalPages, changePage: this.changePage }),
-	        _react2['default'].createElement(_Map2['default'], { records: this.state.records, mapIdle: this.loadByBoundingBox, changeBounds: this.state.changeBounds, highlightRecord: this.state.highlightRecord, setHighlightRecord: this.setHighlightRecord })
+	        _react2['default'].createElement(_LocationInput2['default'], {
+	          changeLocation: this.changeLocation
+	        }),
+	        _react2['default'].createElement(_VolunteeringList2['default'], {
+	          changePage: this.changePage,
+	          currentPage: this.state.currentPage,
+	          records: this.state.records,
+	          setHighlightRecord: this.setHighlightRecord,
+	          totalEntries: this.state.totalEntries,
+	          totalPages: this.state.totalPages
+	        }),
+	        _react2['default'].createElement(_Map2['default'], {
+	          changeBounds: this.state.changeBounds,
+	          highlightRecord: this.state.highlightRecord,
+	          mapIdle: this.loadByBoundingBox,
+	          records: this.state.records,
+	          setHighlightRecord: this.setHighlightRecord
+	        })
 	      );
 	    }
 
@@ -26037,6 +26052,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactDom = __webpack_require__(99);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
 	var _Pagination = __webpack_require__(230);
 
 	var _Pagination2 = _interopRequireDefault(_Pagination);
@@ -26055,7 +26074,11 @@
 	      var _this = this;
 
 	      var volunteeringNodes = this.props.records.map(function (record) {
-	        return _react2['default'].createElement(_Volunteering2['default'], { record: record, key: record.id, setHighlightRecord: _this.props.setHighlightRecord });
+	        return _react2['default'].createElement(_Volunteering2['default'], {
+	          key: record.id,
+	          record: record,
+	          setHighlightRecord: _this.props.setHighlightRecord
+	        });
 	      });
 
 	      return _react2['default'].createElement(
@@ -26077,12 +26100,36 @@
 	        _react2['default'].createElement(
 	          'div',
 	          null,
-	          _react2['default'].createElement(_Pagination2['default'], { currentPage: this.props.currentPage, totalPages: this.props.totalPages, changePage: this.props.changePage })
+	          _react2['default'].createElement(_Pagination2['default'], {
+	            changePage: this.changePage,
+	            currentPage: this.props.currentPage,
+	            totalPages: this.props.totalPages
+	          })
 	        )
 	      );
 	    }
 
 	    return render;
+	  }(),
+
+	  changePage: function () {
+	    function changePage(toPage) {
+	      this.shouldScrollTop = true;
+	      this.props.changePage(toPage);
+	    }
+
+	    return changePage;
+	  }(),
+
+	  componentDidUpdate: function () {
+	    function componentDidUpdate() {
+	      if (this.shouldScrollTop) {
+	        this.shouldScrollTop = false;
+	        _reactDom2['default'].findDOMNode(this).scrollTop = 0;
+	      }
+	    }
+
+	    return componentDidUpdate;
 	  }()
 	});
 
@@ -26174,12 +26221,19 @@
 	          _react2["default"].createElement(
 	            "ul",
 	            { className: "pager" },
-	            _react2["default"].createElement(PrevButton, { currentPage: this.props.currentPage, handleClick: this.previousPage }),
+	            _react2["default"].createElement(PrevButton, {
+	              currentPage: this.props.currentPage,
+	              handleClick: this.previousPage
+	            }),
 	            "Seite ",
 	            this.props.currentPage,
 	            " von ",
 	            this.props.totalPages,
-	            _react2["default"].createElement(NextButton, { currentPage: this.props.currentPage, totalPages: this.props.totalPages, handleClick: this.nextPage })
+	            _react2["default"].createElement(NextButton, {
+	              currentPage: this.props.currentPage,
+	              handleClick: this.nextPage,
+	              totalPages: this.props.totalPages
+	            })
 	          )
 	        );
 	      } else {
@@ -26192,7 +26246,7 @@
 
 	  previousPage: function () {
 	    function previousPage(event) {
-	      this.props.changePage(this.props.currentPage - 1);
+	      this.changePage(this.props.currentPage - 1);
 	    }
 
 	    return previousPage;
@@ -26200,10 +26254,18 @@
 
 	  nextPage: function () {
 	    function nextPage(event) {
-	      this.props.changePage(this.props.currentPage + 1);
+	      this.changePage(this.props.currentPage + 1);
 	    }
 
 	    return nextPage;
+	  }(),
+
+	  changePage: function () {
+	    function changePage(toPage) {
+	      this.props.changePage(toPage);
+	    }
+
+	    return changePage;
 	  }()
 	});
 
@@ -26357,14 +26419,14 @@
 
 	      var markers = this.props.records.map(function (record) {
 	        return _react2['default'].createElement(_reactGoogleMaps.Marker, {
-	          position: { lat: record.latitude, lng: record.longitude },
-	          key: record.id,
+	          customInfo: 'Marker A',
 	          icon: record == _this.props.highlightRecord ? highlightPin : defaultPin,
-	          zIndex: record == _this.props.highlightRecord ? 10000 : null,
+	          key: record.id,
 	          onClick: _this.handleMarkerClick.bind(_this, record),
-	          onMouseover: _this.handleMarkerMouseOver.bind(_this, record),
 	          onMouseout: _this.handleMarkerMouseOut.bind(_this, record),
-	          customInfo: 'Marker A'
+	          onMouseover: _this.handleMarkerMouseOver.bind(_this, record),
+	          position: { lat: record.latitude, lng: record.longitude },
+	          zIndex: record == _this.props.highlightRecord ? 10000 : null
 	        });
 	      });
 
@@ -26376,17 +26438,17 @@
 	          googleMapElement: _react2['default'].createElement(
 	            _reactGoogleMaps.GoogleMap,
 	            {
+	              defaultCenter: { lat: 52.49928, lng: 13.44944 },
+	              defaultZoom: 5,
+	              onClick: this.handleMapClick,
+	              onIdle: this.idle,
 	              ref: function () {
 	                function ref(map) {
 	                  return _this.googlemap = map;
 	                }
 
 	                return ref;
-	              }(),
-	              defaultZoom: 5,
-	              defaultCenter: { lat: 52.49928, lng: 13.44944 },
-	              onIdle: this.idle,
-	              onClick: this.handleMapClick
+	              }()
 	            },
 	            markers
 	          )
@@ -26398,7 +26460,7 @@
 	  }(),
 
 	  componentDidUpdate: function () {
-	    function componentDidUpdate(next, prev) {
+	    function componentDidUpdate(prevProps, prevState) {
 	      if (this.props.changeBounds) {
 	        this.googlemap.fitBounds(this.props.changeBounds);
 	        this.googlemap.props.map.setZoom(this.googlemap.getZoom() + 1);

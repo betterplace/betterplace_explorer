@@ -1,4 +1,5 @@
 import React        from 'react'
+import ReactDOM     from 'react-dom'
 import Pagination   from './Pagination.jsx'
 import Volunteering from './Volunteering.jsx'
 
@@ -20,13 +21,25 @@ var VolunteeringList = React.createClass({
         </div>
         <div>
           <Pagination
-            changePage={this.props.changePage}
+            changePage={this.changePage}
             currentPage={this.props.currentPage}
             totalPages={this.props.totalPages}
           />
         </div>
       </div>
     )
+  },
+
+  changePage: function(toPage) {
+    this.shouldScrollTop = true
+    this.props.changePage(toPage)
+  },
+
+  componentDidUpdate: function() {
+    if (this.shouldScrollTop) {
+      this.shouldScrollTop = false
+      ReactDOM.findDOMNode(this).scrollTop = 0
+    }
   },
 });
 
