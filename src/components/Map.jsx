@@ -31,11 +31,7 @@ var Map = React.createClass({
     var markers = this.props.records.map(
       record => <Marker
                   customInfo="Marker A"
-                  icon={record == this.getHighlightRecord() ?
-                        highlightPin :
-                        (this.props.visitedRecords.indexOf(record) === -1 ?
-                         defaultPin :
-                         visitedPin)}
+                  icon={this.getPinForRecord(record)}
                   key={record.id}
                   onClick={this.handleMarkerClick.bind(this, record)}
                   onMouseout={this.handleMarkerMouseOut.bind(this, record)}
@@ -147,6 +143,15 @@ var Map = React.createClass({
       this.infoBubbleRecord = null
       this.infoBubble.close()
     }
+  },
+
+  getPinForRecord: function(record) {
+    if (record == this.getHighlightRecord())
+      return highlightPin
+    else if (this.props.visitedRecordIds.indexOf(record.id) !== -1)
+      return visitedPin
+    else
+      return defaultPin
   },
 
   getHighlightRecord: function() {

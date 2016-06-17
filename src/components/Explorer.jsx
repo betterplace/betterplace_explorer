@@ -7,7 +7,7 @@ import LocationInput    from './LocationInput.jsx'
 
 var Explorer = React.createClass({
   getInitialState() {
-    return { records: [], currentBounds: {}, currentPage: 1, visitedRecords: [] };
+    return { records: [], currentBounds: {}, currentPage: 1, visitedRecordIds: [] };
   },
 
   componentDidMount() {
@@ -53,7 +53,7 @@ var Explorer = React.createClass({
           records={this.state.records}
           setHighlightRecord={this.setHighlightRecord}
           setRecordVisited={this.setRecordVisited}
-          visitedRecords={this.state.visitedRecords}
+          visitedRecordIds={this.state.visitedRecordIds}
         />
       </div>
     )
@@ -116,8 +116,8 @@ var Explorer = React.createClass({
   },
 
   setRecordVisited: function(record) {
-    var newVisitedRecords = this.state.visitedRecords.concat([record])
-    this.setState({ visitedRecords: newVisitedRecords })
+    var newVisitedRecordIds = this.state.visitedRecordIds.concat([record.id])
+    this.setState({ visitedRecordIds: newVisitedRecordIds })
   },
 });
 

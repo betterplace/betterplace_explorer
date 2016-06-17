@@ -74,7 +74,7 @@
 	  displayName: 'Explorer',
 	  getInitialState: function () {
 	    function getInitialState() {
-	      return { records: [], currentBounds: {}, currentPage: 1, visitedRecords: [] };
+	      return { records: [], currentBounds: {}, currentPage: 1, visitedRecordIds: [] };
 	    }
 
 	    return getInitialState;
@@ -128,7 +128,7 @@
 	          records: this.state.records,
 	          setHighlightRecord: this.setHighlightRecord,
 	          setRecordVisited: this.setRecordVisited,
-	          visitedRecords: this.state.visitedRecords
+	          visitedRecordIds: this.state.visitedRecordIds
 	        })
 	      );
 	    }
@@ -229,8 +229,8 @@
 
 	  setRecordVisited: function () {
 	    function setRecordVisited(record) {
-	      var newVisitedRecords = this.state.visitedRecords.concat([record]);
-	      this.setState({ visitedRecords: newVisitedRecords });
+	      var newVisitedRecordIds = this.state.visitedRecordIds.concat([record.id]);
+	      this.setState({ visitedRecordIds: newVisitedRecordIds });
 	    }
 
 	    return setRecordVisited;
@@ -26392,7 +26392,7 @@
 	      var markers = this.props.records.map(function (record) {
 	        return _react2['default'].createElement(_reactGoogleMaps.Marker, {
 	          customInfo: 'Marker A',
-	          icon: record == _this.getHighlightRecord() ? highlightPin : _this.props.visitedRecords.indexOf(record) === -1 ? defaultPin : visitedPin,
+	          icon: _this.getPinForRecord(record),
 	          key: record.id,
 	          onClick: _this.handleMarkerClick.bind(_this, record),
 	          onMouseout: _this.handleMarkerMouseOut.bind(_this, record),
@@ -26540,6 +26540,14 @@
 	    }
 
 	    return closeInfoBubble;
+	  }(),
+
+	  getPinForRecord: function () {
+	    function getPinForRecord(record) {
+	      if (record == this.getHighlightRecord()) return highlightPin;else if (this.props.visitedRecordIds.indexOf(record.id) !== -1) return visitedPin;else return defaultPin;
+	    }
+
+	    return getPinForRecord;
 	  }(),
 
 	  getHighlightRecord: function () {
