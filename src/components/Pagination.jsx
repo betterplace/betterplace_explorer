@@ -34,9 +34,16 @@ var Pagination = React.createClass({
       return (
         <nav className="bpe--pagination">
           <ul className="pager">
-            <PrevButton currentPage={this.props.currentPage} handleClick={this.previousPage} />
+            <PrevButton
+              currentPage={this.props.currentPage}
+              handleClick={this.previousPage}
+            />
             Seite {this.props.currentPage} von {this.props.totalPages}
-            <NextButton currentPage={this.props.currentPage} totalPages={this.props.totalPages} handleClick={this.nextPage} />
+            <NextButton
+              currentPage={this.props.currentPage}
+              handleClick={this.nextPage}
+              totalPages={this.props.totalPages}
+            />
           </ul>
         </nav>
       )
