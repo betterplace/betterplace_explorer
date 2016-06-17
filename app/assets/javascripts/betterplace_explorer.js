@@ -74,7 +74,7 @@
 	  displayName: 'Explorer',
 	  getInitialState: function () {
 	    function getInitialState() {
-	      return { records: [], currentBounds: {}, currentPage: 1 };
+	      return { records: [], currentBounds: {}, currentPage: 1, visitedRecords: [] };
 	    }
 
 	    return getInitialState;
@@ -126,7 +126,9 @@
 	          highlightRecord: this.state.highlightRecord,
 	          mapIdle: this.loadByBoundingBox,
 	          records: this.state.records,
-	          setHighlightRecord: this.setHighlightRecord
+	          setHighlightRecord: this.setHighlightRecord,
+	          setRecordVisited: this.setRecordVisited,
+	          visitedRecords: this.state.visitedRecords
 	        })
 	      );
 	    }
@@ -223,6 +225,15 @@
 	    }
 
 	    return setHighlightRecord;
+	  }(),
+
+	  setRecordVisited: function () {
+	    function setRecordVisited(record) {
+	      var newVisitedRecords = this.state.visitedRecords.concat([record]);
+	      this.setState({ visitedRecords: newVisitedRecords });
+	    }
+
+	    return setRecordVisited;
 	  }()
 	});
 
@@ -343,6 +354,31 @@
 	// shim for using process in browser
 
 	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	(function () {
+	  try {
+	    cachedSetTimeout = setTimeout;
+	  } catch (e) {
+	    cachedSetTimeout = function () {
+	      throw new Error('setTimeout is not defined');
+	    }
+	  }
+	  try {
+	    cachedClearTimeout = clearTimeout;
+	  } catch (e) {
+	    cachedClearTimeout = function () {
+	      throw new Error('clearTimeout is not defined');
+	    }
+	  }
+	} ())
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -367,7 +403,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = setTimeout(cleanUpNextTick);
+	    var timeout = cachedSetTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -384,7 +420,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    clearTimeout(timeout);
+	    cachedClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -396,7 +432,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
+	        cachedSetTimeout(drainQueue, 0);
 	    }
 	};
 
@@ -1284,7 +1320,7 @@
 	var warning = emptyFunction;
 
 	if (process.env.NODE_ENV !== 'production') {
-	  warning = function (condition, format) {
+	  warning = function warning(condition, format) {
 	    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
 	      args[_key - 2] = arguments[_key];
 	    }
@@ -1332,6 +1368,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
+	 * 
 	 */
 
 	function makeEmptyFunction(arg) {
@@ -1345,7 +1382,7 @@
 	 * primarily useful idiomatically for overridable function endpoints which
 	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
 	 */
-	function emptyFunction() {}
+	var emptyFunction = function emptyFunction() {};
 
 	emptyFunction.thatReturns = makeEmptyFunction;
 	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
@@ -2234,11 +2271,11 @@
 	 * because of Facebook's testing infrastructure.
 	 */
 	if (performance.now) {
-	  performanceNow = function () {
+	  performanceNow = function performanceNow() {
 	    return performance.now();
 	  };
 	} else {
-	  performanceNow = function () {
+	  performanceNow = function performanceNow() {
 	    return Date.now();
 	  };
 	}
@@ -3326,7 +3363,7 @@
 	 * @param {object} obj
 	 * @return {object}
 	 */
-	var keyMirror = function (obj) {
+	var keyMirror = function keyMirror(obj) {
 	  var ret = {};
 	  var key;
 	  !(obj instanceof Object && !Array.isArray(obj)) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'keyMirror(...): Argument must be an object.') : invariant(false) : void 0;
@@ -3398,7 +3435,7 @@
 	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
 	 * reuse those resolutions.
 	 */
-	var keyOf = function (oneKeyObj) {
+	var keyOf = function keyOf(oneKeyObj) {
 	  var key;
 	  for (key in oneKeyObj) {
 	    if (!oneKeyObj.hasOwnProperty(key)) {
@@ -8532,11 +8569,11 @@
 	    arity: true
 	};
 
-	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent) {
+	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
 	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
 	        var keys = Object.getOwnPropertyNames(sourceComponent);
-	        for (var i=0; i<keys.length; ++i) {
-	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]]) {
+	        for (var i = 0; i < keys.length; ++i) {
+	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
 	                try {
 	                    targetComponent[keys[i]] = sourceComponent[keys[i]];
 	                } catch (error) {
@@ -9711,7 +9748,11 @@
 	  var useRefresh = !isSupported || forceRefresh;
 
 	  function getCurrentLocation(historyState) {
-	    historyState = historyState || window.history.state || {};
+	    try {
+	      historyState = historyState || window.history.state || {};
+	    } catch (e) {
+	      historyState = {};
+	    }
 
 	    var path = _DOMUtils.getWindowPath();
 	    var _historyState = historyState;
@@ -17395,6 +17436,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
+	 * 
 	 * @typechecks static-only
 	 */
 
@@ -17402,9 +17444,6 @@
 
 	/**
 	 * Memoizes the return value of a function that accepts one string argument.
-	 *
-	 * @param {function} callback
-	 * @return {function}
 	 */
 
 	function memoizeStringOnly(callback) {
@@ -22649,18 +22688,18 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  listen: function (target, eventType, callback) {
+	  listen: function listen(target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, false);
 	      return {
-	        remove: function () {
+	        remove: function remove() {
 	          target.removeEventListener(eventType, callback, false);
 	        }
 	      };
 	    } else if (target.attachEvent) {
 	      target.attachEvent('on' + eventType, callback);
 	      return {
-	        remove: function () {
+	        remove: function remove() {
 	          target.detachEvent('on' + eventType, callback);
 	        }
 	      };
@@ -22675,11 +22714,11 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  capture: function (target, eventType, callback) {
+	  capture: function capture(target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, true);
 	      return {
-	        remove: function () {
+	        remove: function remove() {
 	          target.removeEventListener(eventType, callback, true);
 	        }
 	      };
@@ -22693,7 +22732,7 @@
 	    }
 	  },
 
-	  registerDefault: function () {}
+	  registerDefault: function registerDefault() {}
 	};
 
 	module.exports = EventListener;
@@ -23389,7 +23428,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @typechecks
+	 * 
 	 */
 
 	var isTextNode = __webpack_require__(205);
@@ -23398,10 +23437,6 @@
 
 	/**
 	 * Checks if a given DOM node contains or is another DOM node.
-	 *
-	 * @param {?DOMNode} outerNode Outer DOM node.
-	 * @param {?DOMNode} innerNode Inner DOM node.
-	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
 	 */
 	function containsNode(outerNode, innerNode) {
 	  if (!outerNode || !innerNode) {
@@ -23412,7 +23447,7 @@
 	    return false;
 	  } else if (isTextNode(innerNode)) {
 	    return containsNode(outerNode, innerNode.parentNode);
-	  } else if (outerNode.contains) {
+	  } else if ('contains' in outerNode) {
 	    return outerNode.contains(innerNode);
 	  } else if (outerNode.compareDocumentPosition) {
 	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
@@ -26340,6 +26375,13 @@
 	  anchor: new google.maps.Point(16, 16)
 	};
 
+	var visitedPin = {
+	  url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAdVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/v739/fs7Ozq6urPz8+ZmZmEhIQqKioAAAAAAADa2trt7e3t7e1ISEjc3NwAAABnZGPt7e1ua2q4t7acmpmRj453dHRraGfr6+u8u7rLysnR0M/LysrJyMh/fHvZ2w4nAAAAGHRSTlMABAcNFCgdLPvt09CfZ1g0Ihmx19U9sh+WxKfKAAAA+klEQVQ4y42T2RbCIAxERQjdVzegq3X5/080okerzTHOSx/mnimQyWomIcQahZ8VITSlVF5SIkTYSpcQoKDU6hvxNuRpEoVhlKQ5eOTDryCLbdP1g7t2zRhnUCEx83VR29a81Nq60Ei8/d325MxMbtruXoSQVbE5mi8dN0UlxSNAQX02C533oHyEkDqzbgk4m2kfgQFxawi1MUb4gNwaUjbHCATKtKGBJi3vgIKko4EuASXwCEHU00AfBWp9B8KBBobwH4D9BX9I/pr4UCMNjP6hmKf+PawDBjzHPS2B6TluvjB05S6PynGlpWo/9LPa84vDrx6/vOz63wC77Demd5pVhAAAAABJRU5ErkJggg==',
+	  size: new google.maps.Size(32, 32),
+	  origin: new google.maps.Point(0, 0),
+	  anchor: new google.maps.Point(16, 16)
+	};
+
 	var Map = _react2['default'].createClass({
 	  displayName: 'Map',
 
@@ -26350,7 +26392,7 @@
 	      var markers = this.props.records.map(function (record) {
 	        return _react2['default'].createElement(_reactGoogleMaps.Marker, {
 	          customInfo: 'Marker A',
-	          icon: record == _this.props.highlightRecord ? highlightPin : defaultPin,
+	          icon: record == _this.getHighlightRecord() ? highlightPin : _this.props.visitedRecords.indexOf(record) === -1 ? defaultPin : visitedPin,
 	          key: record.id,
 	          onClick: _this.handleMarkerClick.bind(_this, record),
 	          onMouseout: _this.handleMarkerMouseOut.bind(_this, record),
@@ -26466,6 +26508,8 @@
 	      this.preventReloadOnce = true;
 	      this.infoBubbleRecord = record;
 	      this.infoBubble.open();
+
+	      this.props.setRecordVisited(record);
 	    }
 
 	    return handleMarkerClick;
@@ -26496,6 +26540,14 @@
 	    }
 
 	    return closeInfoBubble;
+	  }(),
+
+	  getHighlightRecord: function () {
+	    function getHighlightRecord() {
+	      return this.props.highlightRecord || this.infoBubbleRecord;
+	    }
+
+	    return getHighlightRecord;
 	  }()
 	});
 
@@ -26613,7 +26665,7 @@
 	  _createClass(GoogleMapLoader, [{
 	    key: "mountGoogleMap",
 	    value: function mountGoogleMap(domEl) {
-	      if (this.state.map) {
+	      if (this.state.map || domEl === null) {
 	        return;
 	      }
 	      var _props$googleMapElement$props = this.props.googleMapElement.props;
@@ -29537,6 +29589,21 @@
 	          return getPixelPositionOffset(this._containerElement.offsetWidth, this._containerElement.offsetHeight);
 	        }
 	      };
+
+	      // If we're inside a MarkerClusterer, allow ourselves to be clustered
+	      if (overlayViewProps.anchorHolderRef) {
+	        if ("MarkerClusterer" === overlayViewProps.anchorHolderRef.getAnchorType()) {
+	          overlayView.getDraggable = function getDraggable() {
+	            return !!overlayViewProps.draggable;
+	          };
+
+	          overlayView.getPosition = function getPosition() {
+	            return new google.maps.LatLng(this.position);
+	          };
+
+	          overlayViewProps.anchorHolderRef.getAnchor().addMarker(overlayView);
+	        }
+	      }
 
 	      return overlayView;
 	    }

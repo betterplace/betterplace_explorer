@@ -18,13 +18,24 @@ const highlightPin = {
   anchor: new google.maps.Point(16, 16)
 }
 
+const visitedPin = {
+  url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAdVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/v739/fs7Ozq6urPz8+ZmZmEhIQqKioAAAAAAADa2trt7e3t7e1ISEjc3NwAAABnZGPt7e1ua2q4t7acmpmRj453dHRraGfr6+u8u7rLysnR0M/LysrJyMh/fHvZ2w4nAAAAGHRSTlMABAcNFCgdLPvt09CfZ1g0Ihmx19U9sh+WxKfKAAAA+klEQVQ4y42T2RbCIAxERQjdVzegq3X5/080okerzTHOSx/mnimQyWomIcQahZ8VITSlVF5SIkTYSpcQoKDU6hvxNuRpEoVhlKQ5eOTDryCLbdP1g7t2zRhnUCEx83VR29a81Nq60Ei8/d325MxMbtruXoSQVbE5mi8dN0UlxSNAQX02C533oHyEkDqzbgk4m2kfgQFxawi1MUb4gNwaUjbHCATKtKGBJi3vgIKko4EuASXwCEHU00AfBWp9B8KBBobwH4D9BX9I/pr4UCMNjP6hmKf+PawDBjzHPS2B6TluvjB05S6PynGlpWo/9LPa84vDrx6/vOz63wC77Demd5pVhAAAAABJRU5ErkJggg==',
+  size: new google.maps.Size(32, 32),
+  origin: new google.maps.Point(0, 0),
+  anchor: new google.maps.Point(16, 16)
+}
+
 var Map = React.createClass({
   render: function() {
 
     var markers = this.props.records.map(
       record => <Marker
                   customInfo="Marker A"
-                  icon={record == this.props.highlightRecord ? highlightPin : defaultPin}
+                  icon={record == this.getHighlightRecord() ?
+                        highlightPin :
+                        (this.props.visitedRecords.indexOf(record) === -1 ?
+                         defaultPin :
+                         visitedPin)}
                   key={record.id}
                   onClick={this.handleMarkerClick.bind(this, record)}
                   onMouseout={this.handleMarkerMouseOut.bind(this, record)}
@@ -119,6 +130,8 @@ var Map = React.createClass({
     this.preventReloadOnce = true
     this.infoBubbleRecord = record
     this.infoBubble.open()
+
+    this.props.setRecordVisited(record)
   },
 
   handleMarkerMouseOver: function(record) {
@@ -134,6 +147,10 @@ var Map = React.createClass({
       this.infoBubbleRecord = null
       this.infoBubble.close()
     }
+  },
+
+  getHighlightRecord: function() {
+    return this.props.highlightRecord || this.infoBubbleRecord
   }
 });
 
