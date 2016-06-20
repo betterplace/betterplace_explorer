@@ -82,6 +82,8 @@ var Map = React.createClass({
   // multiple times when `fitBounds` is called, we prevent multiple API calls
   // by comparing the last loaded bounds with the current ones.
   idle: function() {
+    this.googlemap.props.map.setClickableIcons(false)
+
     if (this.preventReloadOnce) {
       this.preventReloadOnce = false
       return
