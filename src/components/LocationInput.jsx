@@ -6,8 +6,8 @@ var LocationInput = React.createClass({
     return (
       <div className='bpe--location-input'>
         <input
-          type='text' 
-          placeholder='Ort'
+          type='text'
+          placeholder='Bezirk, Stadt, Region'
           ref='locationInput'
           className='bpe--location-input--input'
           value={this.props.value}
