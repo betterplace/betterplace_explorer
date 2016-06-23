@@ -9,7 +9,7 @@ var Volunteering = React.createClass({
     return (
       <a href={selfUrl} target='_blank' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
         <div className="bpe--volunteering media">
-          <img className="bpe--volunteering--image" src={imageUrl} alt="{this.props.record.title}" />
+          <img className="bpe--volunteering--image" src={imageUrl} alt={this.props.record.title} />
           <div className="bpe--volunteering--body">
             <p><small className="text-muted">{carrier.name}</small></p>
             <h4 className="media-heading">{this.props.record.title}</h4>
