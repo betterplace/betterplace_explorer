@@ -59,7 +59,7 @@ var LocationInput = React.createClass({
     } else {
       var lat = geometry.location.lat(),
           lng = geometry.location.lng(),
-          rim = 0.05
+          rim = 0.005
       this.props.changeBounds(
         { north: lat - rim, east: lng + rim, south: lat + rim, west: lng - rim }
       )
