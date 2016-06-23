@@ -66,6 +66,10 @@
 
 	var _LocationInput2 = _interopRequireDefault(_LocationInput);
 
+	var _QueryParser = __webpack_require__(225);
+
+	var _QueryParser2 = _interopRequireDefault(_QueryParser);
+
 	__webpack_require__(219);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -77,35 +81,23 @@
 	  displayName: 'Explorer',
 	  getInitialState: function () {
 	    function getInitialState() {
-	      return {
-	        currentBounds: this.props.initialBounds,
-	        currentPage: 1,
-	        location: '',
-	        newBounds: this.props.initialBounds,
-	        records: [],
-	        visitedRecordIds: []
-	      };
+	      return { records: [], visitedRecordIds: [] };
 	    }
 
 	    return getInitialState;
 	  }(),
 	  componentDidMount: function () {
 	    function componentDidMount() {
-	      var hashParams = undefined;
-	      try {
-	        hashParams = JSON.parse(window.location.hash.replace('#', ''));
-	      } catch (e) {}
-
-	      if (hashParams) {
-	        this.setState({ currentBounds: hashParams.bounds, newBounds: hashParams.bounds });
-	      }
+	      var queryParams = new _QueryParser2['default']();
+	      this.setState({ currentBounds: queryParams.bounds, newBounds: queryParams.bounds });
 	    }
 
 	    return componentDidMount;
 	  }(),
 	  componentDidUpdate: function () {
 	    function componentDidUpdate() {
-	      window.location.hash = JSON.stringify({ bounds: this.state.currentBounds, page: this.state.currentPage });
+	      var params = Object.assign({}, this.state.currentBounds, { page: this.state.currentPage });
+	      window.history.pushState(null, null, this.toQuery(params));
 	    }
 
 	    return componentDidUpdate;
@@ -198,10 +190,7 @@
 	        page: page,
 	        per_page: 12
 	      };
-	      var query = Object.keys(params).map(function (k, _) {
-	        return k + '=' + params[k];
-	      }).join('&');
-	      var url = this.props.apiBaseUrl + '?' + query;
+	      var url = '' + this.props.apiBaseUrl + this.toQuery(params);
 	      this.setState({ isLoading: true });
 	      fetch(url).then(function (response) {
 	        return response.json();
@@ -239,6 +228,16 @@
 	    }
 
 	    return setRecordVisited;
+	  }(),
+
+	  toQuery: function () {
+	    function toQuery(object) {
+	      return '?' + Object.keys(object).map(function (k, _) {
+	        return k + '=' + object[k];
+	      }).join('&');
+	    }
+
+	    return toQuery;
 	  }()
 	});
 
@@ -20296,7 +20295,7 @@
 
 	  previousPage: function () {
 	    function previousPage(event) {
-	      this.changePage(this.props.currentPage - 1);
+	      this.changePage(event, this.props.currentPage - 1);
 	    }
 
 	    return previousPage;
@@ -20304,14 +20303,15 @@
 
 	  nextPage: function () {
 	    function nextPage(event) {
-	      this.changePage(this.props.currentPage + 1);
+	      this.changePage(event, this.props.currentPage + 1);
 	    }
 
 	    return nextPage;
 	  }(),
 
 	  changePage: function () {
-	    function changePage(toPage) {
+	    function changePage(event, toPage) {
+	      event.preventDefault();
 	      this.props.changePage(toPage);
 	    }
 
@@ -20325,7 +20325,7 @@
 /* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -20335,25 +20335,25 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var PaginationNextButton = _react2["default"].createClass({
-	  displayName: "PaginationNextButton",
+	var PaginationNextButton = _react2['default'].createClass({
+	  displayName: 'PaginationNextButton',
 
 	  render: function () {
 	    function render() {
 	      if (this.props.currentPage < this.props.totalPages) {
-	        return _react2["default"].createElement(
-	          "li",
-	          { className: "next" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            "weiter ",
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "→"
+	        return _react2['default'].createElement(
+	          'li',
+	          { className: 'next' },
+	          _react2['default'].createElement(
+	            'a',
+	            { href: '#', onClick: this.props.handleClick },
+	            'weiter ',
+	            _react2['default'].createElement(
+	              'span',
+	              { 'aria-hidden': 'true' },
+	              '→'
 	            )
 	          )
 	        );
@@ -20366,7 +20366,7 @@
 	  }()
 	});
 
-	exports["default"] = PaginationNextButton;
+	exports['default'] = PaginationNextButton;
 
 /***/ },
 /* 167 */
@@ -27423,7 +27423,7 @@
 /* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
@@ -28513,6 +28513,65 @@
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
+
+/***/ },
+/* 225 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var QueryParser = function () {
+	  function QueryParser() {
+	    _classCallCheck(this, QueryParser);
+
+	    var query = {};
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	      for (var _iterator = window.location.search.substr(1).split('&')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	        var queryPart = _step.value;
+
+	        var keyValue = queryPart.split('=');
+	        query[keyValue[0]] = keyValue[1];
+	      }
+	    } catch (err) {
+	      _didIteratorError = true;
+	      _iteratorError = err;
+	    } finally {
+	      try {
+	        if (!_iteratorNormalCompletion && _iterator['return']) {
+	          _iterator['return']();
+	        }
+	      } finally {
+	        if (_didIteratorError) {
+	          throw _iteratorError;
+	        }
+	      }
+	    }
+
+	    return {
+	      bounds: {
+	        north: parseFloat(query.north) || this.props.initialBounds.north,
+	        south: parseFloat(query.south) || this.props.initialBounds.south,
+	        west: parseFloat(query.west) || this.props.initialBounds.west,
+	        east: parseFloat(query.east) || this.props.initialBounds.east
+	      },
+	      page: parseInt(query.page, 1)
+	    };
+	  }
+
+	  return QueryParser;
+	}();
+
+	exports['default'] = QueryParser;
 
 /***/ }
 /******/ ]);

@@ -3,33 +3,24 @@ import ReactDOM         from 'react-dom'
 import VolunteeringList from './VolunteeringList.jsx'
 import Map              from './Map.jsx'
 import LocationInput    from './LocationInput.jsx'
+import QueryParser      from './QueryParser.js'
 
 require('es6-promise').polyfill();
 import 'whatwg-fetch'
 
 var Explorer = React.createClass({
   getInitialState() {
-    return {
-      currentBounds:    this.props.initialBounds,
-      currentPage:      1,
-      location:         '',
-      newBounds:        this.props.initialBounds,
-      records:          [],
-      visitedRecordIds: [],
-    }
+    return { records: [], visitedRecordIds: [] }
   },
 
   componentDidMount() {
-    var hashParams = undefined
-    try { hashParams = JSON.parse(window.location.hash.replace('#','')) } catch(e) {}
-
-    if (hashParams) {
-      this.setState({ currentBounds: hashParams.bounds, newBounds: hashParams.bounds })
-    }
+    var queryParams = new QueryParser()
+    this.setState({ currentBounds: queryParams.bounds, newBounds: queryParams.bounds })
   },
 
   componentDidUpdate() {
-    window.location.hash = JSON.stringify({ bounds: this.state.currentBounds, page: this.state.currentPage })
+    var params = Object.assign({}, this.state.currentBounds, { page: this.state.currentPage })
+    window.history.pushState(null, null, this.toQuery(params))
   },
 
   render: function() {
@@ -95,8 +86,7 @@ var Explorer = React.createClass({
       page:     page,
       per_page: 12,
     }
-    var query = Object.keys(params).map(function(k, _) { return k + '=' + params[k] }).join('&')
-    var url = `${this.props.apiBaseUrl}?${query}`
+    var url = `${this.props.apiBaseUrl}${this.toQuery(params)}`
     this.setState({ isLoading: true })
     fetch(url)
       .then(response => response.json())
@@ -116,6 +106,10 @@ var Explorer = React.createClass({
   setRecordVisited: function(record) {
     var newVisitedRecordIds = this.state.visitedRecordIds.concat([record.id])
     this.setState({ visitedRecordIds: newVisitedRecordIds })
+  },
+
+  toQuery: function(object) {
+    return '?' + Object.keys(object).map(function(k, _) { return k + '=' + object[k] }).join('&')
   },
 });
 

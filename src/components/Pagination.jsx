@@ -29,14 +29,15 @@ var Pagination = React.createClass({
   },
 
   previousPage: function(event) {
-    this.changePage(this.props.currentPage - 1)
+    this.changePage(event, this.props.currentPage - 1)
   },
 
   nextPage: function(event) {
-    this.changePage(this.props.currentPage + 1)
+    this.changePage(event, this.props.currentPage + 1)
   },
 
-  changePage: function(toPage) {
+  changePage: function(event, toPage) {
+    event.preventDefault()
     this.props.changePage(toPage)
   },
 })
