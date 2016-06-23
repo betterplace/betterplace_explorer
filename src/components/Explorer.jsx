@@ -14,13 +14,12 @@ var Explorer = React.createClass({
   },
 
   componentDidMount() {
-    var queryParams = new QueryParser()
-    this.setState({ currentBounds: queryParams.bounds, newBounds: queryParams.bounds })
+    var queryParams = new QueryParser(this.props.initialBounds)
+    this.setState({ currentBounds: queryParams.bounds, newBounds: queryParams.bounds, location: queryParams.location })
   },
 
   componentDidUpdate() {
-    var params = Object.assign({}, this.state.currentBounds, { page: this.state.currentPage })
-    window.history.pushState(null, null, this.toQuery(params))
+    window.history.pushState(null, null, this.toQuery(this.state.currentBounds))
   },
 
   render: function() {

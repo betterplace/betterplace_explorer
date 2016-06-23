@@ -88,16 +88,15 @@
 	  }(),
 	  componentDidMount: function () {
 	    function componentDidMount() {
-	      var queryParams = new _QueryParser2['default']();
-	      this.setState({ currentBounds: queryParams.bounds, newBounds: queryParams.bounds });
+	      var queryParams = new _QueryParser2['default'](this.props.initialBounds);
+	      this.setState({ currentBounds: queryParams.bounds, newBounds: queryParams.bounds, location: queryParams.location });
 	    }
 
 	    return componentDidMount;
 	  }(),
 	  componentDidUpdate: function () {
 	    function componentDidUpdate() {
-	      var params = Object.assign({}, this.state.currentBounds, { page: this.state.currentPage });
-	      window.history.pushState(null, null, this.toQuery(params));
+	      window.history.pushState(null, null, this.toQuery(this.state.currentBounds));
 	    }
 
 	    return componentDidUpdate;
@@ -28527,7 +28526,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var QueryParser = function () {
-	  function QueryParser() {
+	  function QueryParser(defaults) {
 	    _classCallCheck(this, QueryParser);
 
 	    var query = {};
@@ -28559,12 +28558,13 @@
 
 	    return {
 	      bounds: {
-	        north: parseFloat(query.north) || this.props.initialBounds.north,
-	        south: parseFloat(query.south) || this.props.initialBounds.south,
-	        west: parseFloat(query.west) || this.props.initialBounds.west,
-	        east: parseFloat(query.east) || this.props.initialBounds.east
+	        north: parseFloat(query.north) || defaults.north,
+	        south: parseFloat(query.south) || defaults.south,
+	        west: parseFloat(query.west) || defaults.west,
+	        east: parseFloat(query.east) || defaults.east
 	      },
-	      page: parseInt(query.page, 1)
+	      location: query.location ? decodeURIComponent(query.location) : '',
+	      page: parseInt(query.page) || 1
 	    };
 	  }
 

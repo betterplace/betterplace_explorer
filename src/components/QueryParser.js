@@ -1,5 +1,5 @@
 export default class QueryParser {
-  constructor() {
+  constructor(defaults) {
     var query = {}
     for (var queryPart of window.location.search.substr(1).split('&')) {
       var keyValue = queryPart.split('=')
@@ -8,12 +8,13 @@ export default class QueryParser {
 
     return {
       bounds: {
-        north: parseFloat(query.north) || this.props.initialBounds.north,
-        south: parseFloat(query.south) || this.props.initialBounds.south,
-        west:  parseFloat(query.west) || this.props.initialBounds.west,
-        east:  parseFloat(query.east) || this.props.initialBounds.east,
+        north: parseFloat(query.north) || defaults.north,
+        south: parseFloat(query.south) || defaults.south,
+        west:  parseFloat(query.west) || defaults.west,
+        east:  parseFloat(query.east) || defaults.east,
       },
-      page: parseInt(query.page, 1)
+      location: query.location ? decodeURIComponent(query.location) : '',
+      page: parseInt(query.page) || 1,
     }
   }
 }
