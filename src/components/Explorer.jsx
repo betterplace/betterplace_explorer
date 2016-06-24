@@ -26,6 +26,7 @@ var Explorer = React.createClass({
     return (
       <div className="betterplace-explorer">
         <LocationInput
+          biasBounds={this.state.currentBounds}
           changeLocation={this.changeLocation}
           changeBounds={this.changeBounds}
           value={this.state.location}
