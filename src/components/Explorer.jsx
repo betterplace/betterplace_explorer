@@ -19,7 +19,7 @@ var Explorer = React.createClass({
   },
 
   componentDidUpdate() {
-    window.history.pushState(null, null, this.toQuery(this.state.currentBounds))
+    window.history.replaceState(null, null, this.toQuery(this.state.currentBounds))
   },
 
   render: function() {
