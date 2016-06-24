@@ -4,7 +4,7 @@ import PaginationPrevButton from './PaginationPrevButton.jsx'
 
 var Pagination = React.createClass({
   render: function() {
-    if (this.props.currentPage) {
+    if (this.props.totalPages && this.props.totalPages > 1) {
       return (
         <nav className="bpe--pagination">
           <ul className="pager">

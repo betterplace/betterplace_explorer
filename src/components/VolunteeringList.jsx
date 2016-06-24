@@ -2,6 +2,7 @@ import React        from 'react'
 import ReactDOM     from 'react-dom'
 import Pagination   from './Pagination.jsx'
 import Volunteering from './Volunteering.jsx'
+import NoResults    from './NoResults.jsx'
 
 var VolunteeringList = React.createClass({
   render: function() {
@@ -12,6 +13,10 @@ var VolunteeringList = React.createClass({
                   setHighlightRecord={this.props.setHighlightRecord}
                 />
     )
+
+    if (this.props.records.length == 0) {
+      volunteeringNodes = <NoResults />
+    }
 
     return (
       <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >

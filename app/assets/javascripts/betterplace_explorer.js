@@ -66,15 +66,15 @@
 
 	var _LocationInput2 = _interopRequireDefault(_LocationInput);
 
-	var _QueryParser = __webpack_require__(225);
+	var _QueryParser = __webpack_require__(219);
 
 	var _QueryParser2 = _interopRequireDefault(_QueryParser);
 
-	__webpack_require__(219);
+	__webpack_require__(220);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	__webpack_require__(220).polyfill();
+	__webpack_require__(221).polyfill();
 
 
 	var Explorer = _react2['default'].createClass({
@@ -20149,6 +20149,10 @@
 
 	var _Volunteering2 = _interopRequireDefault(_Volunteering);
 
+	var _NoResults = __webpack_require__(227);
+
+	var _NoResults2 = _interopRequireDefault(_NoResults);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var VolunteeringList = _react2['default'].createClass({
@@ -20165,6 +20169,10 @@
 	          setHighlightRecord: _this.props.setHighlightRecord
 	        });
 	      });
+
+	      if (this.props.records.length == 0) {
+	        volunteeringNodes = _react2['default'].createElement(_NoResults2['default'], null);
+	      }
 
 	      return _react2['default'].createElement(
 	        'div',
@@ -20258,7 +20266,7 @@
 
 	  render: function () {
 	    function render() {
-	      if (this.props.currentPage) {
+	      if (this.props.totalPages && this.props.totalPages > 1) {
 	        return _react2['default'].createElement(
 	          'nav',
 	          { className: 'bpe--pagination' },
@@ -20324,7 +20332,7 @@
 /* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -20334,25 +20342,25 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var PaginationNextButton = _react2['default'].createClass({
-	  displayName: 'PaginationNextButton',
+	var PaginationNextButton = _react2["default"].createClass({
+	  displayName: "PaginationNextButton",
 
 	  render: function () {
 	    function render() {
 	      if (this.props.currentPage < this.props.totalPages) {
-	        return _react2['default'].createElement(
-	          'li',
-	          { className: 'next' },
-	          _react2['default'].createElement(
-	            'a',
-	            { href: '#', onClick: this.props.handleClick },
-	            'weiter ',
-	            _react2['default'].createElement(
-	              'span',
-	              { 'aria-hidden': 'true' },
-	              '→'
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "next" },
+	          _react2["default"].createElement(
+	            "a",
+	            { href: "#", onClick: this.props.handleClick },
+	            "weiter ",
+	            _react2["default"].createElement(
+	              "span",
+	              { "aria-hidden": "true" },
+	              "→"
 	            )
 	          )
 	        );
@@ -20365,7 +20373,7 @@
 	  }()
 	});
 
-	exports['default'] = PaginationNextButton;
+	exports["default"] = PaginationNextButton;
 
 /***/ },
 /* 167 */
@@ -26983,6 +26991,66 @@
 /* 219 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var QueryParser = function () {
+	  function QueryParser(defaults) {
+	    _classCallCheck(this, QueryParser);
+
+	    var query = {};
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	      for (var _iterator = window.location.search.substr(1).split('&')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	        var queryPart = _step.value;
+
+	        var keyValue = queryPart.split('=');
+	        query[keyValue[0]] = keyValue[1];
+	      }
+	    } catch (err) {
+	      _didIteratorError = true;
+	      _iteratorError = err;
+	    } finally {
+	      try {
+	        if (!_iteratorNormalCompletion && _iterator['return']) {
+	          _iterator['return']();
+	        }
+	      } finally {
+	        if (_didIteratorError) {
+	          throw _iteratorError;
+	        }
+	      }
+	    }
+
+	    return {
+	      bounds: {
+	        north: parseFloat(query.north) || defaults.north,
+	        south: parseFloat(query.south) || defaults.south,
+	        west: parseFloat(query.west) || defaults.west,
+	        east: parseFloat(query.east) || defaults.east
+	      },
+	      location: query.location ? decodeURIComponent(query.location) : '',
+	      page: parseInt(query.page) || 1
+	    };
+	  }
+
+	  return QueryParser;
+	}();
+
+	exports['default'] = QueryParser;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports) {
+
 	(function(self) {
 	  'use strict';
 
@@ -27419,7 +27487,7 @@
 
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
@@ -27552,7 +27620,7 @@
 	    function lib$es6$promise$asap$$attemptVertx() {
 	      try {
 	        var r = require;
-	        var vertx = __webpack_require__(223);
+	        var vertx = __webpack_require__(224);
 	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	        return lib$es6$promise$asap$$useVertxTimer();
 	      } catch(e) {
@@ -28370,7 +28438,7 @@
 	    };
 
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(224)['amd']) {
+	    if ("function" === 'function' && __webpack_require__(225)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
@@ -28382,10 +28450,10 @@
 	}).call(this);
 
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(221), (function() { return this; }()), __webpack_require__(222)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(222), (function() { return this; }()), __webpack_require__(223)(module)))
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -28485,7 +28553,7 @@
 
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -28501,21 +28569,22 @@
 
 
 /***/ },
-/* 223 */
+/* 224 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 225 */
-/***/ function(module, exports) {
+/* 226 */,
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -28523,55 +28592,38 @@
 	  value: true
 	});
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _react = __webpack_require__(1);
 
-	var QueryParser = function () {
-	  function QueryParser(defaults) {
-	    _classCallCheck(this, QueryParser);
+	var _react2 = _interopRequireDefault(_react);
 
-	    var query = {};
-	    var _iteratorNormalCompletion = true;
-	    var _didIteratorError = false;
-	    var _iteratorError = undefined;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	    try {
-	      for (var _iterator = window.location.search.substr(1).split('&')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	        var queryPart = _step.value;
+	var NoResults = _react2['default'].createClass({
+	  displayName: 'NoResults',
 
-	        var keyValue = queryPart.split('=');
-	        query[keyValue[0]] = keyValue[1];
-	      }
-	    } catch (err) {
-	      _didIteratorError = true;
-	      _iteratorError = err;
-	    } finally {
-	      try {
-	        if (!_iteratorNormalCompletion && _iterator['return']) {
-	          _iterator['return']();
-	        }
-	      } finally {
-	        if (_didIteratorError) {
-	          throw _iteratorError;
-	        }
-	      }
+	  render: function () {
+	    function render() {
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        _react2['default'].createElement(
+	          'p',
+	          null,
+	          'Leider gibt es aktuell keine Angebote an diesem Ort.'
+	        ),
+	        _react2['default'].createElement(
+	          'p',
+	          null,
+	          'Du kannst nachschauen, ob es in Deiner näheren Umgebung Angebote gibt, indem Du den Kartenausschnitt vergrößerst.'
+	        )
+	      );
 	    }
 
-	    return {
-	      bounds: {
-	        north: parseFloat(query.north) || defaults.north,
-	        south: parseFloat(query.south) || defaults.south,
-	        west: parseFloat(query.west) || defaults.west,
-	        east: parseFloat(query.east) || defaults.east
-	      },
-	      location: query.location ? decodeURIComponent(query.location) : '',
-	      page: parseInt(query.page) || 1
-	    };
-	  }
+	    return render;
+	  }()
+	});
 
-	  return QueryParser;
-	}();
-
-	exports['default'] = QueryParser;
+	exports['default'] = NoResults;
 
 /***/ }
 /******/ ]);
