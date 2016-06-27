@@ -19,13 +19,14 @@ var Explorer = React.createClass({
   },
 
   componentDidUpdate() {
-    window.history.pushState(null, null, this.toQuery(this.state.currentBounds))
+    window.history.replaceState(null, null, this.toQuery(this.state.currentBounds))
   },
 
   render: function() {
     return (
       <div className="betterplace-explorer">
         <LocationInput
+          biasBounds={this.state.currentBounds}
           changeLocation={this.changeLocation}
           changeBounds={this.changeBounds}
           value={this.state.location}
