@@ -5,6 +5,7 @@ import Map              from './Map.jsx'
 import LocationInput    from './LocationInput.jsx'
 import QueryParser      from './QueryParser.js'
 
+require('babel-polyfill');
 require('es6-promise').polyfill();
 import 'whatwg-fetch'
 
