@@ -53,6 +53,10 @@ var Map = React.createClass({
               onClick={this.handleMapClick}
               onIdle={this.idle}
               ref={(map) => this.googlemap = map }
+              options={{
+                mapTypeControl: false,
+                streetViewControl: false,
+              }}
             >
               {markers}
             </GoogleMap>
