@@ -52,7 +52,6 @@ var Map = React.createClass({
               defaultZoom={5}
               onClick={this.handleMapClick}
               onIdle={this.idle}
-              ref={(map) => this.googlemap = map }
               options={{
                 mapTypeControl: false,
                 streetViewControl: false,
@@ -60,6 +59,7 @@ var Map = React.createClass({
                   position: google.maps.ControlPosition.LEFT_TOP,
                 },
               }}
+              ref={(map) => this.googlemap = map }
             >
               {markers}
             </GoogleMap>
