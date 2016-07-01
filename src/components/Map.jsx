@@ -1,8 +1,8 @@
-require('js-info-bubble')
 import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Volunteering from './Volunteering.jsx'
+import VolunteeringInfoBubble from './VolunteeringInfoBubble.jsx'
 
 const defaultPin = {
   url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABCFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD26OP39/cAAADPz88AAAAAAAAAAAD9/f3p6ens7Ozt7e2CgoLb29vt7e0nJyeampqZmZns7OwsLCxKSkqZmZkAAADa2tqHh4cwMDDq6uqEhIT+/v4AAABERETPz89HR0cAAADc3Nzb29u2Og+1OA3PfWG4QRi9TSfKb1C1OQ7luqvJb0/25uHcoY325+K3PRTmu6y2PBLfqJa3PRPowrXcoo7BVzPPfmL26OO9Tii2OhDep5Tluar15eD15N/epZK5Qhkx1ZAbAAAAOnRSTlMAAQcCBA4UDwMVKAUWHBMIIi0GDB0rC/7tHp8nGin70NLVWLHXNGhn0zQ+ZiqxWTXQWfsZPJ49H7SyPeI8ZAAAAXFJREFUeAGFk+MaIzEYhZOMbdW2l7Xdte7/TnbTp2628/7N55wDLkDI0xL6h0TzEIJHIEUjl1MFWRZUzkU0BR+fNYZVdNExDEfUFZbR7kIgZVpsEM9Ekn4i4ScjmXjAWuY1AvKIeROtpr4sZl9Xw0/jxc9UMRpjEA/P+Yiz81lv8K1/ojfwsnmbQ6calMnYb9P7P/0bhtP0e5sxqWMB2oqVc9te/47J91wzZtEQF9DYaH096T8wWXejrEbhAkxQ9Yb9J4ZeMWBoCCBi46nPfQKDUk1AEPCu0l72SAG9ZUNxeUBz+rtDn8ghonM0kFQxOSYHjFuiKgEkOP6IHDDyHQEBJBuJFTlglzDk8IDwFnjI2Ysh8ZqRl2viQ83Jh5ofDwWREC8NXpwaf1aB/FmFDwwNT989ff7u6UcRf/d/BfP7JJiT5CqPkvuRrmDJ3Yu2RxTtSfaxaBHLfrTZjGaLX6nCSfbPxul0HowTZr1w84ba/y8wjYohV+qwEQAAAABJRU5ErkJggg==',
@@ -75,7 +75,7 @@ var Map = React.createClass({
       this.googlemap.props.map.setZoom(this.googlemap.getZoom()+1)
     }
 
-    if (this.props.records.indexOf(this.infoBubbleRecord) === -1) {
+    if (this.props.records.indexOf(this.getInfoBubbleRecord()) === -1) {
       this.closeInfoBubble()
     }
   },
@@ -113,27 +113,9 @@ var Map = React.createClass({
   handleMarkerClick: function(record) {
     this.closeInfoBubble()
 
-    var div = document.createElement('div')
-    ReactDOM.render(<Volunteering record={record} key={record.id}/>, div)
-
-    this.infoBubble = new InfoBubble({
-      content: div,
-      disableAnimation: true,
-      maxWidth: 300,
-      position: new google.maps.LatLng(record.latitude, record.longitude),
-      map: this.googlemap.props.map,
-      borderRadius: 0,
-      shadowStyle: 0,
-      minWidth: 212,
-      maxWidth: 212,
-      minHeight: 290,
-      maxHeight: 290,
-      hideCloseButton: true,
-      padding: 0,
-    })
+    this.infoBubble = new VolunteeringInfoBubble(record, this.googlemap.props.map)
 
     this.preventReloadOnce = true
-    this.infoBubbleRecord = record
     this.infoBubble.open()
 
     this.props.setRecordVisited(record)
@@ -148,10 +130,7 @@ var Map = React.createClass({
   },
 
   closeInfoBubble: function() {
-    if (this.infoBubble) {
-      this.infoBubbleRecord = null
-      this.infoBubble.close()
-    }
+    this.infoBubble && this.infoBubble.close()
   },
 
   getPinForRecord: function(record) {
@@ -164,7 +143,11 @@ var Map = React.createClass({
   },
 
   getHighlightRecord: function() {
-    return this.props.highlightRecord || this.infoBubbleRecord
+    return this.props.highlightRecord || this.getInfoBubbleRecord()
+  },
+
+  getInfoBubbleRecord: function() {
+    return this.infoBubble && this.infoBubble.isOpen() && this.infoBubble.record
   }
 });
 
