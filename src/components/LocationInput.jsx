@@ -34,7 +34,7 @@ var LocationInput = React.createClass({
   componentDidMount() {
     var input = this.getInput()
     input.focus()
-    this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] });
+    this.searchBox = new google.maps.places.SearchBox(input, { 'types': ['(regions)'] })
     this.biasSearchBox()
     google.maps.event.addListener(this.searchBox, 'places_changed', this.handlePlacesChanged)
   },
@@ -44,7 +44,7 @@ var LocationInput = React.createClass({
   },
 
   biasSearchBox() {
-    this.searchBox.setBounds(this.props.biasBounds);
+    this.searchBox.setBounds(this.props.biasBounds)
   },
 
   resetInput() {
@@ -74,6 +74,6 @@ var LocationInput = React.createClass({
       )
     }
   }
-});
+})
 
 export default LocationInput

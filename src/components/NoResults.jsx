@@ -11,4 +11,4 @@ var NoResults = React.createClass({
   }
 })
 
-export default NoResults;
+export default NoResults

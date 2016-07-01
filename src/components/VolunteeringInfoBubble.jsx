@@ -25,8 +25,8 @@ export default class VolunteeringInfoBubble extends InfoBubble {
       padding: 0,
     })
 
-    infoBubble.record = record;
+    infoBubble.record = record
 
-    return infoBubble;
+    return infoBubble
   }
 }

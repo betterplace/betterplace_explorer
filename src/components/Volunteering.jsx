@@ -37,6 +37,6 @@ var Volunteering = React.createClass({
   setHighlightRecord: function(record) {
     this.props.setHighlightRecord && this.props.setHighlightRecord(record)
   }
-});
+})
 
 export default Volunteering

@@ -119,6 +119,6 @@ var Map = React.createClass({
   getInfoBubbleRecord: function() {
     return this.infoBubble && this.infoBubble.isOpen() && this.infoBubble.record
   }
-});
+})
 
 export default Map

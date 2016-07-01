@@ -5,8 +5,8 @@ import Map              from './Map.jsx'
 import LocationInput    from './LocationInput.jsx'
 import QueryParser      from './QueryParser.js'
 
-require('babel-polyfill');
-require('es6-promise').polyfill();
+require('babel-polyfill')
+require('es6-promise').polyfill()
 import 'whatwg-fetch'
 
 var Explorer = React.createClass({
@@ -112,7 +112,7 @@ var Explorer = React.createClass({
   toQuery: function(object) {
     return '?' + Object.keys(object).map(function(k, _) { return k + '=' + object[k] }).join('&')
   },
-});
+})
 
 var mountPoint = document.getElementById('betterplace-explorer')
 var apiBaseUrl = mountPoint.getAttribute('data-api-base-url')

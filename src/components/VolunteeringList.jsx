@@ -54,6 +54,6 @@ var VolunteeringList = React.createClass({
       ReactDOM.findDOMNode(this).scrollTop = 0
     }
   },
-});
+})
 
-export default VolunteeringList;
+export default VolunteeringList
