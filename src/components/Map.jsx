@@ -118,6 +118,7 @@ var Map = React.createClass({
 
     this.infoBubble = new InfoBubble({
       content: div,
+      disableAnimation: true,
       maxWidth: 300,
       position: new google.maps.LatLng(record.latitude, record.longitude),
       map: this.googlemap.props.map,
