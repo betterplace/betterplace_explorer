@@ -56,6 +56,9 @@ var Map = React.createClass({
               options={{
                 mapTypeControl: false,
                 streetViewControl: false,
+                zoomControlOptions: {
+                  position: google.maps.ControlPosition.LEFT_TOP,
+                },
               }}
             >
               {markers}
