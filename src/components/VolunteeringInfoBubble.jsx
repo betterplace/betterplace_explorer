@@ -12,18 +12,18 @@ export default class VolunteeringInfoBubble extends InfoBubble {
     ReactDOM.render(<Volunteering record={record} key={record.id}/>, div)
 
     var infoBubble = super({
-      borderRadius: 0,
-      closeSrc: closeButton,
-      content: div,
+      borderRadius:     0,
+      closeSrc:         closeButton,
+      content:          div,
       disableAnimation: true,
-      map: map,
-      maxHeight: 290,
-      maxWidth: 212,
-      minHeight: 290,
-      minWidth: 212,
-      padding: 0,
-      position: new google.maps.LatLng(record.latitude, record.longitude),
-      shadowStyle: 0,
+      map:              map,
+      maxHeight:        290,
+      maxWidth:         212,
+      minHeight:        290,
+      minWidth:         212,
+      padding:          0,
+      position:         new google.maps.LatLng(record.latitude, record.longitude),
+      shadowStyle:      0,
     })
 
     infoBubble.bubble_.className += 'bpe--volunteering-info-bubble'
