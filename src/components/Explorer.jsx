@@ -85,7 +85,7 @@ var Explorer = React.createClass({
       swlat:    bounds.south,
       swlng:    bounds.west,
       page:     page,
-      per_page: 12,
+      per_page: 25,
     }
     var url = `${this.props.apiBaseUrl}${this.toQuery(params)}`
     this.setState({ isLoading: true })
