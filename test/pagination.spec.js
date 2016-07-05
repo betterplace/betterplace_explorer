@@ -8,12 +8,12 @@ describe('<Pagination/>', function () {
   const wrapper = mount(<Pagination/>)
 
   it('has no "previous" button if currentPage is 1', function () {
-    wrapper.setProps({ currentPage: 1 })
+    wrapper.setProps({ currentPage: 1, totalPages: 10 })
     expect(wrapper.find('.previous')).to.have.length(0)
   })
 
   it('shows the "previous" button if currentPage gt 1', function () {
-    wrapper.setProps({ currentPage: 2 })
+    wrapper.setProps({ currentPage: 2, totalPages: 10 })
     expect(wrapper.find('.previous')).to.have.length(1)
   })
 
@@ -25,5 +25,11 @@ describe('<Pagination/>', function () {
   it('has no "next" button if totalPages is reached', function () {
     wrapper.setProps({ currentPage: 10, totalPages: 10 })
     expect(wrapper.find('.next')).to.have.length(0)
+  })
+
+  it('shows neither "next" nor "previous" buttons if totalPages lt 2', function () {
+    wrapper.setProps({ currentPage: 1, totalPages: 1 })
+    expect(wrapper.find('.next')).to.have.length(0)
+    expect(wrapper.find('.previous')).to.have.length(0)
   })
 })
