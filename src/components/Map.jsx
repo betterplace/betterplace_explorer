@@ -66,7 +66,7 @@ var Map = React.createClass({
 
   // Trigger loading of new API results for the current bounds. Since it triggers
   // multiple times when `fitBounds` is called, we prevent multiple API calls
-  // by comparing the last loaded bounds with the current ones.
+  // by comparing the last loaded bounds with the current ones in props.mapIdle().
   idle: function() {
     this.googlemap.props.map.setClickableIcons(false)
 
@@ -77,12 +77,7 @@ var Map = React.createClass({
 
     this.closeInfoBubble()
 
-    var newBounds = JSON.stringify(this.googlemap.getBounds())
-
-    if (this.loadedBounds != newBounds) {
-      this.loadedBounds = newBounds
-      this.props.mapIdle(this.googlemap.getBounds().toJSON())
-    }
+    this.props.mapIdle(this.googlemap.getBounds().toJSON())
   },
 
   handleMapClick: function() {
