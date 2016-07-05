@@ -206,7 +206,11 @@ global.stubGoogle = function() {
                 addListener: function() {}
             },
             places: {
-                SearchBox: function() {},
+                SearchBox: function() {
+                    return {
+                        setBounds: function() {}
+                    };
+                },
                 AutocompleteService: function() {
                     return {
                         getPlacePredictions: function() {}
