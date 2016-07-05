@@ -1,6 +1,8 @@
 import { Marker } from 'react-google-maps'
 import React from 'react'
 
+require('es6-object-assign').polyfill();
+
 const pinDimensions = {
   anchor: new google.maps.Point(16, 16),
   origin: new google.maps.Point(0, 0),
