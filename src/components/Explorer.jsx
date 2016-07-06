@@ -37,6 +37,7 @@ var Explorer = React.createClass({
         <VolunteeringList
           changePage={this.changePage}
           currentPage={this.state.currentPage}
+          highlightRecord={this.state.highlightRecord}
           records={this.state.records}
           setHighlightRecord={this.setHighlightRecord}
           totalEntries={this.state.totalEntries}

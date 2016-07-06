@@ -8,6 +8,7 @@ var VolunteeringList = React.createClass({
   render: function() {
     var volunteeringNodes = this.props.records.map(
       record => <Volunteering
+                  active={record === this.props.highlightRecord}
                   key={record.id}
                   record={record}
                   setHighlightRecord={this.props.setHighlightRecord}
