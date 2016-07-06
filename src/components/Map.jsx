@@ -70,8 +70,8 @@ var Map = React.createClass({
   idle: function() {
     this.googlemap.props.map.setClickableIcons(false)
 
-    if (this.preventReloadOnce) {
-      this.preventReloadOnce = false
+    if (this.infoBubble && this.infoBubble.panningIntoView) {
+      this.infoBubble.panningIntoView = false
       return
     }
 
@@ -88,8 +88,6 @@ var Map = React.createClass({
     this.closeInfoBubble()
 
     this.infoBubble = new VolunteeringInfoBubble(record, this.googlemap.props.map)
-
-    this.preventReloadOnce = true
     this.infoBubble.open()
 
     this.props.setRecordVisited(record)
