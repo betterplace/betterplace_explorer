@@ -14,7 +14,7 @@ export default class VolunteeringInfoBubble extends InfoBubble {
     var div = document.createElement('div')
     ReactDOM.render(<Volunteering record={record} key={record.id}/>, div)
 
-    var infoBubble = super({
+    var attributes = {
       borderRadius:     0,
       closeSrc:         closeButton,
       content:          div,
@@ -27,7 +27,12 @@ export default class VolunteeringInfoBubble extends InfoBubble {
       padding:          0,
       position:         new google.maps.LatLng(record.latitude, record.longitude),
       shadowStyle:      0,
-    })
+    }
+
+    var infoBubble = super(attributes)
+
+    // hilarious workaround for IE 10 - https://github.com/babel/babelify/issues/133
+    InfoBubble.call(this, attributes)
 
     infoBubble.bubble_.className += 'bpe--volunteering-info-bubble'
     infoBubble.close_.className  += 'bpe--volunteering-info-bubble-close'
