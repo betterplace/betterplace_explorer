@@ -4,6 +4,7 @@ import VolunteeringList from './VolunteeringList.jsx'
 import Map              from './Map.jsx'
 import NullMap          from './NullMap.jsx'
 import LocationInput    from './LocationInput.jsx'
+import ApiLoader        from '../helpers/ApiLoader.js'
 import QueryParser      from '../helpers/QueryParser.js'
 
 require('babel-polyfill')
@@ -22,7 +23,7 @@ var Explorer = React.createClass({
   },
 
   componentDidUpdate() {
-    window.history.replaceState(null, null, this.toQuery(this.state.currentBounds))
+    window.history.replaceState(null, null, ApiLoader.toQuery(this.state.currentBounds))
   },
 
   render: function() {
@@ -77,7 +78,6 @@ var Explorer = React.createClass({
   },
 
   changePage: function(page) {
-    this.setState({ currentPage: page })
     this.load(this.state.currentBounds, page)
   },
 
@@ -90,28 +90,15 @@ var Explorer = React.createClass({
   },
 
   load: function(bounds, page) {
-    var params = {
-      nelat:    bounds.north,
-      nelng:    bounds.east,
-      swlat:    bounds.south,
-      swlng:    bounds.west,
-      page:     page,
-      per_page: 25,
-    }
-    var url = `${this.props.apiBaseUrl}${this.toQuery(params)}`
-    this.setState({ isLoading: true })
-    fetch(url)
-      .then(response => response.json())
-      .then(json => this.assignApiResult(json))
-      .then(undefined, function(err) { console.log(err) })
+    this.setState({ currentBounds: bounds, currentPage: page, isLoading: true })
+    ApiLoader.load(this.props.apiBaseUrl, bounds, page, this.assignApiResult)
   },
 
   loadByBoundingBox: function(bounds) {
     var boundsJson = JSON.stringify(bounds)
     if (this.loadedBounds === boundsJson) return
-    this.loadedBounds = boundsJson
 
-    this.setState({ currentBounds: bounds, currentPage: 1 })
+    this.loadedBounds = boundsJson
     this.load(bounds, 1)
   },
 
@@ -122,10 +109,6 @@ var Explorer = React.createClass({
   setRecordVisited: function(record) {
     var newVisitedRecordIds = this.state.visitedRecordIds.concat([record.id])
     this.setState({ visitedRecordIds: newVisitedRecordIds })
-  },
-
-  toQuery: function(object) {
-    return '?' + Object.keys(object).map(function(k, _) { return k + '=' + object[k] }).join('&')
   },
 })
 
