@@ -1,7 +1,7 @@
 import { GoogleMap, GoogleMapLoader } from 'react-google-maps'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import RecordSpreader from './RecordSpreader.js'
+import RecordSpreader from '../helpers/RecordSpreader.js'
 import Volunteering from './Volunteering.jsx'
 import VolunteeringInfoBubble from './VolunteeringInfoBubble.jsx'
 import VolunteeringMarker from './VolunteeringMarker.jsx'

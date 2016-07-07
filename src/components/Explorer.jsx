@@ -4,7 +4,7 @@ import VolunteeringList from './VolunteeringList.jsx'
 import Map              from './Map.jsx'
 import NullMap          from './NullMap.jsx'
 import LocationInput    from './LocationInput.jsx'
-import QueryParser      from './QueryParser.js'
+import QueryParser      from '../helpers/QueryParser.js'
 
 require('babel-polyfill')
 require('es6-promise').polyfill()
