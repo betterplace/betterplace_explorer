@@ -90,7 +90,7 @@ var Map = React.createClass({
   handleMarkerClick: function(record) {
     this.closeInfoBubble()
 
-    this.infoBubble = new VolunteeringInfoBubble(record, this.googlemap.props.map)
+    this.infoBubble = VolunteeringInfoBubble.build(record, this.googlemap.props.map)
     this.infoBubble.open()
 
     this.props.setRecordVisited(record)

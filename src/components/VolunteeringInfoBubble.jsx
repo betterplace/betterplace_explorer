@@ -10,8 +10,11 @@ const anchorHeight = 14,
       bubbleHeight = 290,
       bubbleWidth  = 212
 
-export default class VolunteeringInfoBubble extends InfoBubble {
-  constructor(record, map) {
+// not extending InfoBubble because of IE 10 constructor issue:
+// https://github.com/babel/babelify/issues/133
+
+export default class VolunteeringInfoBubble {
+  static build(record, map) {
     var div = document.createElement('div')
     ReactDOM.render(<Volunteering record={record} key={record.id}/>, div)
 
@@ -30,21 +33,20 @@ export default class VolunteeringInfoBubble extends InfoBubble {
       shadowStyle:      0,
     }
 
-    var infoBubble = super(attributes)
-
-    // hilarious workaround for IE 10 - https://github.com/babel/babelify/issues/133
-    InfoBubble.call(this, attributes)
+    var infoBubble = new InfoBubble(attributes)
 
     infoBubble.bubble_.className += 'bpe--volunteering-info-bubble'
     infoBubble.close_.className  += 'bpe--volunteering-info-bubble-close'
 
     infoBubble.record = record
 
+    // override default panToView functionality
+    infoBubble.panToView = VolunteeringInfoBubble.panToView
+
     return infoBubble
   }
 
-  // OVERRIDE
-  panToView() {
+  static panToView() {
     var anchorPos = this.getProjection().fromLatLngToContainerPixel(this.getPosition()),
         map       = this.get('map'),
         mapDiv    = map.getDiv(),
