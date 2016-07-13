@@ -4,28 +4,30 @@ import PaginationPrevButton from './PaginationPrevButton.jsx'
 
 var Pagination = React.createClass({
   render: function() {
-    if (this.props.totalPages && this.props.totalPages > 1) {
-      return (
-        <nav className="bpe--pagination">
-          <span className="bpe--pagination--current-page">
-            {this.indexOfFirstRecord()} - {this.indexOfLastRecord()} von {this.props.totalEntries} Ehrenämtern
-          </span>
-          <ul className="bpe--pagination--pager">
-            <PaginationPrevButton
-              currentPage={this.props.currentPage}
-              handleClick={this.previousPage}
-            />
-            <PaginationNextButton
-              currentPage={this.props.currentPage}
-              handleClick={this.nextPage}
-              totalPages={this.props.totalPages}
-            />
-          </ul>
-        </nav>
-      )
-    } else {
-      return null
+    if (this.props.totalEntries > 1) {
+      var text = `${this.indexOfFirstRecord()} - ${this.indexOfLastRecord()} von ${this.props.totalEntries} Ehrenämtern`
+    } else if (this.props.totalEntries == 1) {
+      var text = '1 Ehrenamt gefunden'
     }
+
+    return (
+      <nav className="bpe--pagination">
+        <span className="bpe--pagination--current-page">
+          {text}
+        </span>
+        <ul className="bpe--pagination--pager">
+          <PaginationPrevButton
+            currentPage={this.props.currentPage}
+            handleClick={this.previousPage}
+          />
+          <PaginationNextButton
+            currentPage={this.props.currentPage}
+            handleClick={this.nextPage}
+            totalPages={this.props.totalPages}
+          />
+        </ul>
+      </nav>
+    )
   },
 
   indexOfFirstRecord: function() {

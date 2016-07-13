@@ -1195,7 +1195,7 @@
 	var warning = emptyFunction;
 
 	if (false) {
-	  warning = function warning(condition, format) {
+	  warning = function (condition, format) {
 	    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
 	      args[_key - 2] = arguments[_key];
 	    }
@@ -1242,7 +1242,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * 
 	 */
 
 	function makeEmptyFunction(arg) {
@@ -1256,7 +1255,7 @@
 	 * primarily useful idiomatically for overridable function endpoints which
 	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
 	 */
-	var emptyFunction = function emptyFunction() {};
+	function emptyFunction() {}
 
 	emptyFunction.thatReturns = makeEmptyFunction;
 	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
@@ -2140,11 +2139,11 @@
 	 * because of Facebook's testing infrastructure.
 	 */
 	if (performance.now) {
-	  performanceNow = function performanceNow() {
+	  performanceNow = function () {
 	    return performance.now();
 	  };
 	} else {
-	  performanceNow = function performanceNow() {
+	  performanceNow = function () {
 	    return Date.now();
 	  };
 	}
@@ -2995,7 +2994,7 @@
 	 * @param {object} obj
 	 * @return {object}
 	 */
-	var keyMirror = function keyMirror(obj) {
+	var keyMirror = function (obj) {
 	  var ret = {};
 	  var key;
 	  !(obj instanceof Object && !Array.isArray(obj)) ?  false ? invariant(false, 'keyMirror(...): Argument must be an object.') : invariant(false) : void 0;
@@ -3065,7 +3064,7 @@
 	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
 	 * reuse those resolutions.
 	 */
-	var keyOf = function keyOf(oneKeyObj) {
+	var keyOf = function (oneKeyObj) {
 	  var key;
 	  for (key in oneKeyObj) {
 	    if (!oneKeyObj.hasOwnProperty(key)) {
@@ -11529,7 +11528,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * 
 	 * @typechecks static-only
 	 */
 
@@ -11537,6 +11535,9 @@
 
 	/**
 	 * Memoizes the return value of a function that accepts one string argument.
+	 *
+	 * @param {function} callback
+	 * @return {function}
 	 */
 
 	function memoizeStringOnly(callback) {
@@ -16761,18 +16762,18 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  listen: function listen(target, eventType, callback) {
+	  listen: function (target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, false);
 	      return {
-	        remove: function remove() {
+	        remove: function () {
 	          target.removeEventListener(eventType, callback, false);
 	        }
 	      };
 	    } else if (target.attachEvent) {
 	      target.attachEvent('on' + eventType, callback);
 	      return {
-	        remove: function remove() {
+	        remove: function () {
 	          target.detachEvent('on' + eventType, callback);
 	        }
 	      };
@@ -16787,11 +16788,11 @@
 	   * @param {function} callback Callback function.
 	   * @return {object} Object with a `remove` method.
 	   */
-	  capture: function capture(target, eventType, callback) {
+	  capture: function (target, eventType, callback) {
 	    if (target.addEventListener) {
 	      target.addEventListener(eventType, callback, true);
 	      return {
-	        remove: function remove() {
+	        remove: function () {
 	          target.removeEventListener(eventType, callback, true);
 	        }
 	      };
@@ -16805,7 +16806,7 @@
 	    }
 	  },
 
-	  registerDefault: function registerDefault() {}
+	  registerDefault: function () {}
 	};
 
 	module.exports = EventListener;
@@ -17500,7 +17501,7 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * 
+	 * @typechecks
 	 */
 
 	var isTextNode = __webpack_require__(140);
@@ -17509,6 +17510,10 @@
 
 	/**
 	 * Checks if a given DOM node contains or is another DOM node.
+	 *
+	 * @param {?DOMNode} outerNode Outer DOM node.
+	 * @param {?DOMNode} innerNode Inner DOM node.
+	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
 	 */
 	function containsNode(outerNode, innerNode) {
 	  if (!outerNode || !innerNode) {
@@ -17519,7 +17524,7 @@
 	    return false;
 	  } else if (isTextNode(innerNode)) {
 	    return containsNode(outerNode, innerNode.parentNode);
-	  } else if ('contains' in outerNode) {
+	  } else if (outerNode.contains) {
 	    return outerNode.contains(innerNode);
 	  } else if (outerNode.compareDocumentPosition) {
 	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
@@ -20243,37 +20248,34 @@
 
 	  render: function () {
 	    function render() {
-	      if (this.props.totalPages && this.props.totalPages > 1) {
-	        return _react2['default'].createElement(
-	          'nav',
-	          { className: 'bpe--pagination' },
-	          _react2['default'].createElement(
-	            'span',
-	            { className: 'bpe--pagination--current-page' },
-	            this.indexOfFirstRecord(),
-	            ' - ',
-	            this.indexOfLastRecord(),
-	            ' von ',
-	            this.props.totalEntries,
-	            ' Ehrenämtern'
-	          ),
-	          _react2['default'].createElement(
-	            'ul',
-	            { className: 'bpe--pagination--pager' },
-	            _react2['default'].createElement(_PaginationPrevButton2['default'], {
-	              currentPage: this.props.currentPage,
-	              handleClick: this.previousPage
-	            }),
-	            _react2['default'].createElement(_PaginationNextButton2['default'], {
-	              currentPage: this.props.currentPage,
-	              handleClick: this.nextPage,
-	              totalPages: this.props.totalPages
-	            })
-	          )
-	        );
-	      } else {
-	        return null;
+	      if (this.props.totalEntries > 1) {
+	        var text = this.indexOfFirstRecord() + ' - ' + this.indexOfLastRecord() + ' von ' + this.props.totalEntries + ' Ehrenämtern';
+	      } else if (this.props.totalEntries == 1) {
+	        var text = '1 Ehrenamt gefunden';
 	      }
+
+	      return _react2['default'].createElement(
+	        'nav',
+	        { className: 'bpe--pagination' },
+	        _react2['default'].createElement(
+	          'span',
+	          { className: 'bpe--pagination--current-page' },
+	          text
+	        ),
+	        _react2['default'].createElement(
+	          'ul',
+	          { className: 'bpe--pagination--pager' },
+	          _react2['default'].createElement(_PaginationPrevButton2['default'], {
+	            currentPage: this.props.currentPage,
+	            handleClick: this.previousPage
+	          }),
+	          _react2['default'].createElement(_PaginationNextButton2['default'], {
+	            currentPage: this.props.currentPage,
+	            handleClick: this.nextPage,
+	            totalPages: this.props.totalPages
+	          })
+	        )
+	      );
 	    }
 
 	    return render;
@@ -35865,31 +35867,6 @@
 	// shim for using process in browser
 
 	var process = module.exports = {};
-
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-
-	var cachedSetTimeout;
-	var cachedClearTimeout;
-
-	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
-	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
-	    }
-	  }
-	} ())
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -35914,7 +35891,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = setTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -35931,7 +35908,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    clearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -35943,7 +35920,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        setTimeout(drainQueue, 0);
 	    }
 	};
 
