@@ -21,9 +21,6 @@ var VolunteeringList = React.createClass({
 
     return (
       <div>
-        <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >
-          {volunteeringNodes}
-        </div>
         <Pagination
           changePage={this.changePage}
           currentPage={this.props.currentPage}
@@ -32,6 +29,9 @@ var VolunteeringList = React.createClass({
           perPage={this.props.perPage}
           recordLength={this.props.records.length}
         />
+        <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >
+          {volunteeringNodes}
+        </div>
       </div>
     )
   },

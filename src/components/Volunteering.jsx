@@ -11,7 +11,7 @@ var Volunteering = React.createClass({
         <div className={this.props.active ? "bpe--volunteering media active" : "bpe--volunteering media"}>
           <img className="bpe--volunteering--image" src={imageUrl} alt={this.props.record.title} />
           <div className="bpe--volunteering--body">
-            <p><small className="text-muted">{carrier.name}</small></p>
+            <p className="bpe--volunteering--carrier-name"><small className="text-muted">{carrier.name}</small></p>
             <h4 className="media-heading">{this.props.record.title}</h4>
           </div>
         </div>

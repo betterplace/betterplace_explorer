@@ -1,12 +1,14 @@
 .bpe--volunteering-list
-  position: absolute
-  top: $betterplace_explorer_location_input_height
-  left: 0
-  width: $betterplace_explorer_sidebar_width
-  height: $betterplace_explorer_height
-  overflow-x: hidden
-  overflow-y: scroll
-  padding: 20px
+
+  +desktop
+    position: absolute
+    top: $betterplace_explorer_location_input_height
+    left: 0
+    width: $betterplace_explorer_sidebar_width
+    height: $betterplace_explorer_height
+    overflow-x: hidden
+    overflow-y: scroll
+    padding: 20px
 
   &.loading:before
     content: ''

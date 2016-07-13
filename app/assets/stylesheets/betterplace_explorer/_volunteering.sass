@@ -1,10 +1,8 @@
 .bpe--volunteering
-  display: flex
   margin-bottom: 20px
   border: 1px solid $light-grey
 
   .bpe--map &
-    flex-direction: column
     border: 0
     margin-bottom: 0
 
@@ -13,14 +11,36 @@
       text-decoration: underline
 
 .bpe--volunteering--body
-  flex-grow: 1
   padding-top: 10px
   font-size: 14px
+
+  small
+    font-size: 12px
+
+  .bpe--volunteering-list &
+    display: inline-block
+    vertical-align: top
+    width: 50%
 
   .bpe--map &
     padding: 10px
 
-  p:first-child:before
+  h4
+    font-weight: 400
+
+    +phone
+      font-size: 14px
+      hyphens: auto
+      -webkit-hyphens: auto
+
+.bpe--volunteering--carrier-name
+
+  +phone
+    text-overflow: ellipsis
+    white-space: nowrap
+    overflow: hidden
+
+  &:before
     content: ''
     display: inline-block
     margin-right: 5px
@@ -31,11 +51,13 @@
     background-size: contain
     background-repeat: no-repeat
 
-  h4
-    font-weight: 400
-
 .bpe--volunteering--image
-  margin-right: 10px
+
+  .bpe--volunteering-list &
+    display: inline-block
+    vertical-align: top
+    width: 46%
+    margin-right: 4%
 
   .bpe--map &
     width: 210px

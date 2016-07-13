@@ -1,21 +1,27 @@
 .bpe--location-input
   background: white
-  position: absolute
-  top: 0
-  left: 0
-  z-index: 100
-  width:  $betterplace_explorer_sidebar_width / 2
-  height: $betterplace_explorer_location_input_height
   border-bottom: 1px solid $light-grey
+
+  +desktop
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 100
+    width:  $betterplace_explorer_sidebar_width / 2
+    height: $betterplace_explorer_location_input_height
 
 .bpe--location-input--input
   display: block
-  margin: 17px 20px
   padding: 10px 30px 10px 10px
-  width: $betterplace_explorer_sidebar_width / 2 - 17px
   box-shadow: none
   border: 1px solid $light-grey
   border-radius: 4px
+  width: $betterplace_explorer_sidebar_width / 2 - 17px
+  margin: 17px 20px
+
+  +phone
+    width: 100%
+    margin: 10px 0
 
   .browser-edge &,
   .browser-msie &
@@ -23,12 +29,16 @@
 
 .bpe--location-input--reset
   position: absolute
-  right: 8px
-  top: 14px
   z-index: 1000
   font-size: 3rem
   font-weight: 100
   cursor: pointer
+  right: 8px
+  top: 14px
+
+  +phone
+    right: 20px
+    top: 8px
 
   .browser-edge &,
   .browser-msie &

@@ -20172,11 +20172,6 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
-	        _react2['default'].createElement(
-	          'div',
-	          { className: 'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '') },
-	          volunteeringNodes
-	        ),
 	        _react2['default'].createElement(_Pagination2['default'], {
 	          changePage: this.changePage,
 	          currentPage: this.props.currentPage,
@@ -20184,7 +20179,12 @@
 	          totalEntries: this.props.totalEntries,
 	          perPage: this.props.perPage,
 	          recordLength: this.props.records.length
-	        })
+	        }),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '') },
+	          volunteeringNodes
+	        )
 	      );
 	    }
 
@@ -20447,7 +20447,7 @@
 	            { className: 'bpe--volunteering--body' },
 	            _react2['default'].createElement(
 	              'p',
-	              null,
+	              { className: 'bpe--volunteering--carrier-name' },
 	              _react2['default'].createElement(
 	                'small',
 	                { className: 'text-muted' },

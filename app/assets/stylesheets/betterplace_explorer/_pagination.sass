@@ -1,18 +1,25 @@
 .bpe--pagination
-  position: absolute
-  left: $betterplace_explorer_sidebar_width / 2
-  top:  $betterplace_explorer_location_input_height / 4
-  width: $betterplace_explorer_sidebar_width / 2
-  height: $betterplace_explorer_location_input_height / 4 * 3
-  border-bottom: 1px solid $light-grey
-  padding-right: 35px
+
+  +desktop
+    position: absolute
+    left: $betterplace_explorer_sidebar_width / 2
+    top:  $betterplace_explorer_location_input_height / 4
+    width: $betterplace_explorer_sidebar_width / 2
+    height: $betterplace_explorer_location_input_height / 4 * 3
+    padding-right: 35px
+    border-bottom: 1px solid $light-grey
+
+  +phone
+    margin: 10px 0
 
   .bpe--pagination--current-page
     display: inline-block
     width: calc(100% - 36px * 2 - 2px)
-    text-align: right
     padding-right: 10px
     font-weight: bold
+
+    +desktop
+      text-align: right
 
   .bpe--pagination--pager
     list-style-type: none
