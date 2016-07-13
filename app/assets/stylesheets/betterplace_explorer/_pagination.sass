@@ -1,3 +1,58 @@
 .bpe--pagination
-  li.text-muted
-    line-height: 32px
+  position: absolute
+  left: $betterplace_explorer_sidebar_width / 2
+  top:  $betterplace_explorer_location_input_height / 4
+  width: $betterplace_explorer_sidebar_width / 2
+  height: $betterplace_explorer_location_input_height / 4 * 3
+  border-bottom: 1px solid $light-grey
+  padding-right: 35px
+
+  .bpe--pagination--current-page
+    display: inline-block
+    width: calc(100% - 36px * 2 - 2px)
+    text-align: right
+    padding-right: 10px
+    font-weight: bold
+
+  .bpe--pagination--pager
+    list-style-type: none
+    margin: 0
+    padding: 0
+    display: inline-block
+    width: 36px * 2 + 2px
+
+    li
+      display: inline-block
+      margin-right: 1px
+
+    li a
+      background: $very-dark-grey
+      color: white
+      display: inline-block
+      width: 36px
+      height: 36px
+      text-align: center
+      line-height: 36px
+
+    li.disabled a
+      background: $light-grey
+
+    li:first-child a
+      border-radius: 4px 0 0 4px
+
+    li:last-child a
+      border-radius: 0 4px 4px 0
+
+    li a:before
+      content: ''
+      display: inline-block
+      width: 0
+      height: 0
+      border-top: 5px solid transparent
+      border-bottom: 5px solid transparent
+
+    li.previous a:before
+      border-right: 5px solid white
+
+    li.next a:before
+      border-left: 5px solid white

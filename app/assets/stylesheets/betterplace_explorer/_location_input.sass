@@ -4,32 +4,35 @@
   top: 0
   left: 0
   z-index: 100
-  width: $betterplace_explorer_sidebar_width
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.25)
+  width:  $betterplace_explorer_sidebar_width / 2
+  height: $betterplace_explorer_location_input_height
+  border-bottom: 1px solid $light-grey
 
-  .bpe--location-input--input
-    display: block
-    margin: 20px
-    padding: 5px
-    padding-right: 30px
-    width: calc(100% - 70px)
+.bpe--location-input--input
+  display: block
+  margin: 17px 20px
+  padding: 10px 30px 10px 10px
+  width: $betterplace_explorer_sidebar_width / 2 - 17px
+  box-shadow: none
+  border: 1px solid $light-grey
+  border-radius: 4px
 
-    .browser-edge &,
-    .browser-msie &
-      padding-right: 5px
+  .browser-edge &,
+  .browser-msie &
+    padding-right: 5px
 
-  .bpe--location-input--reset
-    position: absolute
-    right: 20px
-    top: 13px
-    z-index: 1000
-    font-size: 3rem
-    font-weight: 100
-    cursor: pointer
+.bpe--location-input--reset
+  position: absolute
+  right: 8px
+  top: 14px
+  z-index: 1000
+  font-size: 3rem
+  font-weight: 100
+  cursor: pointer
 
-    .browser-edge &,
-    .browser-msie &
-      display: none
+  .browser-edge &,
+  .browser-msie &
+    display: none
 
-    &:hover
-      text-decoration: none
+  &:hover
+    text-decoration: none

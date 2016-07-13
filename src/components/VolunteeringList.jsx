@@ -20,26 +20,18 @@ var VolunteeringList = React.createClass({
     }
 
     return (
-      <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >
-        <h1>{this.props.records.length} von {this.props.totalEntries} Ehrenämter gefunden</h1>
-        <div>
-          <Pagination
-            changePage={this.changePage}
-            currentPage={this.props.currentPage}
-            totalPages={this.props.totalPages}
-          />
-        </div>
-
-        <div>
+      <div>
+        <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >
           {volunteeringNodes}
         </div>
-        <div>
-          <Pagination
-            changePage={this.changePage}
-            currentPage={this.props.currentPage}
-            totalPages={this.props.totalPages}
-          />
-        </div>
+        <Pagination
+          changePage={this.changePage}
+          currentPage={this.props.currentPage}
+          totalPages={this.props.totalPages}
+          totalEntries={this.props.totalEntries}
+          perPage={this.props.perPage}
+          recordLength={this.props.records.length}
+        />
       </div>
     )
   },

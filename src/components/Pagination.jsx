@@ -7,14 +7,14 @@ var Pagination = React.createClass({
     if (this.props.totalPages && this.props.totalPages > 1) {
       return (
         <nav className="bpe--pagination">
-          <ul className="pager">
+          <span className="bpe--pagination--current-page">
+            {this.indexOfFirstRecord()} - {this.indexOfLastRecord()} von {this.props.totalEntries} Ehrenämtern
+          </span>
+          <ul className="bpe--pagination--pager">
             <PaginationPrevButton
               currentPage={this.props.currentPage}
               handleClick={this.previousPage}
             />
-            <li className="text-muted">
-              Seite {this.props.currentPage} von {this.props.totalPages}
-            </li>
             <PaginationNextButton
               currentPage={this.props.currentPage}
               handleClick={this.nextPage}
@@ -26,6 +26,16 @@ var Pagination = React.createClass({
     } else {
       return null
     }
+  },
+
+  indexOfFirstRecord: function() {
+    return (this.props.currentPage - 1) * this.props.perPage + 1
+  },
+
+  indexOfLastRecord: function() {
+    var a = this.props.currentPage * this.props.perPage
+    var b = this.props.totalEntries
+    return Math.min(a, b)
   },
 
   previousPage: function(event) {

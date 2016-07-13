@@ -5,10 +5,15 @@ var PaginationPrevButton = React.createClass({
     if (this.props.currentPage > 1) {
       return (
         <li className="previous">
-          <a href="#" onClick={this.props.handleClick}><span aria-hidden="true">&larr;</span> zurück</a>
+          <a href="#" onClick={this.props.handleClick}></a>
         </li>
       )
     } else {
+      return (
+        <li className="previous disabled">
+          <a></a>
+        </li>
+      )
       return null
     }
   }

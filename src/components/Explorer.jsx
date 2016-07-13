@@ -13,7 +13,7 @@ import 'whatwg-fetch'
 
 var Explorer = React.createClass({
   getInitialState() {
-    return { records: [], visitedRecordIds: [] }
+    return { records: [], visitedRecordIds: [], perPage: 25 }
   },
 
   componentDidMount() {
@@ -43,6 +43,7 @@ var Explorer = React.createClass({
           setHighlightRecord={this.setHighlightRecord}
           totalEntries={this.state.totalEntries}
           totalPages={this.state.totalPages}
+          perPage={this.state.perPage}
           isLoading={this.state.isLoading}
         />
         {this.shouldRenderMap() ? <Map
@@ -91,7 +92,7 @@ var Explorer = React.createClass({
 
   load: function(bounds, page) {
     this.setState({ currentBounds: bounds, currentPage: page, isLoading: true })
-    ApiLoader.load(this.props.apiBaseUrl, bounds, page, this.assignApiResult)
+    ApiLoader.load(this.props.apiBaseUrl, bounds, page, this.state.perPage, this.assignApiResult)
   },
 
   loadByBoundingBox: function(bounds) {

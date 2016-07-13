@@ -1,39 +1,43 @@
 .bpe--volunteering
   display: flex
   margin-bottom: 20px
-  border: 1px solid #ccc
+  border: 1px solid $light-grey
 
   .bpe--map &
     flex-direction: column
     border: 0
     margin-bottom: 0
 
-  .bpe--volunteering--image
-    margin-right: 10px
-
-    .bpe--map &
-      width: 210px
-      height: 109px
-      margin-right: 0
-
-  .bpe--volunteering--body
-    flex-grow: 1
-    padding-top: 10px
-    font-size: 14px
-
-    .bpe--map &
-      padding: 10px
-
-    p:first-child:before
-      content: ''
-      display: inline-block
-      margin-right: 5px
-      vertical-align: middle
-      height: 17px
-      width: 17px
-      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABFCAMAAADerVCrAAAAM1BMVEUAAAC60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wSM4IHZAAAAEHRSTlMAwECAYDDg0KDwsBBQIJBwPkbmYQAAAMhJREFUWMPt18sOgjAQheFpGa4Fnfd/Wp1E2sbZcaqpZv5dAzl+JiyAvthx50R4+yYi6zKCmGGSVzMnCFNSFobRCgvAGBaAMSwAY1gAxrAAjGEBGMO6hrEsAGNZFgOwagzCImnUPw+FZ7NABY20tArQTCVGHshIdfFqI30sDmf6I2M+sV685aO51TTIWdS/mk+DXgz5+HarD/mQD/mQD/mQD/3iUFyAl+yDSpMAbRVIoHoe6qvEAW/biRZpEpO0aerw66i/odCoByH8r05KM8SjAAAAAElFTkSuQmCC)
-      background-size: contain
-      background-repeat: no-repeat
-
+  &.active
     h4
-      font-weight: 400
+      text-decoration: underline
+
+.bpe--volunteering--body
+  flex-grow: 1
+  padding-top: 10px
+  font-size: 14px
+
+  .bpe--map &
+    padding: 10px
+
+  p:first-child:before
+    content: ''
+    display: inline-block
+    margin-right: 5px
+    vertical-align: middle
+    height: 17px
+    width: 17px
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABFCAMAAADerVCrAAAAM1BMVEUAAAC60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wS60wSM4IHZAAAAEHRSTlMAwECAYDDg0KDwsBBQIJBwPkbmYQAAAMhJREFUWMPt18sOgjAQheFpGa4Fnfd/Wp1E2sbZcaqpZv5dAzl+JiyAvthx50R4+yYi6zKCmGGSVzMnCFNSFobRCgvAGBaAMSwAY1gAxrAAjGEBGMO6hrEsAGNZFgOwagzCImnUPw+FZ7NABY20tArQTCVGHshIdfFqI30sDmf6I2M+sV685aO51TTIWdS/mk+DXgz5+HarD/mQD/mQD/mQD/3iUFyAl+yDSpMAbRVIoHoe6qvEAW/biRZpEpO0aerw66i/odCoByH8r05KM8SjAAAAAElFTkSuQmCC)
+    background-size: contain
+    background-repeat: no-repeat
+
+  h4
+    font-weight: 400
+
+.bpe--volunteering--image
+  margin-right: 10px
+
+  .bpe--map &
+    width: 210px
+    height: 109px
+    margin-right: 0

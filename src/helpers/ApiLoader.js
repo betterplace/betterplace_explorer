@@ -1,12 +1,12 @@
 export default class ApiLoader {
-  static load(apiBaseUrl, bounds, page, successHandler) {
+  static load(apiBaseUrl, bounds, page, perPage, successHandler) {
     var params = {
       nelat:    bounds.north,
       nelng:    bounds.east,
       swlat:    bounds.south,
       swlng:    bounds.west,
       page:     page,
-      per_page: 25,
+      per_page: perPage,
     }
     var url = apiBaseUrl + ApiLoader.toQuery(params)
     fetch(url)

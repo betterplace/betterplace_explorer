@@ -5,11 +5,15 @@ var PaginationNextButton = React.createClass({
     if (this.props.currentPage < this.props.totalPages) {
       return (
         <li className="next">
-          <a href="#" onClick={this.props.handleClick}>weiter <span aria-hidden="true">&rarr;</span></a>
+          <a href="#" onClick={this.props.handleClick}></a>
         </li>
       )
     } else {
-      return null
+      return (
+        <li className="next disabled">
+          <a></a>
+        </li>
+      )
     }
   }
 })

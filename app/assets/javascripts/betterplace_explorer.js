@@ -90,7 +90,7 @@
 	  displayName: 'Explorer',
 	  getInitialState: function () {
 	    function getInitialState() {
-	      return { records: [], visitedRecordIds: [] };
+	      return { records: [], visitedRecordIds: [], perPage: 25 };
 	    }
 
 	    return getInitialState;
@@ -132,6 +132,7 @@
 	          setHighlightRecord: this.setHighlightRecord,
 	          totalEntries: this.state.totalEntries,
 	          totalPages: this.state.totalPages,
+	          perPage: this.state.perPage,
 	          isLoading: this.state.isLoading
 	        }),
 	        this.shouldRenderMap() ? _react2['default'].createElement(_Map2['default'], {
@@ -202,7 +203,7 @@
 	  load: function () {
 	    function load(bounds, page) {
 	      this.setState({ currentBounds: bounds, currentPage: page, isLoading: true });
-	      _ApiLoader2['default'].load(this.props.apiBaseUrl, bounds, page, this.assignApiResult);
+	      _ApiLoader2['default'].load(this.props.apiBaseUrl, bounds, page, this.state.perPage, this.assignApiResult);
 	    }
 
 	    return load;
@@ -20170,38 +20171,20 @@
 
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '') },
-	        _react2['default'].createElement(
-	          'h1',
-	          null,
-	          this.props.records.length,
-	          ' von ',
-	          this.props.totalEntries,
-	          ' Ehrenämter gefunden'
-	        ),
+	        null,
 	        _react2['default'].createElement(
 	          'div',
-	          null,
-	          _react2['default'].createElement(_Pagination2['default'], {
-	            changePage: this.changePage,
-	            currentPage: this.props.currentPage,
-	            totalPages: this.props.totalPages
-	          })
-	        ),
-	        _react2['default'].createElement(
-	          'div',
-	          null,
+	          { className: 'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '') },
 	          volunteeringNodes
 	        ),
-	        _react2['default'].createElement(
-	          'div',
-	          null,
-	          _react2['default'].createElement(_Pagination2['default'], {
-	            changePage: this.changePage,
-	            currentPage: this.props.currentPage,
-	            totalPages: this.props.totalPages
-	          })
-	        )
+	        _react2['default'].createElement(_Pagination2['default'], {
+	          changePage: this.changePage,
+	          currentPage: this.props.currentPage,
+	          totalPages: this.props.totalPages,
+	          totalEntries: this.props.totalEntries,
+	          perPage: this.props.perPage,
+	          recordLength: this.props.records.length
+	        })
 	      );
 	    }
 
@@ -20265,20 +20248,22 @@
 	          'nav',
 	          { className: 'bpe--pagination' },
 	          _react2['default'].createElement(
+	            'span',
+	            { className: 'bpe--pagination--current-page' },
+	            this.indexOfFirstRecord(),
+	            ' - ',
+	            this.indexOfLastRecord(),
+	            ' von ',
+	            this.props.totalEntries,
+	            ' Ehrenämtern'
+	          ),
+	          _react2['default'].createElement(
 	            'ul',
-	            { className: 'pager' },
+	            { className: 'bpe--pagination--pager' },
 	            _react2['default'].createElement(_PaginationPrevButton2['default'], {
 	              currentPage: this.props.currentPage,
 	              handleClick: this.previousPage
 	            }),
-	            _react2['default'].createElement(
-	              'li',
-	              { className: 'text-muted' },
-	              'Seite ',
-	              this.props.currentPage,
-	              ' von ',
-	              this.props.totalPages
-	            ),
 	            _react2['default'].createElement(_PaginationNextButton2['default'], {
 	              currentPage: this.props.currentPage,
 	              handleClick: this.nextPage,
@@ -20292,6 +20277,24 @@
 	    }
 
 	    return render;
+	  }(),
+
+	  indexOfFirstRecord: function () {
+	    function indexOfFirstRecord() {
+	      return (this.props.currentPage - 1) * this.props.perPage + 1;
+	    }
+
+	    return indexOfFirstRecord;
+	  }(),
+
+	  indexOfLastRecord: function () {
+	    function indexOfLastRecord() {
+	      var a = this.props.currentPage * this.props.perPage;
+	      var b = this.props.totalEntries;
+	      return Math.min(a, b);
+	    }
+
+	    return indexOfLastRecord;
 	  }(),
 
 	  previousPage: function () {
@@ -20347,19 +20350,14 @@
 	        return _react2["default"].createElement(
 	          "li",
 	          { className: "next" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            "weiter ",
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "→"
-	            )
-	          )
+	          _react2["default"].createElement("a", { href: "#", onClick: this.props.handleClick })
 	        );
 	      } else {
-	        return null;
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "next disabled" },
+	          _react2["default"].createElement("a", null)
+	        );
 	      }
 	    }
 
@@ -20394,18 +20392,14 @@
 	        return _react2["default"].createElement(
 	          "li",
 	          { className: "previous" },
-	          _react2["default"].createElement(
-	            "a",
-	            { href: "#", onClick: this.props.handleClick },
-	            _react2["default"].createElement(
-	              "span",
-	              { "aria-hidden": "true" },
-	              "←"
-	            ),
-	            " zurück"
-	          )
+	          _react2["default"].createElement("a", { href: "#", onClick: this.props.handleClick })
 	        );
 	      } else {
+	        return _react2["default"].createElement(
+	          "li",
+	          { className: "previous disabled" },
+	          _react2["default"].createElement("a", null)
+	        );
 	        return null;
 	      }
 	    }
@@ -27405,14 +27399,14 @@
 	  _createClass(ApiLoader, null, [{
 	    key: 'load',
 	    value: function () {
-	      function load(apiBaseUrl, bounds, page, successHandler) {
+	      function load(apiBaseUrl, bounds, page, perPage, successHandler) {
 	        var params = {
 	          nelat: bounds.north,
 	          nelng: bounds.east,
 	          swlat: bounds.south,
 	          swlng: bounds.west,
 	          page: page,
-	          per_page: 25
+	          per_page: perPage
 	        };
 	        var url = apiBaseUrl + ApiLoader.toQuery(params);
 	        fetch(url).then(function (response) {
