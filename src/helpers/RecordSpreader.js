@@ -17,8 +17,8 @@ export default class RecordSpreader {
       for (var i = 0; i < recordsWithSamePosition.length; i++) {
         var record = recordsWithSamePosition[i]
         var angle = 0.666 * i;
-        record.longitude += ((4 + angle) * Math.cos(angle)) / 80000;
-        record.latitude  += ((4 + angle) * Math.sin(angle)) / 120000;
+        record.longitude += ((4 + angle) * Math.cos(angle)) / 52000;
+        record.latitude  += ((4 + angle) * Math.sin(angle)) / 80000;
       }
 
       // arrange in square grid
