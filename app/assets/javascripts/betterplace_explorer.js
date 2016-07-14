@@ -27096,7 +27096,7 @@
 	        { className: 'bpe--location-input' },
 	        _react2['default'].createElement('input', {
 	          type: 'text',
-	          placeholder: 'Bezirk, Stadt, Region',
+	          placeholder: 'Suche nach Deiner Straße, PLZ, Stadt',
 	          ref: 'locationInput',
 	          className: 'bpe--location-input--input',
 	          value: this.props.value,
