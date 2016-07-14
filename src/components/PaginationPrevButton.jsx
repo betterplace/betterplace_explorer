@@ -14,7 +14,6 @@ var PaginationPrevButton = React.createClass({
           <a></a>
         </li>
       )
-      return null
     }
   }
 })
