@@ -1,9 +1,10 @@
 .bpe--location-input
   background: white
-  border-bottom: 1px solid $light-grey
+  position: relative
 
   +desktop
     position: absolute
+    border-bottom: 1px solid $light-grey
     top: 0
     left: 0
     z-index: 100
@@ -37,8 +38,9 @@
   top: 14px
 
   +phone
-    right: 20px
-    top: 8px
+    right: 10px
+    top: 0
+    line-height: 37px
 
   .browser-edge &,
   .browser-msie &
