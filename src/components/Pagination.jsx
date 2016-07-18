@@ -4,10 +4,12 @@ import PaginationPrevButton from './PaginationPrevButton.jsx'
 
 var Pagination = React.createClass({
   render: function() {
-    if (this.props.totalEntries > 1) {
+    if (this.props.totalPages > 1) {
       var text = `${this.indexOfFirstRecord()} - ${this.indexOfLastRecord()} von ${this.props.totalEntries} Ehrenämtern`
     } else if (this.props.totalEntries == 1) {
       var text = '1 Ehrenamt gefunden'
+    } else if (this.props.totalEntries > 1) {
+      var text = `${this.props.totalEntries} Ehrenämter gefunden`
     }
 
     return (

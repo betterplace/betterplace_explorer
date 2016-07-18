@@ -20061,10 +20061,12 @@
 
 	  render: function () {
 	    function render() {
-	      if (this.props.totalEntries > 1) {
+	      if (this.props.totalPages > 1) {
 	        var text = this.indexOfFirstRecord() + ' - ' + this.indexOfLastRecord() + ' von ' + this.props.totalEntries + ' Ehrenämtern';
 	      } else if (this.props.totalEntries == 1) {
 	        var text = '1 Ehrenamt gefunden';
+	      } else if (this.props.totalEntries > 1) {
+	        var text = this.props.totalEntries + ' Ehrenämter gefunden';
 	      }
 
 	      return _react2['default'].createElement(
@@ -20215,7 +20217,6 @@
 	          { className: "previous disabled" },
 	          _react2["default"].createElement("a", null)
 	        );
-	        return null;
 	      }
 	    }
 
@@ -24962,8 +24963,8 @@
 	          for (var i = 0; i < recordsWithSamePosition.length; i++) {
 	            var record = recordsWithSamePosition[i];
 	            var angle = 0.666 * i;
-	            record.longitude += (4 + angle) * Math.cos(angle) / 80000;
-	            record.latitude += (4 + angle) * Math.sin(angle) / 120000;
+	            record.longitude += (4 + angle) * Math.cos(angle) / 52000;
+	            record.latitude += (4 + angle) * Math.sin(angle) / 80000;
 	          }
 
 	          // arrange in square grid
@@ -35829,7 +35830,7 @@
 /* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
