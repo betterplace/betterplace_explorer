@@ -3,9 +3,9 @@ import React from 'react'
 var NoResults = React.createClass({
   render: function() {
     return (
-      <div className="text-center">
-        <h3>Leider gibt es aktuell keine Angebote an diesem Ort.</h3>
-        <p><strong>Wenn Du auf der Karte rauszoomst, kannst Du schauen, ob es in einem größeren Umkreis Ehrenämter gibt.</strong></p>
+      <div className="text-center no-results">
+        <h2>Leider gibt es aktuell keine Angebote an diesem Ort.</h2>
+        <h3>Bitte zoome auf der Karte raus – vielleicht gibt etwas weiter entfernt ein Ehrenamt. :-)</h3>
       </div>
     )
   }

@@ -10,6 +10,15 @@
     margin-bottom: 0
 
   &.active
+    box-shadow: 0 0 5px 0 $light-grey
+
+    h4
+      text-decoration: underline
+
+.bpe--map a:hover
+  text-decoration: none
+
+  .bpe--volunteering
     h4
       text-decoration: underline
 
@@ -38,6 +47,10 @@
 
     +desktop
       line-height: 21px
+
+      .bpe--map &
+        font-size: 16px
+        line-height: 18px
 
     +phone
       font-size: 14px
