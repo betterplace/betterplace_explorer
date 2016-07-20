@@ -13,7 +13,7 @@ var LocationInput = React.createClass({
           value={this.props.value}
           onChange={this.updateLocation}
         />
-        <i className="fa fa-search bpe--location-input--search-icon" />
+        <i className="bpe--location-input--search-icon" />
         <a
           className='bpe--location-input--reset'
           onClick={this.resetInput}

@@ -27097,7 +27097,7 @@
 	          value: this.props.value,
 	          onChange: this.updateLocation
 	        }),
-	        _react2['default'].createElement('i', { className: 'fa fa-search bpe--location-input--search-icon' }),
+	        _react2['default'].createElement('i', { className: 'bpe--location-input--search-icon' }),
 	        _react2['default'].createElement(
 	          'a',
 	          {
@@ -35831,7 +35831,7 @@
 /* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
