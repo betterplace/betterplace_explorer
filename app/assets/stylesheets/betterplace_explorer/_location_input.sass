@@ -28,7 +28,8 @@
   .browser-msie &
     padding-right: 5px
 
-  &[value='']
+  &[value=''],
+  &:not([value])
     ~ .bpe--location-input--search-icon
       display: block
 
