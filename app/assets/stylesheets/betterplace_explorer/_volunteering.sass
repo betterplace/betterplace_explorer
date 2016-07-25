@@ -1,13 +1,21 @@
 .bpe--volunteering
   border: 1px solid $light-grey
+
+  &:hover
+    box-shadow: $light-grey 0 0 5px 0
+
   +desktop
     margin-bottom: 20px
+
   +phone
     margin-bottom: 10px
 
   .bpe--map &
     border: 0
     margin-bottom: 0
+
+    &:hover
+      box-shadow: none
 
 .bpe--map a:hover
   text-decoration: none
@@ -52,6 +60,7 @@
       hyphens: auto
       -webkit-hyphens: auto
       margin-top: 0
+      word-wrap: break-word
 
 .bpe--volunteering--carrier-name
   font-size: 13px

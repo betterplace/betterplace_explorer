@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 var LocationInput = React.createClass({
   render: function() {
     return (
-      <div className='bpe--location-input'>
+      <div className={this.props.value ? "bpe--location-input has-value" : "bpe--location-input"}>
         <input
           type='text'
           placeholder='Suche nach Deiner Straße, PLZ, Stadt'
