@@ -20348,7 +20348,7 @@
 	        _react2["default"].createElement(
 	          "h3",
 	          null,
-	          "Bitte zoome auf der Karte raus – vielleicht gibt etwas weiter entfernt ein Ehrenamt. :-)"
+	          "Bitte zoome auf der Karte raus – vielleicht gibt es etwas weiter entfernt ein Ehrenamt. :-)"
 	        )
 	      );
 	    }
