@@ -6,7 +6,7 @@ import NoResults    from './NoResults.jsx'
 
 var VolunteeringList = React.createClass({
   render: function() {
-    var volunteeringNodes = this.props.records.map(
+    var listContent = this.props.records.map(
       record => <Volunteering
                   active={record === this.props.highlightRecord}
                   key={record.id}
@@ -15,8 +15,11 @@ var VolunteeringList = React.createClass({
                 />
     )
 
-    if (this.props.records.length == 0) {
-      volunteeringNodes = <NoResults />
+    if (this.props.isLoading) {
+      listContent.push(<div className='loading-spinner' />)
+    }
+    else if (this.props.records.length == 0) {
+      listContent = <NoResults />
     }
 
     return (
@@ -30,7 +33,7 @@ var VolunteeringList = React.createClass({
           recordLength={this.props.records.length}
         />
         <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >
-          {volunteeringNodes}
+          {listContent}
         </div>
       </div>
     )

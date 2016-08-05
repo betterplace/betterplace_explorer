@@ -13,7 +13,7 @@ import 'whatwg-fetch'
 
 var Explorer = React.createClass({
   getInitialState() {
-    return { records: [], visitedRecordIds: [], perPage: 25 }
+    return { records: [], visitedRecordIds: [], perPage: 25, isLoading: true }
   },
 
   componentDidMount() {
