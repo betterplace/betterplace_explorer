@@ -92,7 +92,14 @@ var Explorer = React.createClass({
 
   load: function(bounds, page) {
     this.setState({ currentBounds: bounds, currentPage: page, isLoading: true })
-    ApiLoader.load(this.props.apiBaseUrl, bounds, page, this.state.perPage, this.assignApiResult)
+    ApiLoader.load({
+      apiBaseUrl:         this.props.apiBaseUrl,
+      bounds:             bounds,
+      onlySearchInBounds: this.shouldRenderMap(),
+      page:               page,
+      perPage:            this.state.perPage,
+      successHandler:     this.assignApiResult
+    })
   },
 
   loadByBoundingBox: function(bounds) {
