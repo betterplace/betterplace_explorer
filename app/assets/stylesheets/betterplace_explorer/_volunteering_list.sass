@@ -22,6 +22,12 @@
     opacity: 0.6
     background: white
 
+  +phone
+    &.loading
+      // ugly solution to make sure that stuff that is placed
+      // below the explorer never ends up beneath the loading-spinner 😢
+      min-height: 210px
+
   .no-results
     p
       font-size: 22px
