@@ -1,8 +1,9 @@
-import React        from 'react'
-import ReactDOM     from 'react-dom'
-import Pagination   from './Pagination.jsx'
-import Volunteering from './Volunteering.jsx'
-import NoResults    from './NoResults.jsx'
+import React          from 'react'
+import ReactDOM       from 'react-dom'
+import Pagination     from './Pagination.jsx'
+import Volunteering   from './Volunteering.jsx'
+import NoResults      from './NoResults.jsx'
+import LoadingCurtain from './LoadingCurtain.jsx'
 
 var VolunteeringList = React.createClass({
   render: function() {
@@ -15,10 +16,7 @@ var VolunteeringList = React.createClass({
                 />
     )
 
-    if (this.props.isLoading) {
-      listContent.push(<div className='loading-spinner' />)
-    }
-    else if (this.props.records.length == 0) {
+    if (this.props.records.length == 0 && !this.props.isLoading) {
       listContent = <NoResults />
     }
 
@@ -32,7 +30,8 @@ var VolunteeringList = React.createClass({
           perPage={this.props.perPage}
           recordLength={this.props.records.length}
         />
-        <div className={'bpe--volunteering-list' + (this.props.isLoading ? ' loading' : '')} >
+        {this.props.isLoading && <LoadingCurtain />}
+        <div className='bpe--volunteering-list' >
           {listContent}
         </div>
       </div>

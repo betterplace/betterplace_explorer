@@ -1,5 +1,5 @@
-.bpe--volunteering-list
-
+.bpe--volunteering-list, 
+.bpe--loading-curtain
   +desktop
     position: absolute
     top: $betterplace_explorer_location_input_height
@@ -7,11 +7,24 @@
     width: $betterplace_explorer_sidebar_width
     height: calc(100vh - #{$betterplace_explorer_location_input_height} - #{$betterplace_explorer_additional_header_height})
 
+.bpe--volunteering-list
+  +desktop
     overflow-x: hidden
     overflow-y: scroll
     padding: 20px
 
-  &.loading:before
+  .no-results
+    p
+      font-size: 22px
+      line-height: 18px
+
+.bpe--loading-curtain
+  +phone
+    // ugly solution to make sure that stuff that is placed
+    // below the explorer never ends up beneath the loading-spinner 😢
+    min-height: 210px
+
+  &:before
     content: ''
     position: absolute
     top: 0
@@ -21,17 +34,6 @@
     z-index: 1050
     opacity: 0.6
     background: white
-
-  +phone
-    &.loading
-      // ugly solution to make sure that stuff that is placed
-      // below the explorer never ends up beneath the loading-spinner 😢
-      min-height: 210px
-
-  .no-results
-    p
-      font-size: 22px
-      line-height: 18px
 
   .loading-spinner
     position: absolute
