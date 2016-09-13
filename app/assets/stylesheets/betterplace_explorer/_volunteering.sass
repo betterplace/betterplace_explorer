@@ -77,7 +77,10 @@
     overflow: hidden
     margin-bottom: 0
 
-  &:before
+  &:empty
+    margin: 0
+
+  &:not(:empty):before
     +desktop
       position: absolute
       top: 0
